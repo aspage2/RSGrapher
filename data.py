@@ -1,6 +1,6 @@
-import sys
+import tkFileDialog
 
-def getascmeta (fh):
+def get_asc_meta (fh):
 	fh.seek(0)
 	title = fh.readline().strip()
 	if (title != "DASYLab - V 12.00.01"):
@@ -17,14 +17,20 @@ def getascmeta (fh):
 	
 	return meta
 
-if (len(sys.argv) != 2):
-	print ("Bad args")
-	exit (1)
+def generate_csv (ascfile, outfilename):
+	ascfile.seek(0)
+	for i in range (7):
+		ascfile.readline()
+	outfile = open (outfilename, "w")
+	line = ascfile.readline().strip()
+	while (line != ""):
+		outfile.writelines((line.replace("\t",",") + "\n"))
+		line = ascfile.readline().strip()
+	outfile.close()
 
-fh = open (sys.argv[1], 'r')
-meta = getascmeta (fh)
+fh = tkFileDialog.askopenfile (title="Open ASC File")
+meta = get_asc_meta (fh)
 if (meta == None):
-	print ("An error occured")
+	print ("An error occured. Did you select an ASC file?")
 else:
-	for item in meta.items():
-		print (item)
+	generate_csv (fh, "out.csv")
