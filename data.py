@@ -1,4 +1,3 @@
-import tkFileDialog
 
 def get_asc_meta (fh):
 	fh.seek(0)
@@ -7,7 +6,7 @@ def get_asc_meta (fh):
 		return None
 	meta = {"Worksheet name":"", "Recording date":"", "Block length":"", "Delta":"", "Number of channels":""}
 	for i in range (5):
-		items = map (str.strip, fh.readline().strip().split(":",1))
+		items = list(map(str.strip, fh.readline().strip().split(":",1)))
 		if (len(items)!=2 or items[0] not in meta.keys() or meta[items[0]] != ""):
 			return None
 		meta[items[0]] = items[1]
@@ -29,7 +28,7 @@ def generate_csv (ascfile, outfilename):
 	outfile.close()
 
 print ("This is an edit")
-fh = tkFileDialog.askopenfile (title="Open ASC File")
+fh = open ("samples/rawdata.asc", 'r')
 meta = get_asc_meta (fh)
 if (meta == None):
 	print ("An error occured. Did you select an ASC file?")
