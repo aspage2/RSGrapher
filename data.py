@@ -28,6 +28,7 @@ def generate_csv (ascfile, outfilename):
 		line = ascfile.readline().strip()
 	outfile.close()
 
+print ("This is an edit")
 fh = tkFileDialog.askopenfile (title="Open ASC File")
 meta = get_asc_meta (fh)
 if (meta == None):
