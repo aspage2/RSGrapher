@@ -1,4 +1,2 @@
 # RSGrapher
-An application for RSG. It don't do nothing right now. I fix that soon.
-
-Hello again
+An application to streamline the organization & production of stress-strain graphs given data from rebar stress tests
