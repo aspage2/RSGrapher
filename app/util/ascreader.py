@@ -1,7 +1,7 @@
 ## Class to read out ASC data from a file.
 class ASCData:
-    def __init__ (self, filename):
-        fh = open (filename)
+    def __init__(self, filename):
+        fh = open(filename)
         self.__skip_asc_header (fh)
         self.__x = []
         self.__y = []
@@ -37,4 +37,3 @@ class ASCData:
     def __skip_asc_header (self, fh):
         for i in range (7):
             fh.readline()
-    

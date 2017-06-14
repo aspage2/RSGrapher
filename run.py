@@ -1,8 +1,9 @@
 import sys
+import argparse
+
+from app.main import application_debug, application_start
 
 assert sys.version_info >= (3, 5)
 
-from app.root import ApplicationInstance
-
 if __name__ == "__main__":
-    ApplicationInstance.start()
+    application_start()
