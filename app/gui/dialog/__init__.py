@@ -25,6 +25,7 @@ class BaseDialogWindow(Toplevel):
     def __init__(self, root):
         super().__init__(master=root)
         self.root = root
+        self.resizable(0,0)
         self.ret = {}
 
     def ret_update(self, **kwargs):

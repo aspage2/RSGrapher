@@ -1,15 +1,18 @@
-
 from app.gui.dialog import ask_project_dir
 from app.gui.dialog.newproject import NewProjectPrompt
+from app.gui.dialog.newsample import NewSampleWindow
 from app.util.ascreader import ASCData
+from app.project.datastructure import create_project, proj_folder_name
 from tkinter import filedialog
 
 from os import getcwd
 
 from tkinter import messagebox
 
+
 class Helper:
     """A helper class to extract the methods needed to update the project and GUI"""
+
     def __init__(self, project, frame):
         self.project = project
         self.frame = frame
@@ -17,13 +20,14 @@ class Helper:
     def new(self):
         """Create a new project"""
         try:
-            dir = NewProjectPrompt(self.frame.parent).run()['dir']
-        except KeyError:
-            messagebox.showwarning("Internal Error", "The 'open' dialog did not output the project directory.")
-        except:
+            data = NewProjectPrompt(self.frame.parent).run()
+        except Exception as e:
             messagebox.showwarning("Internal Error", "Something bad happened.")
         else:
-            self.open(dir)
+            if not data['cancelled']:
+                create_project(data['dir'], data['title'], data['num'], data['description'])
+                self.project.open(data['dir'] + "/" + proj_folder_name(data['title'],data['num']))
+                self.frame.refresh()
 
     def open(self, dir=None):
         """Try to open an existing project"""
@@ -43,8 +47,9 @@ class Helper:
 
     def add_sample(self):
         """Add a sample to the open project"""
-        data = ASCData(filedialog.askopenfilename(title="Select ASC Data", initialdir=getcwd()))
-        self.project.add_sample(data)
+        data = NewSampleWindow(self.frame.parent).run()
+        self.project.add_sample(ASCData(data['data_dir']),data['name'],data['diam'])
+        self.project.set_sample(data['name'])
         self.frame.refresh()
 
     def noimp(self):
