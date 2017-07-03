@@ -1,3 +1,4 @@
+import numpy
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
@@ -30,9 +31,10 @@ class ProjectFrame(Frame):
 
     def build(self):
         """Build the User interface"""
+        self.sampleframe = SampleFrame(self)
         # Left frame to hold sample information
         infoframe = Frame(self)
-
+        Button(infoframe, text="Stuff",command=self.sampleframe.wat).pack()
         # Sample Choosing button
         Button(infoframe, text="-- Samples --", command=self.set_sample, width=30).pack()
 
@@ -49,7 +51,7 @@ class ProjectFrame(Frame):
 
         infoframe.pack(side=LEFT, expand=False, padx=10, pady=10)
 
-        self.sampleframe = SampleFrame(self)
+
         self.sampleframe.pack(side=LEFT, expand=True)
 
     def set_sample(self):
@@ -62,12 +64,10 @@ class ProjectFrame(Frame):
     def refresh(self):
 
         if self.project.dir is None:
-            print("shit")
             self.proj_descrip.config(text="")
             self.proj_title.config(text="")
             self.sampleframe.set_sample(None)
         else:
-            print("Hello")
             self.proj_descrip.config(text=self.project.desc)
             self.proj_title.config(text=self.project.title)
             self.sampleframe.set_sample(self.project.curr_sample)
@@ -82,18 +82,25 @@ class SampleFrame(Frame):
         self.pack(fill=BOTH)
         self.build()
 
+    def wat(self):
+        self.wat.set_data(numpy.arange(-1,1,0.1),8000*numpy.arange(-1,1,0.1)**2)
+        self.canvas.draw()
+        self.canvas.show()
+
     def set_sample(self, sample):
         self.sample=sample
         if self.sample is not None:
-            print(len(self.sample.get_disp_data()))
             self.p.clear()
-            self.p.plot(sample.get_disp_data(), sample.get_load_data())
+            self.p.set_xlabel("Time (s)")
+            self.p.set_ylabel("Displacement (in)")
+            self.p.set_title("Raw Data")
+            self.wat = self.p.plot(sample.get_disp_data(), sample.get_load_data())[0]
             self.canvas.draw()
             self.canvas.show()
 
     def build(self):
         f = Figure(figsize=(5, 5), dpi=100)
-        self.p = f.add_subplot(111)
+        self.p = f.add_subplot(1,1,1)
         self.p.set_xlabel("Time (s)")
         self.p.set_ylabel("Displacement (in)")
         self.p.set_title("Raw Data")
