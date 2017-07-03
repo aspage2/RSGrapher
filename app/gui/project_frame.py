@@ -5,6 +5,8 @@ from tkinter import *
 
 import matplotlib
 
+from app.gui.dialog.choosesample import ChooseSampleWindow
+
 matplotlib.use("TkAgg")
 
 """
@@ -32,7 +34,7 @@ class ProjectFrame(Frame):
         infoframe = Frame(self)
 
         # Sample Choosing button
-        Button(infoframe, text="-- Samples --", width=30).pack()
+        Button(infoframe, text="-- Samples --", command=self.set_sample, width=30).pack()
 
         # Sample Image thumbnail
         self.sampleimage = Canvas(infoframe, width=256, height=256, bg="grey")
@@ -50,12 +52,22 @@ class ProjectFrame(Frame):
         self.sampleframe = SampleFrame(self)
         self.sampleframe.pack(side=LEFT, expand=True)
 
+    def set_sample(self):
+        data = ChooseSampleWindow(self.parent,self.project.samples).run()
+        if not data['cancelled']:
+            self.project.set_sample(data['name'])
+            self.sampleframe.set_sample(self.project.curr_sample)
+
+
     def refresh(self):
+
         if self.project.dir is None:
+            print("shit")
             self.proj_descrip.config(text="")
             self.proj_title.config(text="")
             self.sampleframe.set_sample(None)
         else:
+            print("Hello")
             self.proj_descrip.config(text=self.project.desc)
             self.proj_title.config(text=self.project.title)
             self.sampleframe.set_sample(self.project.curr_sample)
@@ -73,7 +85,10 @@ class SampleFrame(Frame):
     def set_sample(self, sample):
         self.sample=sample
         if self.sample is not None:
+            print(len(self.sample.get_disp_data()))
+            self.p.clear()
             self.p.plot(sample.get_disp_data(), sample.get_load_data())
+            self.canvas.draw()
             self.canvas.show()
 
     def build(self):
@@ -83,7 +98,9 @@ class SampleFrame(Frame):
         self.p.set_ylabel("Displacement (in)")
         self.p.set_title("Raw Data")
         if self.sample is not None:
-            self.p.plot(self.sample.get_disp_data(), self.sample.get_load_data())
+            self.stresscurve = self.p.plot(self.sample.get_disp_data(), self.sample.get_load_data())[0]
+        else:
+            self.stresscurve = self.p.plot([],[])[0]
 
         self.canvas = FigureCanvasTkAgg(f, master=self)
         self.canvas.show()

@@ -12,7 +12,7 @@ class ApplicationWindow(Tk):
         super().__init__()
         self.title("RSGrapher")
         self.geometry(geometry)
-        self.iconbitmap("res/window_icon.ico")
+#        self.iconbitmap("res/window_icon.ico")
         p = Project()
         self.helper = Helper(p, ProjectFrame(self, p))
         self.bind_menu_actions()

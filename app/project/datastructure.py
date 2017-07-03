@@ -70,6 +70,7 @@ class Project:
 
     def set_sample(self, name):
         for s in self.samples:
+            print(s.name, name)
             if s.name == name:
                 self.curr_sample = s
 
