@@ -3,7 +3,7 @@ from tkinter import messagebox, filedialog
 
 from os import getcwd
 
-from app.project.datastructure import create_project
+from app.project.project_dir import create_project
 
 from app.gui.dialog import BaseDialogWindow
 

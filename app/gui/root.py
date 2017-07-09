@@ -2,7 +2,7 @@ from tkinter import Tk, Frame, Menu, BOTH
 
 from app.gui.project_frame import ProjectFrame
 from app.project.helper import Helper
-from app.project.datastructure import Project
+from app.project.project_dir import ProjectDirectory
 
 
 class ApplicationWindow(Tk):
@@ -13,7 +13,7 @@ class ApplicationWindow(Tk):
         self.title("RSGrapher")
         self.geometry(geometry)
 #        self.iconbitmap("res/window_icon.ico")
-        p = Project()
+        p = ProjectDirectory()
         self.helper = Helper(p, ProjectFrame(self, p))
         self.bind_menu_actions()
 
