@@ -2,14 +2,8 @@ from app.gui.dialog import ask_project_dir
 from app.gui.dialog.newproject import NewProjectPrompt
 from app.gui.dialog.newsample import NewSampleWindow
 from app.util.asc_data import ASCData
-from app.project.project_dir import create_project, proj_folder_name
-from tkinter import filedialog
-
-from os import getcwd
 
 from tkinter import messagebox
-from tkinter import *
-
 
 
 class Helper:
@@ -21,15 +15,13 @@ class Helper:
 
     def new(self):
         """Create a new project"""
-        try:v
+        try:
             data = NewProjectPrompt(self.frame.parent).run()
         except Exception as e:
             messagebox.showwarning("Internal Error", "Something bad happened.")
         else:
             if not data['cancelled']:
-                create_project(data['dir'], data['title'], data['num'], data['description'])
-                self.project.open(data['dir'] + "/" + proj_folder_name(data['title'],data['num']))
-                self.frame.refresh()
+                pass
 
     def open(self, dir=None):
         """Try to open an existing project"""

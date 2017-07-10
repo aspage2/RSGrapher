@@ -1,8 +1,4 @@
-from tkinter import Tk, Frame, Menu, BOTH
-
-from app.gui.project_frame import ProjectFrame
-from app.project.helper import Helper
-from app.project.project_dir import ProjectDirectory
+from tkinter import *
 
 
 class ApplicationWindow(Tk):
@@ -12,13 +8,8 @@ class ApplicationWindow(Tk):
         super().__init__()
         self.title("RSGrapher")
         self.geometry(geometry)
-#        self.iconbitmap("res/window_icon.ico")
-        p = ProjectDirectory()
-        self.helper = Helper(p, ProjectFrame(self, p))
+        self.iconbitmap("res/window_icon.ico")
         self.bind_menu_actions()
-
-    def __del__(self):
-        ApplicationWindow.running = False
 
     def bind_menu_actions(self):
         """Create menu bar"""

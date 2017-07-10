@@ -1,9 +1,10 @@
 import sys
 import argparse
 
-from app.main import application_debug, application_start
+from app.gui.root import ApplicationWindow
 
 assert sys.version_info >= (3, 5)
 
 if __name__ == "__main__":
-    application_start()
+    tk = ApplicationWindow("1080x720")
+    tk.run()

@@ -24,18 +24,9 @@ class ProjectDirectory:
             self.kwinfo[key] = value
         self.kwinfo_modified = True
 
-    def add_new_sample(self, name, area, data):
-        """Add a sample to the project"""
-        self.dirtysamples.append(Sample(name, area, data, self.sample_dir()))
-
-    def mark_sample_as_dirty(self, sample):
-        """Mark a sample as modified"""
-        if sample in self.samples:
-            self.dirtysamples.append(sample)
-
     def up_to_date(self):
         """All changes have been written back to the filesystem"""
-        return len(self.dirtysamples) == 0
+        return True
 
     def as_dict(self):
         """Serializable representation of a project"""
@@ -48,14 +39,10 @@ class ProjectDirectory:
     def write(self):
         """Write changes to """
         # resolve any new samples
-        while len(self.dirtysamples) > 0:
-            s = self.dirtysamples.pop()
-            s.write_data()
-            if s not in self.samples:
-                self.samples.append(s)
+
         with open(self.directory+"/project.json",'w') as fh:
             json.dump(self.as_dict(), fh)
-            kwinfo_modified = False
+            self.kwinfo_modified = False
 
     @staticmethod
     def open(directory):
