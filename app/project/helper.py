@@ -1,9 +1,12 @@
-from app.gui.dialog import ask_project_dir
+from app.gui.dialog import ask_project_dir, ask_save
 from app.gui.dialog.newproject import NewProjectPrompt
 from app.gui.dialog.newsample import NewSampleWindow
+from app.project.sample import Sample
 from app.util.asc_data import ASCData
 
 from tkinter import messagebox
+
+from app.project.project_dir import ProjectDirectory
 
 
 class Helper:
@@ -11,29 +14,43 @@ class Helper:
 
     def __init__(self, project, frame):
         self.project = project
-        self.frame = frame
+        self.mainframe = frame
 
     def new(self):
         """Create a new project"""
         try:
-            data = NewProjectPrompt(self.frame.parent).run()
+            data = NewProjectPrompt(self.mainframe.parent).run()
         except Exception as e:
             messagebox.showwarning("Internal Error", "Something bad happened.")
         else:
             if not data['cancelled']:
-                pass
+                self.project = ProjectDirectory.create_project(data['title'], data['num'], data['dir'])
+                self.mainframe.set_project(self.project)
 
     def open(self, dir=None):
         """Try to open an existing project"""
+        self.try_save_open_project()
         if dir is None:
             dir = ask_project_dir()
-        self.project.open(dir)
-        self.frame.refresh()
+        try:
+            self.project = ProjectDirectory.open(dir)
+        except FileNotFoundError as e:
+            print(e.filename.split("/")[-1])
+            if e.filename.split("/")[-1] == "project.json":
+                messagebox.showwarning(title="Open Project", message=dir+" is not a valid project folder: Could not find 'project.json'")
+        else:
+            self.mainframe.set_project(self.project)
+
+    def save(self):
+        """Save the current project"""
+        if not self.project.up_to_date():
+            self.project.write()
 
     def close(self):
         """Close the current project"""
-        self.project.close()
-        self.frame.refresh()
+        self.try_save_open_project()
+        self.project = None
+        self.mainframe.set_project(None)
 
     def export(self):
         """Export the graphs of the project as PNG's"""
@@ -41,11 +58,28 @@ class Helper:
 
     def add_sample(self):
         """Add a sample to the open project"""
-        data = NewSampleWindow(self.frame.parent).run()
-        self.project.add_sample(ASCData(data['data_dir']),data['name'],data['diam'])
-        self.project.set_sample(data['name'])
-        self.frame.refresh()
+        if not self.project:
+            messagebox.showinfo(title="Add Sample", message="There is no open project")
+            return
+        try:
+            data = NewSampleWindow(self.mainframe.parent).run()
+        except Exception as e:
+            messagebox.showwarning("Internal Error", "Something bad happened.")
+            print(e)
+        else:
+            if not data['cancelled']:
+                self.project.samples.append(
+                    Sample(data['name'], data['diam'], ASCData.open(data['data_dir']), self.project.sample_dir()))
 
     def noimp(self):
         """Not implemented"""
         print("This function is not yet implemented")
+
+    def try_save_open_project(self):
+        """Ask to save an open project that has been modified"""
+        if self.project is not None and not self.project.up_to_date():
+            resp = ask_save()
+            if resp is None:
+                return
+            elif resp:
+                self.save()

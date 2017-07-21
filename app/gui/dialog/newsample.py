@@ -5,6 +5,12 @@ from tkinter import messagebox, filedialog
 
 from os import getcwd
 
+"""NEWSAMPLEWINDOW RETURN STRUCT
+
+cancelled: if the user pressed 'x' or 'cancel'
+name: sample name
+diam: sample diameter
+data_dir: location of sample ASC data"""
 
 class NewSampleWindow(BaseDialogWindow):
     """A dialog for adding the information for a new sample"""

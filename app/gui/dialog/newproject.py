@@ -3,10 +3,18 @@ from tkinter import messagebox, filedialog
 
 from os import getcwd
 
-from app.project.project_dir import create_project
-
 from app.gui.dialog import BaseDialogWindow
 
+"""
+NEWPROJECTPROMPT Return struct:
+
+cancelled: if the user exited the dialog with "x" or "cancel"
+
+title: The project title
+num: The project number
+dir: The project parent directory
+description: the project description
+"""
 
 class NewProjectPrompt(BaseDialogWindow):
     """A prompt window for creating a new project"""

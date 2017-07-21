@@ -1,0 +1,2 @@
+
+PANEL_BG = "#cecece"

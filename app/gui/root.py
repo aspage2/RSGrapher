@@ -1,15 +1,18 @@
-from tkinter import *
+from tkinter import Menu, BOTH, Tk
 
+from app.gui.main_frame import MainFrame
+from app.project.helper import Helper
 
 class ApplicationWindow(Tk):
     """A running instance of the RSGrapher application. Only one instance may be run at a time"""
 
-    def __init__(self, geometry):
+    def __init__(self):
         super().__init__()
         self.title("RSGrapher")
-        self.geometry(geometry)
-        self.iconbitmap("res/window_icon.ico")
+        self.main = MainFrame(self)
+        self.helper = Helper(None,self.main)
         self.bind_menu_actions()
+        self.main.pack(fill=BOTH)
 
     def bind_menu_actions(self):
         """Create menu bar"""

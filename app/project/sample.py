@@ -9,7 +9,7 @@ class Sample:
         self.area = area
         self.data = ascdata
         self.directory = directory
-        self.dirty = False
+        self.dirty = True
 
         self.test_st = None
         self.test_end = None
@@ -46,4 +46,5 @@ class Sample:
         ret = Sample(info['name'],info['area'],data,info['asc_dir'])
         ret.set_elastic_interval(*info['elastic_interval'])
         ret.set_test_interval(*info['test_interval'])
+        ret.dirty = False
         return ret

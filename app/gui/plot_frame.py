@@ -1,37 +1,33 @@
-
 from tkinter import *
 
-import matplotlib
-matplotlib.use("TkAgg")
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+from app.gui import PANEL_BG
+from app.gui.plot_canvas import PlotCanvas
+
 from matplotlib.figure import Figure
 
+from app.util.plotter import EmptyPlotter
+
+
 class PlotFrame(Frame):
-    """A Frame to hold the matplotlib canvas and a small control panel"""
+    """A frame to house the plot and plot controllers"""
+
     def __init__(self, parent):
-        super().__init__(parent)
-        self.sample = None
+        super().__init__(parent, padx=10)
+        self.canvas = PlotCanvas(Figure(figsize=(5, 5), dpi=100), self)
+        self.controlframe = Frame(self, relief=SUNKEN, border=2, bg=PANEL_BG)
         self.plotter = None
-
-        f = Figure(figsize=(5,5), dpi=100)
-        self.axes = f.add_subplot(111)
-        self.axes.title("RSG")
-        self.datacurve = self.axes.plot([],[])[0]
-        self.canvas = FigureCanvasTkAgg(f, self)
-        self.canvas.show()
-
-        self.control_panel_frame = Frame(self, bd=1)
+        self.set_plotter(None)
         self.build()
 
     def build(self):
-        """Build the GUI"""
-        self.canvas.get_tk_widget().pack()
-
+        self.canvas.pack()
+        self.controlframe.pack(fill=X)
 
     def set_plotter(self, plotter):
-        """Change the plot style and controls with a new plotter instance"""
-        self.plotter = plotter
-
-    def set_sample(self, sample):
-        """Change the sample data"""
-        self.sample = sample
+        if self.plotter is not None:
+            self.plotter.cleanup()
+        if plotter is None:
+            self.plotter = EmptyPlotter(self)
+        else:
+            self.plotter = plotter
+        self.plotter.run()

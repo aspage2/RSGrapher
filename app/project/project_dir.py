@@ -26,7 +26,10 @@ class ProjectDirectory:
 
     def up_to_date(self):
         """All changes have been written back to the filesystem"""
-        return True
+        for s in self.samples:
+            if s.dirty:
+                return False
+        return not self.kwinfo_modified
 
     def as_dict(self):
         """Serializable representation of a project"""
@@ -37,9 +40,11 @@ class ProjectDirectory:
                "samples":[s.as_dict() for s in self.samples]}
 
     def write(self):
-        """Write changes to """
+        """Write changes to this project's directory"""
         # resolve any new samples
-
+        for s in self.samples:
+            if s.dirty:
+                s.write_data()
         with open(self.directory+"/project.json",'w') as fh:
             json.dump(self.as_dict(), fh)
             self.kwinfo_modified = False
