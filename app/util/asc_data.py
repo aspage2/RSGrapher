@@ -16,7 +16,7 @@ class ASCData:
     def write(self, filename):
         with open(filename, 'w') as fh:
             for i in range(self.len):
-                fh.write("{0}\t{1}\t{2}\n".format(self.time[i],self.load[i],self.disp[i]))
+                fh.write("{0}\t{1}\t{2}\n".format(self.time[i],self.disp[i],self.load[i]))
 
     @staticmethod
     def open(filename, header=True):

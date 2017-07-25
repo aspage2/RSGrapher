@@ -11,6 +11,8 @@ class PlotCanvas(FigureCanvasTkAgg):
         self.figure = fig
         fig.set_facecolor("#f0f0f0")
         self.axes = fig.add_subplot(111)
+        self.xmax = 0.0
+        self.ymax = 0.0
         self.figure.tight_layout()
         self.axes.set_title("RSG")
         self.datacurve = self.axes.plot([],[])[0]
@@ -30,9 +32,12 @@ class PlotCanvas(FigureCanvasTkAgg):
     def set_data(self, xdata, ydata):
         """Set the stresscurve data"""
         if len(xdata) != 0 and len(ydata) != 0:
-            self.axes.set_xlim((0,1.3*max(xdata)))
-            self.axes.set_ylim((0,1.3*max(ydata)))
+            self.xmax = 1.3*max(xdata)
+            self.ymax = 1.3*max(ydata)
+            self.axes.set_xlim((0,self.xmax))
+            self.axes.set_ylim((0,self.ymax))
         self.datacurve.set_data(xdata,ydata)
+        self.figure.tight_layout()
 
     def plot(self, xdata, ydata, **kwargs):
         """For plotting extra information"""
@@ -51,12 +56,12 @@ class PlotCanvas(FigureCanvasTkAgg):
 
     def bind_event(self, event, func):
         """Add event handler"""
-        self.cids.append(self.figure.mpl_connect(event,func))
+        self.cids.append(self.mpl_connect(event,func))
 
     def clear_events(self):
         """Remove all event handlers"""
         while len(self.cids) != 0:
-            self.figure.mpl_disconnect(self.cids.pop())
+            self.mpl_disconnect(self.cids.pop())
 
     def pack(self, **kwargs):
         """tk-style pack method"""

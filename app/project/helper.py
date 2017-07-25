@@ -4,7 +4,7 @@ from app.gui.dialog.newsample import NewSampleWindow
 from app.project.sample import Sample
 from app.util.asc_data import ASCData
 
-from tkinter import messagebox
+from tkinter import messagebox, END
 
 from app.project.project_dir import ProjectDirectory
 
@@ -32,23 +32,29 @@ class Helper:
         self.try_save_open_project()
         if dir is None:
             dir = ask_project_dir()
+            if dir == "":
+                return
         try:
             self.project = ProjectDirectory.open(dir)
         except FileNotFoundError as e:
             print(e.filename.split("/")[-1])
             if e.filename.split("/")[-1] == "project.json":
-                messagebox.showwarning(title="Open Project", message=dir+" is not a valid project folder: Could not find 'project.json'")
+                messagebox.showwarning(title="Open Project",
+                                       message=dir + " is not a valid project folder: Could not find 'project.json'")
         else:
             self.mainframe.set_project(self.project)
 
     def save(self):
         """Save the current project"""
+        if self.project is None:
+            return
         if not self.project.up_to_date():
             self.project.write()
 
     def close(self):
         """Close the current project"""
-        self.try_save_open_project()
+        if self.try_save_open_project():
+            return
         self.project = None
         self.mainframe.set_project(None)
 
@@ -68,18 +74,33 @@ class Helper:
             print(e)
         else:
             if not data['cancelled']:
-                self.project.samples.append(
-                    Sample(data['name'], data['diam'], ASCData.open(data['data_dir']), self.project.sample_dir()))
+                sample = Sample(data['name'], data['diam'], data['leng'], ASCData.open(data['data_dir']),
+                                self.project.sample_dir())
+                self.project.samples.append(sample)
+                self.mainframe.samplelist.insert(END, data['name'])
+
+    def delete_sample(self):
+        if not self.project:
+            messagebox.showinfo(title="Delete Sample", message="There is no open project.")
+        if self.mainframe.currsample is None:
+            messagebox.showinfo(title="Delete Sample", message="There is no selected sample.")
+        else:
+            if messagebox.askyesno("Delete Sample", message="Delete sample {}?".format(self.mainframe.currsample.name)):
+                self.project.remove_sample(self.mainframe.currsample)
+                self.mainframe.remove_sample(self.mainframe.currsample)
 
     def noimp(self):
         """Not implemented"""
         print("This function is not yet implemented")
 
     def try_save_open_project(self):
-        """Ask to save an open project that has been modified"""
+        """Ask to save an open project that has been modified.
+        return true if user pressed cancel, false otherwise"""
         if self.project is not None and not self.project.up_to_date():
             resp = ask_save()
             if resp is None:
-                return
+                return True
             elif resp:
                 self.save()
+                return False
+        return False

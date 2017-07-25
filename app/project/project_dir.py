@@ -13,6 +13,7 @@ class ProjectDirectory:
         self.kwinfo = {}
         self.kwinfo_modified = False
         self.samples = []
+        self.sample_deleted = False
 
     def sample_dir(self):
         """Helper method returning the sample directory for this project"""
@@ -29,7 +30,7 @@ class ProjectDirectory:
         for s in self.samples:
             if s.dirty:
                 return False
-        return not self.kwinfo_modified
+        return not self.kwinfo_modified and not self.sample_deleted
 
     def as_dict(self):
         """Serializable representation of a project"""
@@ -38,6 +39,13 @@ class ProjectDirectory:
                "directory":self.directory,
                "kwinfo":self.kwinfo,
                "samples":[s.as_dict() for s in self.samples]}
+
+    def remove_sample(self, sample):
+        """Remove a sample from the project"""
+        if sample in self.samples:
+            self.samples.remove(sample)
+            os.remove(self.sample_dir()+sample.name+".dat")
+            self.sample_deleted = True
 
     def write(self):
         """Write changes to this project's directory"""
@@ -48,6 +56,7 @@ class ProjectDirectory:
         with open(self.directory+"/project.json",'w') as fh:
             json.dump(self.as_dict(), fh)
             self.kwinfo_modified = False
+        self.sample_deleted = False
 
     @staticmethod
     def open(directory):
@@ -56,8 +65,11 @@ class ProjectDirectory:
             data = json.load(fh)
             ret = ProjectDirectory(data['title'],data['number'],data['directory'])
             ret.update_kwinfo(**data['kwinfo'])
-            for s in data['samples']:
-                ret.samples.append(Sample.from_dict(**s))
+            ret.kwinfo_modified = False
+            for sinfo in data['samples']:
+                sample = Sample.from_dict(**sinfo)
+                sample.set_clean()
+                ret.samples.append(sample)
         return ret
 
     @staticmethod
