@@ -13,6 +13,11 @@ class ASCData:
     def __len__(self):
         return self.len
 
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            return (self.time[key.start:key.stop], self.disp[key.start:key.stop], self.load[key.start:key.stop])
+        return (self.time[key], self.disp[key], self.load[key])
+
     def write(self, filename):
         with open(filename, 'w') as fh:
             for i in range(self.len):

@@ -36,4 +36,4 @@ class PlotFrame(Frame):
         self.descrip.pack()
         self.canvas.pack()
         self.nav.pack()
-        self.controlframe.pack(fill=X)
+        self.controlframe.pack(fill=X, ipadx=10, ipady=10)

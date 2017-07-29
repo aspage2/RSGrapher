@@ -20,7 +20,7 @@ class Helper:
         """Create a new project"""
         try:
             data = NewProjectPrompt(self.mainframe.parent).run()
-        except Exception as e:
+        except:
             messagebox.showwarning("Internal Error", "Something bad happened.")
         else:
             if not data['cancelled']:
