@@ -29,7 +29,7 @@ class MainFrame(Frame):
         super().__init__(parent, padx=10, pady=10)
         self.project = project
         self.parent = parent
-        self.currsample = None
+        self.currsample = "Hello"
 
         self.controlframe = Frame(self, relief=SUNKEN, border=2, bg=PANEL_BG)
         self.samplelist = Listbox(self.controlframe, width=30)

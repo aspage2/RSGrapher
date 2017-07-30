@@ -13,12 +13,22 @@ class Sample:
         self.directory = directory
         self.dirty = True
 
-        self.test_interval = [None, None]
+        self.test_interval = [0, len(self.data) - 1]
         self.elastic_interval = [None, None]
 
-    def set_test_interval(self, int_st, int_end):
-        self.test_interval = [nearest_neighbor(int_st, self.data.time) if int_st is not None else None,
-                              nearest_neighbor(int_end, self.data.time) if int_end is not None else None]
+    def set_test_interval(self, *interval):
+        """Set the test interval (index) via time values"""
+        if len(interval) != 2:
+            raise ValueError("Arguments do not represent a time interval.")
+        t0, t1 = interval
+        if t0 is None: t0 = self.data.time[self.test_interval[0]]
+        if t1 is None: t1 = self.data.time[self.test_interval[1]]
+        if t1 <= t0: # t0 must be before t1
+            return
+        # It is assumed that the time array is sorted
+        for i in range(2):
+            if interval[i] is not None:
+                self.test_interval[i] = nearest_neighbor(interval[i], self.data.time)
         self.dirty = True
 
     def get_test_interval(self):
@@ -37,18 +47,20 @@ class Sample:
     def as_dict(self):
         """Dictionary representation for serialization"""
         return {"name": self.name, "area": self.area, "length": self.length, "asc_dir": self.directory,
-                'test_interval': list(self.get_test_interval()), 'elastic_interval': list(self.elastic_interval)}
+                'test_interval': list(self.test_interval), 'elastic_interval': list(self.elastic_interval)}
 
     def write_data(self):
         """Write my ASC data to myname.dat in my given directory"""
         self.data.write(self.directory + self.name + ".dat")
+        self.dirty = False
 
     @staticmethod
     def from_dict(**info):
         """Create a sample instance from a dictionary representation"""
         data = ASCData.open(info['asc_dir'] + info['name'] + ".dat", header=False)
         ret = Sample(info['name'], info['area'], info['length'], data, info['asc_dir'])
-        ret.set_elastic_interval(*info['elastic_interval'])
-        ret.set_test_interval(*info['test_interval'])
+        if None not in info['test_interval']:
+            ret.test_interval = info['test_interval']
+        ret.elastic_interval = info['elastic_interval']
         ret.dirty = False
         return ret

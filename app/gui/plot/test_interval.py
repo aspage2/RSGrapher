@@ -12,8 +12,7 @@ class TestIntervalPlot(PlotFrame):
         """Plot frame for defining the test interval of the given sample data"""
         super().__init__(parent, title="Load vs. Time", xlabel="Time (s)", ylabel="Load (lbs)")
         self.sample = None
-        self.interval = [0, 100]
-        self.interval_lines = [self.canvas.plot([self.interval[i]]*2, [0, self.canvas.ymax], color="k", linestyle="--") for i in range(2)]
+        self.interval_lines = [self.canvas.plot([], [], color="k", linestyle="--") for i in '  ']
 
         self.int_label = Label(self.controlframe, text="", bg="#cecece", font=("Arial", 12, "bold"))
         self.radiobuttons = []
@@ -26,7 +25,6 @@ class TestIntervalPlot(PlotFrame):
                             bg="#cecece"))
 
         self.canvas.bind_event("button_press_event", self.onmouseclick)
-
         self.control_panel_build()
 
     def onmouseclick(self, event):
@@ -37,34 +35,22 @@ class TestIntervalPlot(PlotFrame):
             return
         i = [None, None]
         i[self.changing] = event.xdata
-        self.set_interval(*i)
-        self.canvas.show()
+        self.sample.set_test_interval(*i)
+        self.interval_update()
 
     def set_sample(self, sample):
         """Set the sample of this plot frame."""
         super().set_sample(sample)
         self.sample = sample
         self.canvas.set_data(sample.data.time, sample.data.load)
+        self.interval_update()
 
-        self.set_interval(*sample.get_test_interval())
-
-    def set_interval(self, t0=None, t1=None):
-        if t0 is not None:
-            if (t1 is None and self.interval[1] < t0) or (t1 is not None and t1 < t0):
-                print("SETTING t0 > t1")
-                return
-            self.interval[0] = t0
-            self.interval_lines[0].set_data([t0,t0],[0,self.canvas.ymax])
-        if t1 is not None:
-            if (t0 is None and self.interval[0] > t1) or (t0 is not None and t1 < t0):
-                print("SETTING t0 > t1")
-                return
-            self.interval[1] = t1
-            self.interval_lines[1].set_data([t1,t1],[0,self.canvas.ymax])
-
+    def interval_update(self):
+        interval = self.sample.get_test_interval()
+        for i, t in enumerate(interval):
+            self.interval_lines[i].set_data([t, t], [0, self.canvas.ymax])
         self.canvas.show()
-        self.update_label()
-        self.sample.set_test_interval(*self.interval)
+        self.int_label.config(text="Start: {0:^8.2f}  |  End: {1:^8.2f}".format(*interval))
 
     def set_line_tracking(self, i):
         """Set the line to change the x value of"""
@@ -76,10 +62,6 @@ class TestIntervalPlot(PlotFrame):
             self.interval_lines[i].set_color('r')
         self.changing = i
         self.canvas.show()
-
-    def update_label(self):
-        """Write the test interval times on the GUI"""
-        self.int_label.config(text="Start: {0:^8.2f}  |  End: {1:^8.2f}".format(*self.interval))
 
     def control_panel_build(self):
         """Build the control panel"""

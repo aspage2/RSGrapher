@@ -41,6 +41,8 @@ class Helper:
             if e.filename.split("/")[-1] == "project.json":
                 messagebox.showwarning(title="Open Project",
                                        message=dir + " is not a valid project folder: Could not find 'project.json'")
+        except Exception as e:
+            print(e)
         else:
             self.mainframe.set_project(self.project)
 
@@ -78,6 +80,7 @@ class Helper:
                                 self.project.sample_dir())
                 self.project.samples.append(sample)
                 self.mainframe.samplelist.insert(END, data['name'])
+                self.mainframe.set_sample(sample)
 
     def delete_sample(self):
         if not self.project:

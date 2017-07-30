@@ -1,9 +1,10 @@
 def nearest_neighbor(x, data):
+    """Binary nearest_neighbor searching algorithm"""
     return nearest_neighbor_rec(x, data, 0, len(data) - 1)
 
 
 def nearest_neighbor_rec(x, data, lo, hi):
-    """Return the index of the nearest vale to x in the sorted data"""
+    """Return the index of the nearest vale to x in the sorted data on the interval"""
     if lo >= hi:
         return lo
     elif hi - lo == 1:
