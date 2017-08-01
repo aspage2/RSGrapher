@@ -5,22 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cf0eb20a-9975-403e-ba1a-713fba1035f9" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/gui/plot/elastic_interval.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/gui/plot/peak_load_frame.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/gui/plot/uts_frame.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/gui/plot/yield_load.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/gui/plot/yield_strength.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/util/auto_elastic.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/util/linear_reg.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/util/linear_reg.py" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/gui/main_frame.py" afterPath="$PROJECT_DIR$/app/gui/main_frame.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/gui/plot/plot_canvas.py" afterPath="$PROJECT_DIR$/app/gui/plot/plot_canvas.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/gui/plot/test_interval.py" afterPath="$PROJECT_DIR$/app/gui/plot/test_interval.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/gui/root.py" afterPath="$PROJECT_DIR$/app/gui/root.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/project/helper.py" afterPath="$PROJECT_DIR$/app/project/helper.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/project/sample.py" afterPath="$PROJECT_DIR$/app/project/sample.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testrun.py" afterPath="$PROJECT_DIR$/testrun.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/gui/plot/elastic_interval.py" afterPath="$PROJECT_DIR$/app/gui/plot/elastic_interval.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/util/auto_elastic.py" afterPath="$PROJECT_DIR$/app/util/auto_elastic.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -30,7 +18,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/RSGrapher$Test_Run.coverage" NAME="Test Run Coverage Results" MODIFIED="1501560723944" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/RSGrapher$Test_Run.coverage" NAME="Test Run Coverage Results" MODIFIED="1501562494846" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/RSGrapher$Something.coverage" NAME="Something Coverage Results" MODIFIED="1499048728226" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/RSGrapher$Full_Run.coverage" NAME="Full Run Coverage Results" MODIFIED="1501377425919" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/RSGrapher$Scratch.coverage" NAME="Scratch Coverage Results" MODIFIED="1501560342694" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -44,11 +32,33 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="search.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/util/search.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="391">
+              <caret line="23" column="26" lean-forward="false" selection-start-line="23" selection-start-column="26" selection-end-line="23" selection-end-column="26" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sample.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/project/sample.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="293">
+              <caret line="56" column="30" lean-forward="false" selection-start-line="56" selection-start-column="30" selection-end-line="56" selection-end-column="30" />
+              <folding>
+                <element signature="e#0#37#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="elastic_interval.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/gui/plot/elastic_interval.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="612">
-              <caret line="36" column="32" lean-forward="false" selection-start-line="36" selection-start-column="32" selection-end-line="36" selection-end-column="32" />
+            <state relative-caret-position="854">
+              <caret line="74" column="54" lean-forward="false" selection-start-line="74" selection-start-column="54" selection-end-line="74" selection-end-column="54" />
               <folding>
                 <element signature="e#0#45#0" expanded="true" />
               </folding>
@@ -69,10 +79,10 @@
       <file leaf-file-name="auto_elastic.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/util/auto_elastic.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="7" column="30" lean-forward="false" selection-start-line="7" selection-start-column="30" selection-end-line="7" selection-end-column="30" />
+            <state relative-caret-position="565">
+              <caret line="48" column="85" lean-forward="true" selection-start-line="48" selection-start-column="85" selection-end-line="48" selection-end-column="85" />
               <folding>
-                <element signature="e#0#49#0" expanded="true" />
+                <element signature="e#0#18#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -168,16 +178,16 @@
         <option value="$PROJECT_DIR$/app/gui/plot/peak_load_frame.py" />
         <option value="$PROJECT_DIR$/app.py" />
         <option value="$PROJECT_DIR$/requirements.txt" />
-        <option value="$PROJECT_DIR$/app/util/linear_reg.py" />
-        <option value="$PROJECT_DIR$/app/project/sample.py" />
         <option value="$PROJECT_DIR$/app/gui/root.py" />
         <option value="$PROJECT_DIR$/app/project/helper.py" />
-        <option value="$PROJECT_DIR$/app/gui/plot/elastic_interval.py" />
         <option value="$PROJECT_DIR$/app/gui/main_frame.py" />
         <option value="$PROJECT_DIR$/app/gui/plot/plot_canvas.py" />
         <option value="$PROJECT_DIR$/app/gui/plot/test_interval.py" />
         <option value="$PROJECT_DIR$/testrun.py" />
+        <option value="$PROJECT_DIR$/app/util/linear_reg.py" />
         <option value="$PROJECT_DIR$/app/util/auto_elastic.py" />
+        <option value="$PROJECT_DIR$/app/project/sample.py" />
+        <option value="$PROJECT_DIR$/app/gui/plot/elastic_interval.py" />
       </list>
     </option>
   </component>
@@ -699,7 +709,14 @@
       <option name="project" value="LOCAL" />
       <updated>1501378632296</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Elastic zone functionality (manual and automatic selection)">
+      <created>1501560801435</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1501560801435</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -776,11 +793,12 @@
     <MESSAGE value="Removed plotter idea; delegated plotting to separate plot frames. Implemented test interval plot tool" />
     <MESSAGE value="Stuff" />
     <MESSAGE value="Refactoring to make selecting the test region easier" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactoring to make selecting the test region easier" />
+    <MESSAGE value="Elastic zone functionality (manual and automatic selection)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Elastic zone functionality (manual and automatic selection)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="17" />
+      <option name="time" value="18" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -926,14 +944,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/util/search.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="50" lean-forward="false" selection-start-line="1" selection-start-column="50" selection-end-line="1" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/gui/plot/yield_strength.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
@@ -982,16 +992,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/project/sample.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="582">
-          <caret line="97" column="0" lean-forward="true" selection-start-line="97" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/gui/root.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="361">
@@ -1010,16 +1010,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/util/linear_reg.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="24" lean-forward="true" selection-start-line="6" selection-start-column="24" selection-end-line="6" selection-end-column="24" />
-          <folding>
-            <element signature="e#1#19#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/matplotlib/backends/backend_tkagg.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="236">
@@ -1033,16 +1023,6 @@
         <state relative-caret-position="313">
           <caret line="2836" column="27" lean-forward="false" selection-start-line="2836" selection-start-column="20" selection-end-line="2836" selection-end-column="27" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/gui/plot/elastic_interval.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="36" column="32" lean-forward="false" selection-start-line="36" selection-start-column="32" selection-end-line="36" selection-end-column="32" />
-          <folding>
-            <element signature="e#0#45#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1080,6 +1060,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/util/linear_reg.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/gui/plot/test_interval.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
@@ -1088,12 +1076,40 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/util/search.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="23" column="26" lean-forward="false" selection-start-line="23" selection-start-column="26" selection-end-line="23" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/project/sample.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="293">
+          <caret line="56" column="30" lean-forward="false" selection-start-line="56" selection-start-column="30" selection-end-line="56" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/gui/plot/elastic_interval.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="854">
+          <caret line="74" column="54" lean-forward="false" selection-start-line="74" selection-start-column="54" selection-end-line="74" selection-end-column="54" />
+          <folding>
+            <element signature="e#0#45#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/util/auto_elastic.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="30" lean-forward="false" selection-start-line="7" selection-start-column="30" selection-end-line="7" selection-end-column="30" />
+        <state relative-caret-position="565">
+          <caret line="48" column="85" lean-forward="true" selection-start-line="48" selection-start-column="85" selection-end-line="48" selection-end-column="85" />
           <folding>
-            <element signature="e#0#49#0" expanded="true" />
+            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>

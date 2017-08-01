@@ -1,5 +1,5 @@
 from app.gui.plot.plot_frame import PlotFrame
-from app.util.auto_elastic import getAutoElasticZone, get_yield_line
+from app.util.auto_elastic import suggested_elastic_zone, get_yield_line
 
 from tkinter import *
 
@@ -31,7 +31,7 @@ class ElasticIntervalFrame(PlotFrame):
         self.origin = [0,0]
 
     def autoelasticzone(self):
-        getAutoElasticZone(self.sample)
+        self.sample.set_elastic_interval(*suggested_elastic_zone(*self.sample.test_interval_data()[1:]))
         self.update_interval()
 
     def set_sample(self, sample):
@@ -72,7 +72,8 @@ class ElasticIntervalFrame(PlotFrame):
         elastic_interval = self.sample.get_elastic_interval()
         for i, e in enumerate(elastic_interval):
             self.interval_lines[i].set_data([0, 100], [e, e])
-        m,b,r = get_yield_line(self.sample)
+        disp, load = self.sample.elastic_interval_data()[1:]
+        m,b,r = get_yield_line(disp, load, self.sample.length)
         disp = self.sample.test_interval_data()[1]
         self.yield_line.set_data(disp, m*disp + b)
         self.canvas.show()

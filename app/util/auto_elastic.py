@@ -1,6 +1,7 @@
-from app.util.linear_reg import linear_regression
 import numpy as np
+import numpy.linalg as la
 
+from app.util.search import lin_nearest_neighbor
 
 class ElasticZone():
     def __init__(self, min_lbs, max_lbs):
@@ -8,42 +9,41 @@ class ElasticZone():
         self.max_lbs = max_lbs
 
 
-def get_yield_line(sample):
-    time, disp, load = sample.elastic_interval_data()
-    line, residual = linear_regression(disp, load)[:2]
-    m, b = line
-    r = residual[0]
-    b_offset = m * 0.2 / 100.0 * sample.length
+def linear_regression(x,y):
+    """Basic least-squares linear regression"""
+    A = np.vstack([x,np.ones(x.shape)]).T
+    ret = la.lstsq(A, y)
+    m, b = ret[0]
+    return m,b,ret[1][0]
+
+def get_yield_line(disp, load, length):
+    m,b,r = linear_regression(disp, load)
+    b_offset = m * 0.2 / 100.0 * length
     return m, b - b_offset, r
 
+def suggested_elastic_zone(disp, load):
+    """Brute force algorithm for finding a good fitting elastic zone."""
+    k_elastic = 0.3
+    max_load = np.amax(load)
+    n_steps = 100
 
-def getAutoElasticZone(sample):
-    kElastic = 0.3  # // fraction of the max load.  this is dist between horiz lines.
-    time, disp, load_lbs = sample.test_interval_data()
-    MaxLoad = np.amax(load_lbs)
-    Nsteps = 100
-
-    #     // slide the horizontal lines, spaced at deltaHoriz, starting with lower line
-    #     // down at 5% of max load, until the upper line hits 95% of max load.
-    start_elastic_zone = ElasticZone(MaxLoad * 0.05, MaxLoad * (0.05 + kElastic))
-    highest_to_go = 0.95 * MaxLoad
-    horiz_inc = (highest_to_go - start_elastic_zone.max_lbs) / Nsteps
+    # slide the horizontal lines, spaced at deltaHoriz, starting with lower line
+    # down at 5% of max load, until the upper line hits 95% of max load.
+    start_zone = [max_load*0.05, max_load*(0.05+k_elastic)]
+    zone = list(start_zone)
+    highest_to_go = 0.95 * max_load
+    horiz_inc = (highest_to_go - zone[1]) / n_steps
     min_error = None
     iOptimum = 0
-    m_opt = 0
-    b_opt = 0
 
-    for iStep in range(Nsteps):
-        sample.set_elastic_interval(start_elastic_zone.min_lbs + iStep * horiz_inc,
-                                    start_elastic_zone.max_lbs + iStep * horiz_inc)
-        m, b, r = get_yield_line(sample)
+    for iStep in range(n_steps):
+        zone[0] += horiz_inc
+        zone[1] += horiz_inc
+        i0 = lin_nearest_neighbor(zone[0], load)
+        i1 = lin_nearest_neighbor(zone[1], load)
+        m, b, r = linear_regression(disp[i0:i1],load[i0:i1])
         if min_error is None or r < min_error:
             min_error = r
             iOptimum = iStep
-            m_opt = m
-            b_opt = b
 
-    sample.set_elastic_interval(start_elastic_zone.min_lbs + iOptimum * horiz_inc,
-                                start_elastic_zone.max_lbs + iOptimum * horiz_inc)
-
-    return m_opt, b_opt
+    return start_zone[0] + iOptimum * horiz_inc, start_zone[1] + iOptimum * horiz_inc
