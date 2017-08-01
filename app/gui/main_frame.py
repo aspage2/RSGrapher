@@ -3,16 +3,21 @@ from tkinter import messagebox
 import logging
 
 from app.gui import PANEL_BG
+from app.gui.plot.elastic_interval import ElasticIntervalFrame
 from app.gui.plot.empty_plot_frame import EmptyPlotFrame
+from app.gui.plot.peak_load_frame import PeakLoadFrame
 from app.gui.plot.raw_plot_frame import RawPlotFrame
-from app.gui.plot.test_interval import TestIntervalPlot
+from app.gui.plot.test_interval import TestIntervalFrame
+from app.gui.plot.uts_frame import UTSFrame
+from app.gui.plot.yield_load import YieldLoadFrame
+from app.gui.plot.yield_strength import YieldStrengthFrame
 
 RADIO_BUTTON_STUFF = (("Test Interval", 1, lambda m: lambda: m.set_plot_frame(1)),
-                      ("Ultimate Tensile Strength", 2, lambda m: lambda: m.set_plot_frame(2)),
-                      ("Yield Strength", 3, lambda m: lambda: m.set_plot_frame(3)),
-                      ("Yield Load", 4, lambda m: lambda: m.set_plot_frame(4)),
-                      ("Peak Load", 5, lambda m: lambda: m.set_plot_frame(5)))
-
+                      ("Elastic Interval", 2, lambda m: lambda: m.set_plot_frame(2)),
+                      ("Load vs. Displacement", 3, lambda m: lambda: m.set_plot_frame(3)),
+                      ("Stress vs. Strain (UTS)", 4, lambda m: lambda: m.set_plot_frame(4)),
+                      ("Stress vs. Strain (Yield)", 5, lambda m: lambda: m.set_plot_frame(5)),
+                      ("Load vs. Strain", 6, lambda m: lambda: m.set_plot_frame(6)))
 
 
 class MainFrame(Frame):
@@ -25,7 +30,7 @@ class MainFrame(Frame):
     FRAME_PL = 5
     FRAME_EMPTY = 0
 
-    def __init__(self, parent, project = None):
+    def __init__(self, parent, project=None):
         super().__init__(parent, padx=10, pady=10)
         self.project = project
         self.parent = parent
@@ -52,9 +57,16 @@ class MainFrame(Frame):
         Label(self.controlframe, text="Samples", bg=PANEL_BG).pack(anchor=N)
         self.samplelist.pack(anchor=N)
         Button(self.controlframe, text="Set Sample", command=self.setsampleclick, width=30).pack(anchor=N)
-        Label(self.controlframe, text="Plot Types", bg=PANEL_BG).pack(anchor=N)
-
-        for name, num, func in RADIO_BUTTON_STUFF:
+        Label(self.controlframe, text="Tools", bg=PANEL_BG, font=("Helvetica", 12, "bold")).pack(anchor=N)
+        for i in range(2):
+            name, num, func = RADIO_BUTTON_STUFF[i]
+            r = Radiobutton(self.controlframe, state=DISABLED, variable=self.plotvar, value=num,
+                            command=func(self), text=name, bg=PANEL_BG)
+            r.pack(anchor=N + W)
+            self.radiobuttons.append(r)
+        Label(self.controlframe, text="Plot Types", bg=PANEL_BG, font=("Helvetica", 12, "bold")).pack(anchor=N)
+        for i in range(2, 6):
+            name, num, func = RADIO_BUTTON_STUFF[i]
             r = Radiobutton(self.controlframe, state=DISABLED, variable=self.plotvar, value=num,
                             command=func(self), text=name, bg=PANEL_BG)
             r.pack(anchor=N + W)
@@ -73,17 +85,19 @@ class MainFrame(Frame):
                     self.set_sample(s)
                     return
 
-
     def init_plot_frames(self):
         """Create plot frames for each of the analysis tools"""
         self.plotframes.append(EmptyPlotFrame(self))
-        self.plotframes.append(TestIntervalPlot(self))
-        for i in range(4):
-            self.plotframes.append(RawPlotFrame(self))
+        self.plotframes.append(TestIntervalFrame(self))
+        self.plotframes.append(ElasticIntervalFrame(self))
+        self.plotframes.append(PeakLoadFrame(self))
+        self.plotframes.append(UTSFrame(self))
+        self.plotframes.append(YieldStrengthFrame(self))
+        self.plotframes.append(YieldLoadFrame(self))
         self.plotframes.append(EmptyPlotFrame(self))
 
     def set_plot_frame(self, frameind):
-        if frameind not in range(6):
+        if frameind not in range(len(RADIO_BUTTON_STUFF)+1):
             raise ValueError("Attempt to select an invalid plotting number")
 
         if self.currframe is not None:
@@ -102,14 +116,14 @@ class MainFrame(Frame):
         self.project = project
         self.samplelist.delete(0, END)
 
-        if project: # Given a project to fill the app with
+        if project:  # Given a project to fill the app with
             for s in project.samples:
-                self.samplelist.insert(END, s.name) # Append sample names to the sample list
-            if len(project.samples) != 0: # Display the first sample with the first plot mechanic
+                self.samplelist.insert(END, s.name)  # Append sample names to the sample list
+            if len(project.samples) != 0:  # Display the first sample with the first plot mechanic
                 self.set_sample(project.samples[0])
             else:
                 self.set_sample(None)
-        else: # making project "None" means displaying the closed project screen
+        else:  # making project "None" means displaying the closed project screen
             self.set_sample(None)
 
     def remove_sample(self, sample):
@@ -118,8 +132,8 @@ class MainFrame(Frame):
             logging.warning("Attempt to remove sample nil from project")
             return
         # Remove name from list
-        names = self.samplelist.get(0,END)
-        for i,name in enumerate(names):
+        names = self.samplelist.get(0, END)
+        for i, name in enumerate(names):
             if name == sample.name:
                 self.samplelist.delete(i)
         if self.currsample is sample:

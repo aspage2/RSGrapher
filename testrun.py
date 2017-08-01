@@ -1,12 +1,9 @@
-import random
+import matplotlib.pyplot as plt
 
-from app.util.search import lin_nearest_neighbor
+x = [1,2,3,4,5,6]
+y = [3,4,5,6,7,8]
 
-vals = sorted([random.random()*1000 for i in range(1000)])
+plt.plot(x[1:], y[1:], 'ro')
+plt.plot(x[0], y[0], 'g*')
 
-ind = lin_nearest_neighbor(float(input("Choose: ")), vals)
-
-print("BEST MATCH: ",ind, vals[ind])
-
-for x in range(ind-5 if  ind-5 >= 0 else 0, ind+5 if ind+5 < len(vals) else  len(vals)-1):
-    print(vals[x])
+plt.show()

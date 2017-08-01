@@ -1,5 +1,5 @@
 from app.util.asc_data import ASCData
-from app.util.search import nearest_neighbor
+from app.util.search import nearest_neighbor, lin_nearest_neighbor
 
 
 class Sample:
@@ -14,7 +14,7 @@ class Sample:
         self.dirty = True
 
         self.test_interval = [0, len(self.data) - 1]
-        self.elastic_interval = [None, None]
+        self.elastic_interval = list(self.test_interval)
 
     def set_test_interval(self, *interval):
         """Set the test interval (index) via time values"""
@@ -31,15 +31,45 @@ class Sample:
                 self.test_interval[i] = nearest_neighbor(interval[i], self.data.time)
         self.dirty = True
 
+    def test_interval_data(self):
+        i0=self.test_interval[0]
+        i1=self.test_interval[1]
+        return (self.data.time[i0:i1],self.data.disp[i0:i1],self.data.load[i0:i1])
+
+    def elastic_interval_data(self):
+        i0 = self.elastic_interval[0]
+        i1 = self.elastic_interval[1]
+        return (self.data.time[i0:i1], self.data.disp[i0:i1], self.data.load[i0:i1])
+
+    def strain_data(self):
+        time, disp, load = self.test_interval_data()
+        return (disp-disp[0])/self.length * 100.0
+
+    def stress_data(self):
+        time, disp, load = self.test_interval_data()
+        return (load-load[0])/self.area
+
     def get_test_interval(self):
         return self.data.time[self.test_interval]
 
-    def set_elastic_interval(self, elastic_st, elastic_end):
-        self.elastic_interval = (elastic_st, elastic_end)
+    def set_elastic_interval(self, *interval):
+        """Set the test interval (index) via time values"""
+        if len(interval) != 2:
+            raise ValueError("Arguments do not represent a time interval.")
+        l0, l1 = interval
+        if l0 is None: l0 = self.data.load[self.test_interval[0]]
+        if l1 is None: l1 = self.data.load[self.test_interval[1]]
+        if l1 <= l0:  # t0 must be before l1
+            print("PROBLEM")
+            return
+        # It is assumed that the time array is sorted
+        for i in range(2):
+            if interval[i] is not None:
+                self.elastic_interval[i] = lin_nearest_neighbor(interval[i], self.data.load)
         self.dirty = True
 
     def get_elastic_interval(self):
-        return self.elastic_interval
+        return self.data.load[self.elastic_interval]
 
     def set_clean(self):
         self.dirty = False
@@ -61,6 +91,7 @@ class Sample:
         ret = Sample(info['name'], info['area'], info['length'], data, info['asc_dir'])
         if None not in info['test_interval']:
             ret.test_interval = info['test_interval']
-        ret.elastic_interval = info['elastic_interval']
+        if None not in info['elastic_interval']:
+            ret.elastic_interval = info['elastic_interval']
         ret.dirty = False
         return ret

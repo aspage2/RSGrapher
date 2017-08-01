@@ -44,6 +44,7 @@ class Helper:
         except Exception as e:
             print(e)
         else:
+            self.mainframe.parent.wm_title("RSG - "+self.project.directory)
             self.mainframe.set_project(self.project)
 
     def save(self):

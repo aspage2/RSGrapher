@@ -3,14 +3,14 @@ from tkinter import *
 from app.gui.plot.plot_frame import PlotFrame
 
 
-class TestIntervalPlot(PlotFrame):
+class TestIntervalFrame(PlotFrame):
     RADIO_BUTTON_INFO = (("Don't change test boundaries", 2, lambda p: lambda: p.set_line_tracking(None)),
                          ("Set T Start", 0, lambda p: lambda: p.set_line_tracking(0)),
                          ("Set T End", 1, lambda p: lambda: p.set_line_tracking(1)))
 
     def __init__(self, parent):
         """Plot frame for defining the test interval of the given sample data"""
-        super().__init__(parent, title="Load vs. Time", xlabel="Time (s)", ylabel="Load (lbs)")
+        super().__init__(parent, title="Displacement vs. Time", xlabel="Time (s)", ylabel="Displacement (in.)")
         self.sample = None
         self.interval_lines = [self.canvas.plot([], [], color="k", linestyle="--") for i in '  ']
 
@@ -29,9 +29,9 @@ class TestIntervalPlot(PlotFrame):
 
     def onmouseclick(self, event):
         """Mouse click event handler"""
-        if event.inaxes is None:
-            return
-        if self.changing is None:
+        if (event.inaxes is None or
+            self.changing is None or
+            self.nav._active == "ZOOM"):
             return
         i = [None, None]
         i[self.changing] = event.xdata
@@ -42,7 +42,7 @@ class TestIntervalPlot(PlotFrame):
         """Set the sample of this plot frame."""
         super().set_sample(sample)
         self.sample = sample
-        self.canvas.set_data(sample.data.time, sample.data.load)
+        self.canvas.set_data(sample.data.time, sample.data.disp)
         self.interval_update()
 
     def interval_update(self):

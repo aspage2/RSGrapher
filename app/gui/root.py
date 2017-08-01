@@ -1,5 +1,4 @@
-from tkinter import Menu, BOTH, Tk
-
+from tkinter import Menu, BOTH, Tk, messagebox
 from app.gui.main_frame import MainFrame
 from app.project.helper import Helper
 
@@ -12,7 +11,12 @@ class ApplicationWindow(Tk):
         self.main = MainFrame(self, project)
         self.helper = Helper(project,self.main)
         self.bind_menu_actions()
+        self.protocol("WM_DELETE_WINDOW", self.on_close)
         self.main.pack(fill=BOTH)
+
+    def on_close(self):
+        if not self.helper.try_save_open_project():
+            self.destroy()
 
     def bind_menu_actions(self):
         """Create menu bar"""

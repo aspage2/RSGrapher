@@ -15,6 +15,7 @@ class PlotCanvas(FigureCanvasTkAgg):
         self.ymax = 0.0
         self.figure.tight_layout()
         self.axes.set_title("RSG")
+        self.axes.grid(color="k",linestyle="--",linewidth=0.3)
         self.datacurve = self.axes.plot([],[])[0]
         self.extra_plots = []
         self.cids = []
