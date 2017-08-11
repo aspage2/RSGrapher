@@ -1,16 +1,13 @@
+
+from app.gui.input_group.title_input import TitleInputGroup
 from tkinter import *
 from tkinter import messagebox
 import logging
 
 from app.gui import PANEL_BG
-from app.gui.plot.elastic_interval import ElasticIntervalFrame
-from app.gui.plot.empty_plot_frame import EmptyPlotFrame
-from app.gui.plot.peak_load_frame import PeakLoadFrame
-from app.gui.plot.raw_plot_frame import RawPlotFrame
-from app.gui.plot.test_interval import TestIntervalFrame
-from app.gui.plot.uts_frame import UTSFrame
-from app.gui.plot.yield_load import YieldLoadFrame
-from app.gui.plot.yield_strength import YieldStrengthFrame
+from app.gui.input_group.sample_dim_input import SampleDimensionInputGroup
+from app.gui.input_group.sample_num_input import SampleNumberInputGroup
+from app.gui.plot.plot_frame import PlotFrame
 
 RADIO_BUTTON_STUFF = (("Test Interval", 1, lambda m: lambda: m.set_plot_frame(1)),
                       ("Elastic Interval", 2, lambda m: lambda: m.set_plot_frame(2)),
@@ -23,137 +20,25 @@ RADIO_BUTTON_STUFF = (("Test Interval", 1, lambda m: lambda: m.set_plot_frame(1)
 class MainFrame(Frame):
     """Root frame of an RSGrapher application window.
        the direct child of the housing Tk instance."""
-    FRAME_TI = 1
-    FRAME_UTS = 2
-    FRAME_YS = 3
-    FRAME_YL = 4
-    FRAME_PL = 5
-    FRAME_EMPTY = 0
 
     def __init__(self, parent, project=None):
         super().__init__(parent, padx=10, pady=10)
         self.project = project
         self.parent = parent
-        self.currsample = "Hello"
 
-        self.controlframe = Frame(self, relief=SUNKEN, border=2, bg=PANEL_BG)
-        self.samplelist = Listbox(self.controlframe, width=30)
-        self.radiobuttons = []
-        self.plotvar = IntVar(self)
-        self.plotvar.set(self.FRAME_EMPTY)
-        self.build_control_panel()
+        pad = {"padx":10, "pady":10}
 
-        self.currframe = None
-        self.plotframes = []
-        self.init_plot_frames()
+        self.input_panel = Frame(self, bg=PANEL_BG, borderwidth=2, relief=SUNKEN)
+        self.title_input = TitleInputGroup(self.input_panel, bg=PANEL_BG,**pad)
+        self.dim_input = SampleDimensionInputGroup(self.input_panel, bg=PANEL_BG,**pad)
+        self.num_input = SampleNumberInputGroup(self.input_panel, bg=PANEL_BG,**pad)
 
-        self.set_sample(None)
+        self.plot_panel = PlotFrame(self)
+        self.build()
 
-        if self.project is not None:
-            self.set_project(self.project)
-
-    def build_control_panel(self):
-        """Build the user interface"""
-        Label(self.controlframe, text="Samples", bg=PANEL_BG).pack(anchor=N)
-        self.samplelist.pack(anchor=N)
-        Button(self.controlframe, text="Set Sample", command=self.setsampleclick, width=30).pack(anchor=N)
-        Label(self.controlframe, text="Tools", bg=PANEL_BG, font=("Helvetica", 12, "bold")).pack(anchor=N)
-        for i in range(2):
-            name, num, func = RADIO_BUTTON_STUFF[i]
-            r = Radiobutton(self.controlframe, state=DISABLED, variable=self.plotvar, value=num,
-                            command=func(self), text=name, bg=PANEL_BG)
-            r.pack(anchor=N + W)
-            self.radiobuttons.append(r)
-        Label(self.controlframe, text="Plot Types", bg=PANEL_BG, font=("Helvetica", 12, "bold")).pack(anchor=N)
-        for i in range(2, 6):
-            name, num, func = RADIO_BUTTON_STUFF[i]
-            r = Radiobutton(self.controlframe, state=DISABLED, variable=self.plotvar, value=num,
-                            command=func(self), text=name, bg=PANEL_BG)
-            r.pack(anchor=N + W)
-            self.radiobuttons.append(r)
-
-        self.controlframe.pack(side=LEFT, fill=Y)
-
-    def setsampleclick(self):
-        if len(self.samplelist.curselection()) != 1:
-            messagebox.showinfo("Set Sample", "A sample must be selected")
-            return
-        else:
-            name = self.samplelist.get(self.samplelist.curselection())
-            for s in self.project.samples:
-                if s.name == name:
-                    self.set_sample(s)
-                    return
-
-    def init_plot_frames(self):
-        """Create plot frames for each of the analysis tools"""
-        self.plotframes.append(EmptyPlotFrame(self))
-        self.plotframes.append(TestIntervalFrame(self))
-        self.plotframes.append(ElasticIntervalFrame(self))
-        self.plotframes.append(PeakLoadFrame(self))
-        self.plotframes.append(UTSFrame(self))
-        self.plotframes.append(YieldStrengthFrame(self))
-        self.plotframes.append(YieldLoadFrame(self))
-        self.plotframes.append(EmptyPlotFrame(self))
-
-    def set_plot_frame(self, frameind):
-        if frameind not in range(len(RADIO_BUTTON_STUFF)+1):
-            raise ValueError("Attempt to select an invalid plotting number")
-
-        if self.currframe is not None:
-            self.plotframes[self.currframe].pack_forget()
-        self.currframe = frameind
-        self.plotframes[self.currframe].set_sample(self.currsample)
-        self.plotframes[self.currframe].pack(side=LEFT)
-
-    def set_button_state(self, state):
-        """Enable/Disable the radio buttons on the control frame"""
-        for r in self.radiobuttons:
-            r.config(state=state)
-
-    def set_project(self, project):
-        """Set the project in this window"""
-        self.project = project
-        self.samplelist.delete(0, END)
-
-        if project:  # Given a project to fill the app with
-            for s in project.samples:
-                self.samplelist.insert(END, s.name)  # Append sample names to the sample list
-            if len(project.samples) != 0:  # Display the first sample with the first plot mechanic
-                self.set_sample(project.samples[0])
-            else:
-                self.set_sample(None)
-        else:  # making project "None" means displaying the closed project screen
-            self.set_sample(None)
-
-    def remove_sample(self, sample):
-        """Remove a sample from the main frame"""
-        if sample is None:
-            logging.warning("Attempt to remove sample nil from project")
-            return
-        # Remove name from list
-        names = self.samplelist.get(0, END)
-        for i, name in enumerate(names):
-            if name == sample.name:
-                self.samplelist.delete(i)
-        if self.currsample is sample:
-            if len(self.project.samples) == 0:
-                self.set_sample(None)
-            else:
-                self.set_sample(self.project.samples[0])
-
-    def set_sample(self, sample):
-        """Find the highlighted element in the Listbox and give it to the plot"""
-        if self.currsample is sample:
-            return
-        self.currsample = sample
-        if sample is None:
-            self.set_plot_frame(self.FRAME_EMPTY)
-            self.plotvar.set(self.FRAME_EMPTY)
-            self.set_button_state(DISABLED)
-            return
-        for s in self.project.samples:
-            if s is sample:
-                self.set_plot_frame(self.FRAME_TI)
-                self.plotvar.set(self.FRAME_TI)
-                self.set_button_state(NORMAL)
+    def build(self):
+        self.title_input.pack()
+        self.dim_input.pack()
+        self.num_input.pack()
+        self.input_panel.pack(side=LEFT,fill=Y)
+        self.plot_panel.pack(side=LEFT)

@@ -1,6 +1,9 @@
 from tkinter import *
 
 import matplotlib
+
+from app.gui.input_group.sample_dir_input import SampleDirectoryInputGroup
+
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
 from matplotlib.figure import Figure
@@ -19,21 +22,14 @@ class PlotFrame(Frame):
         self.canvas.figure.tight_layout()
         self.canvas.show()
         self.controlframe = Frame(self, relief=SUNKEN, border=2, bg=PANEL_BG)
+        self.dir_input = SampleDirectoryInputGroup(self.controlframe)
         self.nav = NavigationToolbar2TkAgg(self.canvas,self)
 
-        self.descrip = Label(self,text="<NO SAMPLE DATA>",font=("Helvetica",16))
         self.build()
-
-    def set_sample(self, sample):
-        """Set the sample of this frame to the argument. """
-        if sample is None:
-            self.descrip.config(text="<NO SAMPLE DATA>")
-        else:
-            self.descrip.config(text="Name: {0}  Area: {1} sq.in.  Length: {2} in.".format(sample.name, sample.area, sample.length))
 
     def build(self):
         """Build the UI"""
-        self.descrip.pack()
+        self.dir_input.pack(side=LEFT)
         self.canvas.pack()
         self.nav.pack()
         self.controlframe.pack(fill=X, ipadx=10, ipady=10)
