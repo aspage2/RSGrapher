@@ -47,3 +47,9 @@ def suggested_elastic_zone(disp, load):
             iOptimum = iStep
 
     return start_zone[0] + iOptimum * horiz_inc, start_zone[1] + iOptimum * horiz_inc
+
+def line_intersection(xdata, ydata, m, b):
+    for i, x in enumerate(xdata):
+        if ydata[i] < m*x+b:
+            return i
+    raise ValueError("Saaaaad")

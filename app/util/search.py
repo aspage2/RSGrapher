@@ -27,3 +27,11 @@ def lin_nearest_neighbor(x, data):
         if currbest is None or abs(x-data[currbest]) > abs(x-d):
             currbest = i
     return currbest
+
+def lin_max(data):
+    ret = None
+    for i, x in enumerate(data):
+        if ret is None or data[ret] < x:
+            ret = i
+    return ret
+

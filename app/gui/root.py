@@ -10,7 +10,7 @@ class ApplicationWindow(Tk):
         self.title("RSGrapher")
         self.main = MainFrame(self, project)
         self.helper = Helper(project,self.main)
-        self.bind_menu_actions()
+       # self.bind_menu_actions()
         self.protocol("WM_DELETE_WINDOW", self.on_close)
         self.main.pack(fill=BOTH)
 

@@ -3,11 +3,15 @@ from tkinter import *
 from tkinter import filedialog
 
 from app.gui import PANEL_BG
+from app.util.asc_data import ASCData
+from app.project.sample import Sample
 
 
 class SampleDirectoryInputGroup(Frame):
-    def __init__(self, parent, bg=PANEL_BG, **kwargs):
+    def __init__(self, parent, pframe, bg=PANEL_BG, **kwargs):
         super().__init__(parent, bg=bg, **kwargs)
+        self.parent = parent
+        self.pframe = pframe
         self.sample_dir = Entry(self,width=30)
         Label(self, text="ASC File ",bg=bg).pack(side=LEFT)
         self.sample_dir.pack(side=LEFT)
@@ -30,3 +34,4 @@ class SampleDirectoryInputGroup(Frame):
         if dir is None:
             return
         self.sample_dir.insert(0,dir)
+        self.pframe.set_sample(Sample(ASCData.open(dir)))

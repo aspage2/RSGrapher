@@ -1,5 +1,6 @@
 import numpy as np
 
+from app.util.search import lin_nearest_neighbor
 
 class ASCData:
     def __init__(self, time, load, disp):
@@ -17,6 +18,11 @@ class ASCData:
         if isinstance(key, slice):
             return (self.time[key.start:key.stop], self.disp[key.start:key.stop], self.load[key.start:key.stop])
         return (self.time[key], self.disp[key], self.load[key])
+
+    def test_interval(self, d0, d1):
+        d0 = lin_nearest_neighbor(d0, self.disp)
+        d1 = lin_nearest_neighbor(d1, self.disp)
+        return self.disp[d0:d1], self.load[d0:d1]
 
     def write(self, filename):
         with open(filename, 'w') as fh:

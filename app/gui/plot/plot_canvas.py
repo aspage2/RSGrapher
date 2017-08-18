@@ -30,14 +30,25 @@ class PlotCanvas(FigureCanvasTkAgg):
         if ylabel is not None:
             self.axes.set_ylabel(ylabel)
 
+    def reset_plotrange(self):
+        self.axes.set_xlim((0,self.xmax*1.3))
+        self.axes.set_ylim((0,self.ymax*1.3))
+
+    def set_xrange(self, x0, x1):
+        self.axes.set_xlim((x0,x1))
+        self.show()
+
+    def set_yrange(self, y0, y1):
+        self.axes.set_ylim((y0, y1))
+        self.show()
+
     def set_data(self, xdata, ydata):
         """Set the stresscurve data"""
         if len(xdata) != 0 and len(ydata) != 0:
-            self.xmax = 1.3*max(xdata)
-            self.ymax = 1.3*max(ydata)
-            self.axes.set_xlim((0,self.xmax))
-            self.axes.set_ylim((0,self.ymax))
+            self.xmax = max(xdata)
+            self.ymax = max(ydata)
         self.datacurve.set_data(xdata,ydata)
+        self.reset_plotrange()
         self.figure.tight_layout()
 
     def plot(self, xdata, ydata, **kwargs):
@@ -55,14 +66,9 @@ class PlotCanvas(FigureCanvasTkAgg):
         while len(self.extra_plots) != 0:
             self.extra_plots.pop().remove()
 
-    def bind_event(self, event, func):
-        """Add event handler"""
-        self.cids.append(self.mpl_connect(event,func))
-
-    def clear_events(self):
-        """Remove all event handlers"""
-        while len(self.cids) != 0:
-            self.mpl_disconnect(self.cids.pop())
+    def hide_all_plots(self):
+        for plot in self.extra_plots:
+            plot.set_visible(False)
 
     def pack(self, **kwargs):
         """tk-style pack method"""
