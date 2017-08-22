@@ -3,9 +3,9 @@ from app.gui.main_frame import MainFrame
 from app.project.helper import Helper
 
 class ApplicationWindow(Tk):
-    """A running instance of the RSGrapher application. Only one instance may be run at a time"""
+    """A running instance of the RSGrapher application"""
 
-    def __init__(self, project = None):
+    def __init__(self, project):
         super().__init__()
         self.title("RSGrapher")
         self.main = MainFrame(self, project)
