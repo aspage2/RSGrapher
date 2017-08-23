@@ -1,7 +1,7 @@
 
 from enum import Enum, unique
 
-from app.gui.plot import INTERVAL_LINE_STYLE
+from app.gui.plot import LINESTYLE
 
 
 @unique
@@ -24,7 +24,7 @@ class PlotTool:
         self.label = label
         self.nav = nav
         self.sample = None
-        self.lines = [self.canvas.plot([],[], visible=False, **INTERVAL_LINE_STYLE) for i in range(2)]
+        self.lines = [self.canvas.plot([], [], visible=False, **LINESTYLE) for i in range(2)]
         self.cid = None
         self.focus = Focus.Neither
 

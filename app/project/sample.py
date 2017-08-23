@@ -3,92 +3,83 @@ from app.util.search import lin_nearest_neighbor
 
 class Sample:
     """A sample of rebar from a test"""
+    FP_TOLERANCE = 0.00001
 
-    def __init__(self, ascdata):
+    def __init__(self, num=None):
+        self._data = None
+
+        # Data to be written to JSON
         self.area = None
         self.length = None
-        self.data = ascdata
-        self.dirty = True
+        self.num = num
+        self.titles = [None, None, None]
+        self._peak_cutoff_pct = 0.1
+        self.elastic_interval = [None, None]
+        self._zero = None
 
-        self.test_interval = [0, len(self.data) - 1]
-        self.elastic_interval = list(self.test_interval)
+        # Other useful points
+        self._peak_load = None
+        self._cutoff_pt = None
 
-    def set_test_interval(self, *interval):
-        """Set the test interval (index) via time values"""
-        if len(interval) != 2:
-            raise ValueError("Arguments do not represent a time interval.")
-        d0, d1 = interval
-        if d0 is None: d0 = self.data.disp[self.test_interval[0]]
-        if d1 is None: d1 = self.data.disp[self.test_interval[1]]
-        if d1 <= d0: # t0 must be before t1
-            return
+    def set_data(self, data):
+        self._data = data
 
-        for i in range(2):
-            if interval[i] is not None:
-                self.test_interval[i] = lin_nearest_neighbor(interval[i], self.data.disp)
-        self.dirty = True
+        maxval = None
+        for i, v in enumerate(self.load):
+            if maxval is None or maxval < v:
+                maxval = v
+                self._peak_load = i
+        self._zero = 100
+        self.peak_cutoff_pct = 0.1
 
-    def test_interval_data(self):
-        i0=self.test_interval[0]
-        i1=self.test_interval[1]
-        return self.data.time[i0:i1], self.data.disp[i0:i1], self.data.load[i0:i1]
+    @property
+    def peak_cutoff_pct(self):
+        """The percent below peak load for which to cutoff data after peak load is achieved"""
+        return self._peak_cutoff_pct
 
-    def elastic_interval_data(self):
-        i0 = self.elastic_interval[0]
-        i1 = self.elastic_interval[1]
-        return self.data.time[i0:i1], self.data.disp[i0:i1], self.data.load[i0:i1]
+    @peak_cutoff_pct.setter
+    def peak_cutoff_pct(self, pct):
+        """Set new percent and recalculate the cutoff point"""
+        self._peak_cutoff_pct = pct
+        i = self._peak_load
+        while i < len(self.load) and self.load[i] > self.load[self._peak_load] * (1 - self._peak_cutoff_pct):
+            i += 1
+        self._cutoff_pt = i
 
-    def strain_data(self):
-        time, disp, load = self.test_interval_data()
-        return (disp-disp[0])/self.length * 100.0
+    @property
+    def cutoff(self):
+        return self._cutoff_pt
 
-    def stress_data(self):
-        time, disp, load = self.test_interval_data()
-        return (load-load[0])/self.area
+    @property
+    def zero(self):
+        return self._zero
 
-    def get_test_interval(self):
-        return self.data.disp[self.test_interval]
+    @zero.setter
+    def zero(self, disp):
+        i = 0
+        while i < len(self.disp) and self.disp[i] < disp:
+            i += 1
+        if i != len(self.disp):
+            self._zero = i
 
-    def set_elastic_interval(self, *interval):
-        """Set the test interval (index) via time values"""
-        if len(interval) != 2:
-            raise ValueError("Arguments do not represent a time interval.")
-        l0, l1 = interval
-        if l0 is None: l0 = self.data.load[self.elastic_interval[0]]
-        if l1 is None: l1 = self.data.load[self.elastic_interval[1]]
-        if l1 <= l0:  # t0 must be before l1
-            print("PROBLEM")
-            return
-        # It is assumed that the time array is sorted
-        for i in range(2):
-            if interval[i] is not None:
-                self.elastic_interval[i] = lin_nearest_neighbor(interval[i], self.data.load)
-        self.dirty = True
+    @property
+    def load(self):
+        return self._data.load
+    @property
+    def disp(self):
+        return self._data.disp
 
-    def get_elastic_interval(self):
-        return self.data.load[self.elastic_interval]
 
-    def set_clean(self):
-        self.dirty = False
+    def as_dict(self):
+        """Dictionary representation for serialization"""
+        return {}
 
-    # def as_dict(self):
-    #     """Dictionary representation for serialization"""
-    #     return {"name": self.name, "area": self.area, "length": self.length, "asc_dir": self.directory,
-    #             'test_interval': list(self.test_interval), 'elastic_interval': list(self.elastic_interval)}
-    #
-    # def write_data(self):
-    #     """Write my ASC data to myname.dat in my given directory"""
-    #     self.data.write(self.directory + self.name + ".dat")
-    #     self.dirty = False
-    #
-    # @staticmethod
-    # def from_dict(**info):
-    #     """Create a sample instance from a dictionary representation"""
-    #     data = ASCData.open(info['asc_dir'] + info['name'] + ".dat", header=False)
-    #     ret = Sample(info['name'], info['area'], info['length'], data, info['asc_dir'])
-    #     if None not in info['test_interval']:
-    #         ret.test_interval = info['test_interval']
-    #     if None not in info['elastic_interval']:
-    #         ret.elastic_interval = info['elastic_interval']
-    #     ret.dirty = False
-    #     return ret
+    def write_data(self, dir):
+        """Write my ASC data to myname.dat in my given directory"""
+        self._data.write()
+    @staticmethod
+    def from_dict(**info):
+        """Create a sample instance from a dictionary representation"""
+        ret = Sample()
+        return ret
+
