@@ -1,31 +1,28 @@
 
 from app.gui.plot.plotrangeframe import PlotRangeFrame
 from app.gui.plot import POINTSTYLE, BBOX
-from app.util.search import lin_max
 
 
 class PeakLoadFrame(PlotRangeFrame):
-    def __init__(self, parent, sample):
-        super().__init__(parent, sample)
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.peakpoint = self.canvas.plot([], [], **POINTSTYLE)
+        self.peaktext = self.canvas.axes.text([], [], "", bbox=BBOX, va="bottom", ha="left")
 
-    def init(self):
+    def set_sample(self, sample):
         self.canvas.set_labels("Load vs. Displacement", "Displacement (in.)", "Load (lbs)")
-        disp, load = self.sample.test_interval_data()[1:]
-        disp -= disp[0]
-        load -= load[0]
 
-        i = lin_max(load)
-        self.canvas.set_data(disp, load)
-        point = ([disp[i]], [load[i]])
-        self.canvas.plot(*point, **POINTSTYLE)
-        self.canvas.axes.text(disp[i] * 1.05, load[i] * 1.05, "Peak Load: {:.2f} kips".format(load[i] / 1000.0),
-                                      bbox=BBOX, va="bottom", ha="left")
+        disp = sample.disp - sample.disp[sample.zero]
+        load = sample.load - sample.load[sample.zero]
 
-        xr = 1.3*max(disp)
-        yr = 1.3*max(load)
-        self.canvas.set_xrange(0, xr)
-        self.canvas.set_yrange(0, yr)
-        self.xrange.insert(0, str(xr))
-        self.yrange.insert(0, str(yr))
+        self.canvas.set_data(disp[sample.zero:sample.peak_load], load[sample.zero:sample.peak_load])
+
+        x, y = sample.plotrange
+        self.canvas.set_xrange(0, x)
+        self.canvas.set_yrange(0, y)
+
+        self.peakpoint.set_data(disp[sample.peak_load],load[sample.peak_load])
+        self.peaktext.set_position((1.05*disp[sample.peak_load],1.05*load[sample.peak_load]))
+        self.peaktext.set_text("Peak Load: {:.2f} kips".format(load[sample.peak_load]/1000.0))
         self.canvas.figure.tight_layout()
         self.canvas.show()

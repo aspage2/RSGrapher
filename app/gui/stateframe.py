@@ -12,9 +12,6 @@ class StateFrame(Frame):
     def set_sample(self, sample):
         self.sample = sample
 
-    def show(self):
-        pass
-
     def hide(self):
         pass
 

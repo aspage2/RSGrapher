@@ -28,7 +28,6 @@ class NewProjectPrompt(BaseDialogWindow):
         self.t = None
         self.num = None
         self.dir = None
-        self.description = None
         self.build()
 
     def build(self):
@@ -46,10 +45,6 @@ class NewProjectPrompt(BaseDialogWindow):
         Label(f, text="Folder").grid()
         self.dir.grid(row=2, column=1, columnspan=2,sticky=W)
         Button(f, command=self.get_directory_location,text="Browse").grid(row=2,column=3)
-
-        self.description = Text(f, width=self.ENTRY_WIDTH, height=4)
-        Label(f, text="Description").grid()
-        self.description.grid(row=3,column=1,columnspan=3,sticky=W)
 
         Button(f,command=self.create,text="Create").grid(column=1)
         Button(f,command=self.destroy,text="Cancel").grid(row=4,column=2)
@@ -73,7 +68,7 @@ class NewProjectPrompt(BaseDialogWindow):
         """Callback for when the user clicks 'Create'"""
         if not self.check_for_valid_entries():
             return
-        self.ret_update(title=self.t.get(),num=self.num.get(),dir=self.dir.get(),description=self.description.get("1.0",END))
+        self.ret_update(title=self.t.get(),num=self.num.get(),dir=self.dir.get())
         self.ret_update(cancelled=False)
         self.destroy()
 

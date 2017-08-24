@@ -14,11 +14,11 @@ class TestIntervalFrame(StateFrame):
         self.canvas.mpl_connect("button_press_event", self.on_click)
         self.nav = NavigationToolbar2TkAgg(self.canvas, self)
 
-        self.settingzero = False
         self.zeroline = self.canvas.plot([], [], **LINESTYLE)
         self.trimdata = self.canvas.plot([], [], **TRIMSTYLE)
 
-        self.cutoffentry = Entry(self, width=6)
+        self.controlframe = Frame(self, borderwidth=2, relief=SUNKEN)
+        self.cutoffentry = Entry(self.controlframe, font=("Helvetica", 16), width=6)
         self.cutoffentry.bind("<Return>", lambda k: self.oncutoffset())
         self.build()
 
@@ -27,6 +27,8 @@ class TestIntervalFrame(StateFrame):
         self.canvas.set_data(sample.disp, sample.load)
         if self.sample.zero is not None:
             self.set_zeroline(self.sample.disp[self.sample.zero])
+        self.cutoffentry.delete(0, END)
+        self.cutoffentry.insert(0, str(self.sample.peak_cutoff_pct*100))
         self.set_trimdata(self.sample.disp[self.sample.cutoff:], self.sample.load[self.sample.cutoff:])
         self.canvas.show()
 
@@ -40,11 +42,9 @@ class TestIntervalFrame(StateFrame):
         try:
             c = int(self.cutoffentry.get())
         except:
-            print("NOT A FLOAT BIIITCH")
             return
 
         if c > 100:
-            print ("NOT A PERCENT BIIITCH")
             return
 
         self.sample.peak_cutoff_pct = c / 100.0
@@ -56,12 +56,17 @@ class TestIntervalFrame(StateFrame):
             return
         if self.nav._active == "ZOOM":
             return
-        if self.settingzero:
-            self.sample.zero = event.xdata
-            self.set_zeroline(self.sample.disp[self.sample.zero])
-            self.canvas.show()
+        self.sample.zero = event.xdata
+        self.set_zeroline(self.sample.disp[self.sample.zero])
+        self.canvas.show()
+
+    def ondone(self):
+        self.next()
 
     def build(self):
         self.canvas.pack()
+        Label(self.controlframe, text="Post Peak Load Cutoff (%)", font=("Helvetica", 16)).pack(padx=10, side=LEFT)
         self.cutoffentry.pack(side=LEFT)
+        Button(self.controlframe, text="Done", font=("Helvetica", 16), command=self.ondone).pack(side=RIGHT, padx=10, pady=10)
+        self.controlframe.pack(fill=X)
         self.nav.pack()

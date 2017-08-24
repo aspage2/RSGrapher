@@ -1,40 +1,44 @@
-from app.gui.plot import ELASTIC_STYLE
+
+from app.gui.plot import ELASTIC_STYLE, TRIMSTYLE
 from app.gui.plot import POINTSTYLE, BBOX
 from app.gui.plot.plotrangeframe import PlotRangeFrame
 from app.util.auto_elastic import get_yield_line, line_intersection
-from app.util.search import lin_max
 
+from tkinter import *
 
 class UTSFrame(PlotRangeFrame):
-    def __init__(self, parent, sample):
-        super().__init__(parent, sample)
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.sample = None
+        self.uts = self.canvas.plot([],[], **POINTSTYLE)
+        self.uts_text = self.canvas.axes.text(0,0,"",bbox=BBOX, va="bottom", ha="left")
+        self.yield_text = self.canvas.axes.text(0, 0, "", bbox=BBOX, va="top", ha="left")
+        self.yieldline = self.canvas.plot([],[], **ELASTIC_STYLE)
+        self.yieldline_set = self.canvas.plot([], [], **TRIMSTYLE)
+        self.yieldpoint = self.canvas.plot([], [], **POINTSTYLE)
 
-    def init(self):
+    def set_sample(self, sample):
         self.canvas.set_labels("Stress vs. Strain", "Strain (% Length)", "Stress (psi)")
-        stress = self.sample.stress_data()
-        strain = self.sample.strain_data()
-        self.canvas.set_data(strain, stress)
+        self.sample = sample
+        x, y = sample.plotrange
+        self.canvas.set_xrange(0, x/sample.length * 100)
+        self.canvas.set_yrange(0, y/sample.area)
 
-        i = lin_max(stress)
-        self.canvas.plot(strain[i], stress[i], **POINTSTYLE)
-        self.canvas.axes.text(strain[i] * 1.05, stress[i] * 1.05,
-                                "Ultimate Tensile Strength: {:.2f} ksi".format(stress[i] / 1000.0), bbox=BBOX,
-                                va="bottom", ha="center")
-
-        i0, i1 = self.sample.elastic_interval
-        m, b, r = get_yield_line(strain[i0:i1], stress[i0:i1], self.sample.length)
-        self.canvas.plot(strain, (strain * m + b), **ELASTIC_STYLE)
-        i = line_intersection(strain, stress, m, b)
-        self.canvas.plot(strain[i], stress[i], **POINTSTYLE)
-        self.canvas.axes.text(strain[i] * 1.05, stress[i] * 0.95,
-                                "Yield Strength: {:.2f} ksi".format(stress[i] / 1000.0), bbox=BBOX, va="top", ha="left")
-
-        xr = 1.3*max(strain)
-        yr = 1.3*max(stress)
-        self.canvas.set_xrange(0, xr)
-        self.xrange.insert(0, str(xr))
-        self.yrange.insert(0, str(yr))
-        self.canvas.set_yrange(0, yr)
-
+        # Calculate raw stress/strain data from sample information
+        stress = (sample.load - sample.load[sample.zero])/sample.area
+        strain = (sample.disp - sample.disp[sample.zero])/sample.length*100.0
+        self.canvas.set_data(strain[sample.zero:sample.peak_load], stress[sample.zero:sample.peak_load])
+        self.uts.set_data(strain[sample.peak_load], stress[sample.peak_load])
+        self.uts_text.set_position((1.05*strain[sample.peak_load], 1.05*stress[sample.peak_load]))
+        self.uts_text.set_text("UTS: {:.2f} ksi".format(stress[sample.peak_load]/1000.0))
+        estrain = strain[sample.elastic_interval[0]:sample.elastic_interval[1]]
+        estress = stress[sample.elastic_interval[0]:sample.elastic_interval[1]]
+        m, b, r = get_yield_line(estrain, estress, sample.length)
+        self.yieldline_set.set_data(estrain, estress)
+        self.yieldline.set_data(stress,m*stress+b)
+        yield_ind = line_intersection(strain, stress, m, b)
+        self.yieldpoint.set_data(strain[yield_ind], stress[yield_ind])
+        self.yield_text.set_position((strain[yield_ind]*1.05, stress[yield_ind]*0.95))
+        self.yield_text.set_text("Yield Strength: {:.2f} ksi".format(stress[yield_ind]/1000.0))
         self.canvas.figure.tight_layout()
         self.canvas.show()

@@ -5,14 +5,14 @@ from app.gui import PANEL_BG
 
 
 class SampleDimensionInputGroup(Frame):
-    def __init__(self, parent, bg=PANEL_BG, **kwargs):
-        super().__init__(parent, bg=bg, **kwargs)
-        self.len_entry = Entry(self, width=6)
-        self.area_entry = Entry(self, width=6)
+    def __init__(self, parent, font, **kwargs):
+        super().__init__(parent, **kwargs)
+        self.len_entry = Entry(self, width=6, font=font)
+        self.area_entry = Entry(self, width=6, font=font)
 
-        Label(self, text="Len (in.):", bg=bg).pack(side=LEFT)
+        Label(self, text="Len (in.):", font=font).pack(side=LEFT)
         self.len_entry.pack(side=LEFT)
-        Label(self, text="Area (sq. in.)", bg=bg).pack(side=LEFT)
+        Label(self, text="Area (sq. in.)", font=font).pack(side=LEFT)
         self.area_entry.pack(side=LEFT)
 
     def entries_valid(self):
@@ -24,6 +24,16 @@ class SampleDimensionInputGroup(Frame):
         except:
             return False
         return True
+
+    def set_area(self, area):
+        self.area_entry.delete(0, END)
+        if area is not None:
+            self.area_entry.insert(0, str(area))
+
+    def set_length(self, length):
+        self.len_entry.delete(0, END)
+        if length is not None:
+            self.len_entry.insert(0, str(length))
 
     def get_area(self):
         return float(self.area_entry.get())

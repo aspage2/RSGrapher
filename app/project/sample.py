@@ -1,9 +1,6 @@
-from app.util.search import lin_nearest_neighbor
-
 
 class Sample:
     """A sample of rebar from a test"""
-    FP_TOLERANCE = 0.00001
 
     def __init__(self, num=None):
         self._data = None
@@ -16,6 +13,7 @@ class Sample:
         self._peak_cutoff_pct = 0.1
         self.elastic_interval = [None, None]
         self._zero = None
+        self.plotrange = [None, None]
 
         # Other useful points
         self._peak_load = None
@@ -31,6 +29,24 @@ class Sample:
                 self._peak_load = i
         self._zero = 100
         self.peak_cutoff_pct = 0.1
+
+    @property
+    def elastic_zone(self):
+        return self.elastic_interval
+
+    def set_elastic_zone(self, l0, l1):
+        test = [l0 if l0 is not None else self.load[self.elastic_interval[0]],
+                l1 if l1 is not None else self.load[self.elastic_interval[1]]]
+        if test[1] < test[0]:
+            return
+        for i, l in enumerate((l0, l1)):
+            if l is None:
+                continue
+            j = 0
+            while j < len(self.load) and self.load[j] < l:
+                j += 1
+            if j != len(self.load):
+                self.elastic_interval[i] = j
 
     @property
     def peak_cutoff_pct(self):
@@ -63,12 +79,16 @@ class Sample:
             self._zero = i
 
     @property
+    def peak_load(self):
+        return self._peak_load
+
+    @property
     def load(self):
         return self._data.load
+
     @property
     def disp(self):
         return self._data.disp
-
 
     def as_dict(self):
         """Dictionary representation for serialization"""
@@ -77,9 +97,9 @@ class Sample:
     def write_data(self, dir):
         """Write my ASC data to myname.dat in my given directory"""
         self._data.write()
+
     @staticmethod
     def from_dict(**info):
         """Create a sample instance from a dictionary representation"""
         ret = Sample()
         return ret
-

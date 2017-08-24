@@ -8,14 +8,18 @@ from app.project.sample import Sample
 
 
 class SampleDirectoryInputGroup(Frame):
-    def __init__(self, parent, pframe, bg=PANEL_BG, **kwargs):
-        super().__init__(parent, bg=bg, **kwargs)
+    def __init__(self, parent, font, **kwargs):
+        super().__init__(parent, **kwargs)
         self.parent = parent
-        self.pframe = pframe
-        self.sample_dir = Entry(self,width=30)
-        Label(self, text="ASC File ",bg=bg).pack(side=LEFT)
+        self.sample_dir = Entry(self,width=30, font=font)
+        Label(self, text="ASC File ", font=font).pack(side=LEFT)
         self.sample_dir.pack(side=LEFT)
-        Button(self, text="Browse", command=self.browse).pack(side=LEFT)
+        Button(self, text="Browse", font=font, command=self.browse).pack(side=LEFT)
+
+    def set_dir(self, dir):
+        self.sample_dir.delete(0, END)
+        if dir is not None:
+            self.sample_dir.insert(0, dir)
 
     def get_dir(self):
         return self.sample_dir.get()
@@ -34,4 +38,3 @@ class SampleDirectoryInputGroup(Frame):
         if dir is None:
             return
         self.sample_dir.insert(0,dir)
-        self.pframe.set_sample(Sample(ASCData.open(dir)))

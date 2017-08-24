@@ -5,12 +5,16 @@ from app.gui import PANEL_BG
 
 
 class SampleNumberInputGroup(Frame):
-    def __init__(self, parent, bg=PANEL_BG, **kwargs):
-        super().__init__(parent, bg=bg, **kwargs)
-        self.sample_num = Entry(self, width=3)
-        Label(self, text="Sample # ", bg=bg).pack(side=LEFT)
+    def __init__(self, parent, font, **kwargs):
+        super().__init__(parent, **kwargs)
+        self.sample_num = Entry(self, width=3, font=font)
+        Label(self, text="Sample # ", font=font).pack(side=LEFT)
         self.sample_num.pack(side=LEFT)
-        self.re = re.compile("^\d$")
+        self.re = re.compile("^\d+$")
+
+    def set(self, i):
+        self.sample_num.delete(0, END)
+        self.sample_num.insert(0, str(i))
 
     def get_num(self):
         return int(self.sample_num.get())

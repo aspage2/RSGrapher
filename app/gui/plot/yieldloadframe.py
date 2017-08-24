@@ -1,30 +1,37 @@
-from app.gui.plot import ELASTIC_STYLE, POINTSTYLE, BBOX
+from app.gui.plot import ELASTIC_STYLE, POINTSTYLE, BBOX, TRIMSTYLE
 from app.gui.plot.plotrangeframe import PlotRangeFrame
 from app.util.auto_elastic import line_intersection, get_yield_line
 
 
 class YieldLoadFrame(PlotRangeFrame):
-    def __init__(self, parent, sample):
-        super().__init__(parent, sample)
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.yieldline = self.canvas.plot([], [], **ELASTIC_STYLE)
+        self.yieldload = self.canvas.plot([], [], **POINTSTYLE)
+        self.yieldset = self.canvas.plot([], [], **TRIMSTYLE)
+        self.yieldtext = self.canvas.axes.text([], [], "", bbox=BBOX, va="top", ha="left")
 
-    def init(self):
+
+    def set_sample(self, sample):
         self.canvas.set_labels("Load vs. Strain", "Strain (% Length)", "Load (lbs.)")
-        strain = self.sample.strain_data()
-        load = self.sample.test_interval_data()[2]
-        i0, i1 = self.sample.elastic_interval
-        m, b, r = get_yield_line(strain[i0:i1], load[i0:i1], self.sample.length)
-        self.canvas.plot(strain, m * strain + b, **ELASTIC_STYLE)
-        i = line_intersection(strain, load, m, b)
-        self.canvas.plot(strain[i], load[i], **POINTSTYLE)
-        self.canvas.axes.text(strain[i] * 1.05, load[i] * 0.95,
-                                       "Yield Load: {:.2f} kips".format(load[i] / 1000.0), bbox=BBOX, va="top",
-                                       ha="left")
-        self.canvas.set_data(strain, load)
-        xr = 1.3 * max(strain)
-        yr = 1.3 * max(load)
-        self.canvas.set_xrange(0, xr)
-        self.canvas.set_yrange(0, yr)
-        self.xrange.insert(0, str(xr))
-        self.yrange.insert(0, str(yr))
+
+        strain = (sample.disp - sample.disp[sample.zero]) / sample.length * 100.0
+        load = sample.load - sample.load[0]
+        self.canvas.set_data(strain[sample.zero:sample.cutoff], load[sample.zero:sample.cutoff])
+        x, y = sample.plotrange
+        self.canvas.set_xrange(0, x / sample.length * 100)
+        self.canvas.set_yrange(0, y)
+
+        estrain = strain[sample.elastic_interval[0]:sample.elastic_interval[1]]
+        eload = load[sample.elastic_interval[0]:sample.elastic_interval[1]]
+        self.yieldset.set_data(estrain, eload)
+        m, b, r = get_yield_line(estrain, eload, sample.length)
+        self.yieldline.set_data(strain, m*strain+b)
+
+        intersect = line_intersection(strain, load, m, b)
+        self.yieldload.set_data(strain[intersect], load[intersect])
+
+        self.yieldtext.set_position((1.05*strain[intersect], 0.95*load[intersect]))
+        self.yieldtext.set_text("Yield Load: {:.2f} kips".format(load[intersect]/1000.0))
         self.canvas.figure.tight_layout()
         self.canvas.show()

@@ -59,26 +59,12 @@ class ProjectDirectory:
         self.sample_deleted = False
 
     @staticmethod
-    def open(directory):
-        """Open the project given its root directory"""
-        with open(directory+"/project.json",'r') as fh:
-            data = json.load(fh)
-            ret = ProjectDirectory(data['title'],data['number'],data['directory'])
-            ret.update_kwinfo(**data['kwinfo'])
-            ret.kwinfo_modified = False
-            for sinfo in data['samples']:
-                sample = Sample.from_dict(**sinfo)
-                sample.set_clean()
-                ret.samples.append(sample)
-        return ret
-
-    @staticmethod
     def create_project(title, number, parent_dir):
         """Create a project and write it to [parent_dir]/RSG[number] - [title]"""
         proj_dir = parent_dir + "/RSG"+number+" - "+title
         os.mkdir(proj_dir)
         os.mkdir(proj_dir+"/Samples")
-        os.mkdir(proj_dir+"/Pdfs")
+        os.mkdir(proj_dir+"/Graphs")
         os.mkdir(proj_dir+"/Photos")
 
         ret = ProjectDirectory(title,number,proj_dir)

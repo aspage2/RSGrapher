@@ -4,7 +4,7 @@ class SampleState:
            "TEST": {"N": "ELASTIC", "D":"DATA", "I":"INFO_TEST", "T":"TEST"},
            "ELASTIC": {"N": "FINAL", "D": "DATA", "I":"INFO_ELASTIC", "T":"TEST", "E":"ELASTIC"},
            "FINAL": {"N": "END", "I":"INFO_FINAL","T":"TEST", "E":"ELASTIC", "D":"DATA"},
-           "END":{},
+           "END":{"N":"DATA"},
            "INFO_DATA":{"N":"DATA", "D":"DATA"},
            "INFO_TEST":{"N":"DATA", "D":"DATA", "T":"TEST"},
            "INFO_ELASTIC":{"N":"DATA", "D":"DATA", "T": "TEST", "E":"ELASTIC"},
