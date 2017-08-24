@@ -18,6 +18,8 @@ class ProgressFrame(Frame):
         self.build()
 
     def set(self, val):
+        if val is None:
+            return
         i = val.value
         self.buttons[self.curr]['bg'] = REG_COLOR
         self.buttons[i]['bg'] = CURR_COLOR

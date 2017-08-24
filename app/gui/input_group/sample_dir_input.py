@@ -1,4 +1,3 @@
-
 from tkinter import *
 from tkinter import filedialog
 
@@ -11,7 +10,7 @@ class SampleDirectoryInputGroup(Frame):
     def __init__(self, parent, font, **kwargs):
         super().__init__(parent, **kwargs)
         self.parent = parent
-        self.sample_dir = Entry(self,width=30, font=font)
+        self.sample_dir = Entry(self, width=30, font=font)
         Label(self, text="ASC File ", font=font).pack(side=LEFT)
         self.sample_dir.pack(side=LEFT)
         Button(self, text="Browse", font=font, command=self.browse).pack(side=LEFT)
@@ -37,4 +36,5 @@ class SampleDirectoryInputGroup(Frame):
         dir = filedialog.askopenfilename(title="Open ASC File")
         if dir is None:
             return
-        self.sample_dir.insert(0,dir)
+        self.sample_dir.delete(0, END)
+        self.sample_dir.insert(0, dir)

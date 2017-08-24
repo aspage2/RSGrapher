@@ -47,7 +47,7 @@ class NewProjectPrompt(BaseDialogWindow):
         Button(f, command=self.get_directory_location,text="Browse").grid(row=2,column=3)
 
         Button(f,command=self.create,text="Create").grid(column=1)
-        Button(f,command=self.destroy,text="Cancel").grid(row=4,column=2)
+        Button(f,command=self.destroy,text="Cancel").grid(row=3,column=2)
 
         f.pack(fill=BOTH, ipadx=10, ipady=10)
 

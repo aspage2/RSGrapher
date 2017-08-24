@@ -90,16 +90,6 @@ class Sample:
     def disp(self):
         return self._data.disp
 
-    def as_dict(self):
-        """Dictionary representation for serialization"""
-        return {}
-
     def write_data(self, dir):
         """Write my ASC data to myname.dat in my given directory"""
-        self._data.write()
-
-    @staticmethod
-    def from_dict(**info):
-        """Create a sample instance from a dictionary representation"""
-        ret = Sample()
-        return ret
+        self._data.write(dir+"S{}.dat".format(str(self.num).zfill(3)))

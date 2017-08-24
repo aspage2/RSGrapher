@@ -2,9 +2,9 @@ from tkinter import *
 
 from app.gui.plot.finalplotframe import FinalPlotFrame
 from app.gui.progress_buttons import ProgressFrame
+from app.project.sample import Sample
 from app.util.sample_state import SampleState
 from app.util.progress_enum import Prog
-
 from app.gui.infoframe import InfoFrame
 from app.gui.dataframe import DataFrame
 from app.gui.plot.testintervalframe import TestIntervalFrame
@@ -14,10 +14,10 @@ class MainFrame(Frame):
     """Root frame of an RSGrapher application window.
        the direct child of the housing Tk instance."""
 
-    def __init__(self, parent, sample):
+    def __init__(self, parent, project):
         super().__init__(parent, padx=10, pady=10)
-        self.sample = sample
         self.parent = parent
+        self.project = project
         self.progress = ProgressFrame(self)
         chars = ["I", "D", "T", "E", "F"]
         self.dfa = SampleState(self)
@@ -31,12 +31,18 @@ class MainFrame(Frame):
                        Prog.TESTDATA: DataFrame(self.frameholder, self.dfa),
                        Prog.TESTINT: TestIntervalFrame(self.frameholder, self.dfa),
                        Prog.ELASTICINT: ElasticIntervalFrame(self.frameholder, self.dfa),
-                       Prog.FINALGRAPH: FinalPlotFrame(self.frameholder, self.dfa)}
+                       Prog.FINALGRAPH: FinalPlotFrame(self.frameholder, self.dfa, self.project.graph_dir)}
 
         self.build()
+        self.sample = Sample()
         self.dfa.next("N")
 
     def set_state(self, state):
+        if state == "END":
+            self.new_sample()
+            self.dfa.next("N")
+            return
+
         data = state.split("_")
         if len(data) == 2:
             state = Prog.from_string(data[0])
@@ -53,6 +59,10 @@ class MainFrame(Frame):
         self.frames[state].pack(fill=BOTH)
 
         self.currstate = state
+
     def build(self):
         self.progress.pack()
         self.frameholder.pack(fill=BOTH)
+
+    def new_sample(self):
+        self.sample.write_data(self.project.sample_dir)

@@ -13,7 +13,7 @@ class TestIntervalFrame(StateFrame):
         self.canvas = PlotCanvas(Figure((7,5),dpi=100), self)
         self.canvas.mpl_connect("button_press_event", self.on_click)
         self.nav = NavigationToolbar2TkAgg(self.canvas, self)
-
+        self.canvas.set_labels("Load vs. Displacement", "Displacement (in.)", "Load (lbs.)")
         self.zeroline = self.canvas.plot([], [], **LINESTYLE)
         self.trimdata = self.canvas.plot([], [], **TRIMSTYLE)
 

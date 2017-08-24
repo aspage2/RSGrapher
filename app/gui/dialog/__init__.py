@@ -25,6 +25,9 @@ class BaseDialogWindow(Toplevel):
     def __init__(self, root):
         super().__init__(master=root)
         self.root = root
+        x = root.winfo_x()
+        y = root.winfo_y()
+        self.geometry("{}x{}+{}+{}".format(420, 100, int(x*1.25), int(y*1.25)))
         self.resizable(0,0)
         self.ret = {}
 

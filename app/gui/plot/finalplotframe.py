@@ -10,9 +10,6 @@ from app.gui.stateframe import StateFrame
 
 matplotlib.use("TkAgg")
 
-GRAPH_DIM = (11, 7)
-
-
 class FinalPlotFrame(StateFrame):
     def __init__(self, parent, dfa, photodir):
         super().__init__(parent, dfa)
@@ -39,7 +36,8 @@ class FinalPlotFrame(StateFrame):
         self.peakloadframe.canvas.figure.savefig("{}S{}_PL.png".format(self.photodir, self.sample.num))
         self.utsframe.canvas.figure.savefig("{}S{}_UTS.png".format(self.photodir, self.sample.num))
         self.yieldloadframe.canvas.figure.savefig("{}S{}_YL.png".format(self.photodir, self.sample.num))
+        self.next()
 
     def build(self):
         self.canvasnotebook.pack()
-        Button(self, text="Done", font=("Helvetica", 16), command=self.ondone).pack(side=RIGHT)
+        Button(self, text="Generate PNGs", font=("Helvetica", 16), command=self.ondone).pack(side=RIGHT)

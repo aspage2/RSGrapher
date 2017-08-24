@@ -30,6 +30,7 @@ class ElasticIntervalFrame(StateFrame):
             self.radiobuttons.append(Radiobutton(self.controlframe, font=FONT, text=b['text'], value=b['value'], variable=self.var,
                                                  command=b['command'](self)))
         self.setfocus(0)
+        self.canvas.set_labels("Load vs. Displacement", "Displacement (in.)", "Load (lbs.)")
         self.canvas.show()
         self.sample = None
         self.build()
