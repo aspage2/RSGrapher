@@ -1,6 +1,6 @@
 from tkinter import *
 
-from app.gui.plot.plot_canvas import PlotCanvas
+from app.gui.plotting.plot_canvas import PlotCanvas
 
 from matplotlib.figure import Figure
 

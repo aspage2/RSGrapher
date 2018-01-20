@@ -15,6 +15,9 @@ class SampleDirectoryInputGroup(Frame):
         self.sample_dir.pack(side=LEFT)
         Button(self, text="Browse", font=font, command=self.browse).pack(side=LEFT)
 
+    def set_initialdir(self, d):
+        self._initialdir = d
+
     def set_dir(self, dir):
         self.sample_dir.delete(0, END)
         if dir is not None:
@@ -33,7 +36,7 @@ class SampleDirectoryInputGroup(Frame):
         return True
 
     def browse(self):
-        dir = filedialog.askopenfilename(title="Open ASC File")
+        dir = filedialog.askopenfilename(title="Open ASC File", initialdir=self._initialdir)
         if dir is None:
             return
         self.sample_dir.delete(0, END)

@@ -1,68 +1,47 @@
 from tkinter import *
+from tkinter import messagebox
 
-from app.gui.plot.finalplotframe import FinalPlotFrame
-from app.gui.progress_buttons import ProgressFrame
-from app.project.sample import Sample
-from app.util.sample_state import SampleState
-from app.util.progress_enum import Prog
-from app.gui.infoframe import InfoFrame
-from app.gui.dataframe import DataFrame
-from app.gui.plot.testintervalframe import TestIntervalFrame
-from app.gui.plot.elasticintervalframe import ElasticIntervalFrame
+from app.gui.sample_edit_frame import SampleEditFrame
+
 
 class MainFrame(Frame):
     """Root frame of an RSGrapher application window.
        the direct child of the housing Tk instance."""
 
-    def __init__(self, parent, project):
+    def __init__(self, parent, handler):
         super().__init__(parent, padx=10, pady=10)
-        self.parent = parent
-        self.project = project
-        self.progress = ProgressFrame(self)
-        chars = ["I", "D", "T", "E", "F"]
-        self.dfa = SampleState(self)
-        func = lambda c: lambda: self.dfa.next(c)
-        for i in range(5):
-            self.progress.buttons[i]['command'] = func(chars[i])
-        self.currstate = None
-        self.progress.set(Prog.INFO)
-        self.frameholder = Frame(self)
-        self.frames = {Prog.INFO: InfoFrame(self.frameholder, self.dfa),
-                       Prog.TESTDATA: DataFrame(self.frameholder, self.dfa),
-                       Prog.TESTINT: TestIntervalFrame(self.frameholder, self.dfa),
-                       Prog.ELASTICINT: ElasticIntervalFrame(self.frameholder, self.dfa),
-                       Prog.FINALGRAPH: FinalPlotFrame(self.frameholder, self.dfa, self.project.graph_dir)}
+        self._no_project_frame = NoProjectFrame(self, handler.new_project, handler.open_project)
+        self._no_sample_frame = NoSampleFrame(self, handler.new_sample)
+        self._sample_frame = SampleEditFrame(self, handler)
+        self._project_handler = handler
 
-        self.build()
-        self.sample = Sample()
-        self.dfa.next("N")
+        self._curr = None
 
-    def set_state(self, state):
-        if state == "END":
-            self.new_sample()
-            self.dfa.next("N")
-            return
-
-        data = state.split("_")
-        if len(data) == 2:
-            state = Prog.from_string(data[0])
+    def content_update(self):
+        """Update view with new content from handler"""
+        if self._curr is not None:
+            self._curr.pack_forget()
+        if self._project_handler.project is None:
+            self._no_project_frame.pack()
+            self._curr = self._no_project_frame
+        elif len(self._project_handler.project.samples) == 0:
+            self._no_sample_frame.pack()
+            self._curr = self._no_sample_frame
         else:
-            state = Prog.from_string(state)
-        if self.currstate == state:
-            return
-        print("SET STATE {}".format(state))
-        self.progress.set(state)
-        if self.currstate is not None:
-            self.frames[self.currstate].hide()
-            self.frames[self.currstate].pack_forget()
-        self.frames[state].set_sample(self.sample)
-        self.frames[state].pack(fill=BOTH)
+            self._sample_frame.pack()
+            self._sample_frame.content_update()
+            self._curr = self._sample_frame
 
-        self.currstate = state
 
-    def build(self):
-        self.progress.pack()
-        self.frameholder.pack(fill=BOTH)
+class NoProjectFrame(Frame):
+    def __init__(self, parent, np, op):
+        super().__init__(parent)
+        Label(self, text="No Project Open").pack()
+        Button(self, text="New Project", command=np).pack()
+        Button(self, text="Open Project", command=op).pack()
 
-    def new_sample(self):
-        self.sample.write_data(self.project.sample_dir)
+class NoSampleFrame(Frame):
+    def __init__(self, parent, ns):
+        super().__init__(parent)
+        Label(self, text="Project has no samples!").pack()
+        Button(self, text="Add Sample", command=ns).pack()

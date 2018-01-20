@@ -1,18 +1,16 @@
-from app.gui.plot.elasticintervalframe import ElasticIntervalFrame
-from app.gui.plot.finalplotframe import FinalPlotFrame
-from app.gui.plot.testintervalframe import TestIntervalFrame
-from app.gui.root import ApplicationWindow
-from app.project.sample import Sample
-from app.util.asc_data import ASCData
 
-from tkinter import *
+from app.gui.app_window import AppWindow
 
 import sys
 
-from app.util.sample_state import SampleState
+from app.project.project_dir import ProjectDirectory
 
 assert sys.version_info >= (3, 5)
 
 if __name__ == "__main__":
-    root = ApplicationWindow()
+    if len(sys.argv) > 1:
+        p = ProjectDirectory.open_project(sys.argv[1])
+    else:
+        p = None
+    root = AppWindow(p)
     root.run()

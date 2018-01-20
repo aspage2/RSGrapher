@@ -3,16 +3,16 @@ from tkinter import *
 
 import matplotlib
 
-from app.gui.plot.peakloadframe import PeakLoadFrame
-from app.gui.plot.utsframe import UTSFrame
-from app.gui.plot.yieldloadframe import YieldLoadFrame
-from app.gui.stateframe import StateFrame
+from app.gui.plotting.peakloadframe import PeakLoadFrame
+from app.gui.plotting.utsframe import UTSFrame
+from app.gui.plotting.yieldloadframe import YieldLoadFrame
+from app.gui.abstract_tab_frame import AbstractTabFrame
 
 matplotlib.use("TkAgg")
 
-class FinalPlotFrame(StateFrame):
-    def __init__(self, parent, dfa, photodir):
-        super().__init__(parent, dfa)
+class FinalPlotFrame(AbstractTabFrame):
+    def __init__(self, parent, photodir):
+        super().__init__(parent, "Final Plots")
         self.canvasnotebook = Notebook(self)
         self.photodir = photodir
         self.peakloadframe = PeakLoadFrame(self.canvasnotebook)

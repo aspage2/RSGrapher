@@ -1,95 +1,96 @@
+from app.util.asc_data import ASCData
+import numpy as np
 
-class Sample:
-    """A sample of rebar from a test"""
 
-    def __init__(self, num=None):
-        self._data = None
+class Sample(ASCData):
+    """Data for a specific sample"""
 
+    def __init__(self, area=None, length=None, titles=None, plotrange=None):
+        super().__init__()
         # Data to be written to JSON
-        self.area = None
-        self.length = None
-        self.num = num
-        self.titles = [None, None, None]
-        self._peak_cutoff_pct = 0.1
-        self.elastic_interval = [None, None]
-        self._zero = None
-        self.plotrange = [None, None]
+        self._data_path = None  # Path to ASC
+        self.area = area  # cross-sectional area
+        self.length = length  # Pull length
+        self.num = None  # Sample Number
+        self.titles = titles if titles is not None else [None, None, None]  # Titles for graph output
+        self._cutoff_pct = 0.1  # All data after and below 1 - pct of peak load is cut off
+        self._elastic_interval = [None, None]  # Elastic interval as INDICES
+        self._zero_ind = 0  # Zero point
+        self.plotrange = [None, None]  # Graph plotting range as specified by the user.
 
-        # Other useful points
-        self._peak_load = None
-        self._cutoff_pt = None
-
-    def set_data(self, data):
-        self._data = data
-
-        maxval = None
-        for i, v in enumerate(self.load):
-            if maxval is None or maxval < v:
-                maxval = v
-                self._peak_load = i
-        self._zero = 100
-        self.peak_cutoff_pct = 0.1
+        self._peak_load_ind = None
+        self._cutoff_ind = None  # Index of first point cut from the end of the data.
 
     @property
     def elastic_zone(self):
-        return self.elastic_interval
+        return self._elastic_interval
 
-    def set_elastic_zone(self, l0, l1):
-        test = [l0 if l0 is not None else self.load[self.elastic_interval[0]],
-                l1 if l1 is not None else self.load[self.elastic_interval[1]]]
-        if test[1] < test[0]:
-            return
-        for i, l in enumerate((l0, l1)):
-            if l is None:
-                continue
-            j = 0
-            while j < len(self.load) and self.load[j] < l:
+    def set_data_from_file(self, data_path):
+        self.set_data(*ASCData.from_file(data_path))
+        self._data_path = data_path
+
+    def set_elastic_zone(self, L0, L1):
+        """Set the elastic zone to [L0, L1]"""
+        if L0 >= L1:
+            raise ValueError("elastic zone is backwards")
+        for i, L in enumerate((L0, L1)):
+            j = self._zero_ind
+            while j < len(self.load) and self.load[j] < L:
                 j += 1
             if j != len(self.load):
-                self.elastic_interval[i] = j
+                self._elastic_interval[i] = j
+
+    def set_zero(self, t):
+        self._zero_ind = np.argmin(np.abs(self.time - t))
 
     @property
-    def peak_cutoff_pct(self):
+    def cutoff_pct(self):
         """The percent below peak load for which to cutoff data after peak load is achieved"""
-        return self._peak_cutoff_pct
+        return self._cutoff_pct
 
-    @peak_cutoff_pct.setter
-    def peak_cutoff_pct(self, pct):
+    @cutoff_pct.setter
+    def cutoff_pct(self, pct):
         """Set new percent and recalculate the cutoff point"""
-        self._peak_cutoff_pct = pct
-        i = self._peak_load
-        while i < len(self.load) and self.load[i] > self.load[self._peak_load] * (1 - self._peak_cutoff_pct):
+        self._cutoff_pct = pct
+        if self.load is None:
+            return
+        i = self._peak_load_ind
+        while i < len(self.load) and self.load[i] > self.load[self._peak_load_ind] * (1 - self._cutoff_pct):
             i += 1
-        self._cutoff_pt = i
+        self._cutoff_ind = i
 
     @property
     def cutoff(self):
-        return self._cutoff_pt
+        return self._cutoff_ind
 
     @property
     def zero(self):
-        return self._zero
-
-    @zero.setter
-    def zero(self, disp):
-        i = 0
-        while i < len(self.disp) and self.disp[i] < disp:
-            i += 1
-        if i != len(self.disp):
-            self._zero = i
+        return self._zero_ind
 
     @property
-    def peak_load(self):
-        return self._peak_load
+    def json(self):
+        data = {'number': self.num, 'area': self.area, 'length': self.length, 'cutoff_pct': self._cutoff_pct,
+                'zero_ind': self._zero_ind, 'elastic_zone': self._elastic_interval, 'data_path': self._data_path,
+                'titles': self.titles, 'plot_range': self.plotrange}
+        return data
 
-    @property
-    def load(self):
-        return self._data.load
+    @staticmethod
+    def from_json(data):
+        ret = Sample()
+        path = data['data_path']
+        if path is not None:
+            ret.set_data(*ASCData.from_file(path))
 
-    @property
-    def disp(self):
-        return self._data.disp
+        ret.num = data['number']
+        ret.area = data['area']
+        ret.length = data['length']
 
-    def write_data(self, dir):
-        """Write my ASC data to myname.dat in my given directory"""
-        self._data.write(dir+"S{}.dat".format(str(self.num).zfill(3)))
+        ret.cutoff_pct = data['cutoff_pct']
+        ret._elastic_interval = data['elastic_zone']
+        ret._data_path = data["data_path"]
+        ret._zero_ind = data['zero_ind']
+
+        ret.titles = data['titles']
+        ret.plotrange = data["plot_range"]
+
+        return ret

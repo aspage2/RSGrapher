@@ -1,5 +1,5 @@
-from app.gui.plot import ELASTIC_STYLE, POINTSTYLE, BBOX, TRIMSTYLE
-from app.gui.plot.plotrangeframe import PlotRangeFrame
+from app.gui.plotting import ELASTIC_STYLE, POINTSTYLE, BBOX, TRIMSTYLE
+from app.gui.plotting.plotrangeframe import PlotRangeFrame
 from app.util.auto_elastic import line_intersection, get_yield_line
 
 

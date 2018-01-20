@@ -1,7 +1,4 @@
 
+VERSION = (0, 2)
 
-
-class ApplicationInstance:
-    def __init__(self):
-        self.project = None
-        self.root = Tk()
+PROJECT_TITLE = "RSGrapher v{}.{}".format(*VERSION)

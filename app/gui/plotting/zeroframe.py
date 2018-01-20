@@ -1,16 +1,17 @@
 from app.gui import PANEL_BG
-from app.gui.plot.plot_canvas import PlotCanvas
-from app.gui.stateframe import StateFrame
-from app.gui.plot import LINESTYLE, TRIMSTYLE
+from app.gui.plotting.plot_canvas import PlotCanvas
+from app.gui.abstract_tab_frame import AbstractTabFrame
+from app.gui.plotting import LINESTYLE, TRIMSTYLE
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
 
 from tkinter import *
 
-class TestIntervalFrame(StateFrame):
-    def __init__(self, parent, dfa):
-        super().__init__(parent, dfa)
-        self.canvas = PlotCanvas(Figure((7,5),dpi=100), self)
+
+class ZeroFrame(AbstractTabFrame):
+    def __init__(self, parent):
+        super().__init__(parent, "Trim Data")
+        self.canvas = PlotCanvas(Figure((7, 5), dpi=100), self)
         self.canvas.mpl_connect("button_press_event", self.on_click)
         self.nav = NavigationToolbar2TkAgg(self.canvas, self)
         self.canvas.set_labels("Load vs. Displacement", "Displacement (in.)", "Load (lbs.)")
@@ -28,12 +29,12 @@ class TestIntervalFrame(StateFrame):
         if self.sample.zero is not None:
             self.set_zeroline(self.sample.disp[self.sample.zero])
         self.cutoffentry.delete(0, END)
-        self.cutoffentry.insert(0, str(self.sample.peak_cutoff_pct*100))
+        self.cutoffentry.insert(0, str(self.sample.cutoff_pct * 100))
         self.set_trimdata(self.sample.disp[self.sample.cutoff:], self.sample.load[self.sample.cutoff:])
         self.canvas.show()
 
     def set_zeroline(self, x):
-        self.zeroline.set_data([x,x],[0, 1.3*self.canvas.ymax])
+        self.zeroline.set_data([x, x], [0, 1.3 * self.canvas.ymax])
 
     def set_trimdata(self, x, y):
         self.trimdata.set_data(x, y)
@@ -47,7 +48,7 @@ class TestIntervalFrame(StateFrame):
         if c > 100:
             return
 
-        self.sample.peak_cutoff_pct = c / 100.0
+        self.sample.cutoff_pct = c / 100.0
         self.set_trimdata(self.sample.disp[self.sample.cutoff:], self.sample.load[self.sample.cutoff:])
         self.canvas.show()
 
@@ -67,6 +68,7 @@ class TestIntervalFrame(StateFrame):
         self.canvas.pack()
         Label(self.controlframe, text="Post Peak Load Cutoff (%)", font=("Helvetica", 16)).pack(padx=10, side=LEFT)
         self.cutoffentry.pack(side=LEFT)
-        Button(self.controlframe, text="Done", font=("Helvetica", 16), command=self.ondone).pack(side=RIGHT, padx=10, pady=10)
+        Button(self.controlframe, text="Done", font=("Helvetica", 16), command=self.ondone).pack(side=RIGHT, padx=10,
+                                                                                                 pady=10)
         self.controlframe.pack(fill=X)
         self.nav.pack()

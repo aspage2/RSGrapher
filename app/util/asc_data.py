@@ -1,9 +1,17 @@
 import numpy as np
 
+
 class ASCData:
-    def __init__(self, time, load, disp):
-        if len(time) != len(disp):
-            raise ValueError("Lists are not the same length")
+    def __init__(self, time=None, load=None, disp=None):
+        if time is not None and load is not None and disp is not None:
+            self.set_data(time, load, disp)
+        else:
+            self.time = None
+            self.load = None
+            self.disp = None
+            self.len = None
+
+    def set_data(self, time, load, disp):
         self.time = np.array(time)
         self.disp = np.array(disp)
         self.load = np.array(load)
@@ -17,21 +25,14 @@ class ASCData:
             return (self.time[key.start:key.stop], self.disp[key.start:key.stop], self.load[key.start:key.stop])
         return (self.time[key], self.disp[key], self.load[key])
 
-
-    def write(self, filename):
-        with open(filename, 'w') as fh:
-            for i in range(self.len):
-                fh.write("{0}\t{1}\t{2}\n".format(self.time[i],self.disp[i],self.load[i]))
-
     @staticmethod
-    def open(filename, header=True):
+    def from_file(filename):
         time = []
         load = []
         disp = []
         with open(filename, 'r') as fh:
-            if header:
-                for i in range(7):
-                    fh.readline()
+            for i in range(7):
+                fh.readline()
             line = fh.readline().strip()
             while line != "":
                 t, d, l = line.split("\t")
@@ -39,4 +40,7 @@ class ASCData:
                 load.append(float(l))
                 disp.append(float(d))
                 line = fh.readline().strip()
-        return ASCData(time, load, disp)
+
+        return time, load, disp
+
+

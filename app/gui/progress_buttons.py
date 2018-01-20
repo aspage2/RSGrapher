@@ -1,26 +1,23 @@
 from tkinter import *
 
-from app.util.progress_enum import Prog
 
 CURR_COLOR = "#00ccc5"
 REG_COLOR = "#eff4ff"
 
 
 class ProgressFrame(Frame):
-    def __init__(self, parent):
+    def __init__(self, parent, labels):
         super().__init__(parent)
         self.parent = parent
-        labels = ["Info", "Test Data", "Trim Data", "Elastic Zone", "Graphs"]
-        self.buttons = [Button(self, text=labels[i], width=15, bg=REG_COLOR, activebackground=REG_COLOR) for i in
-                        range(5)]
+        self.buttons = [Button(self, text=label, width=15, bg=REG_COLOR, activebackground=REG_COLOR,
+                               command=lambda: self.parent.set_frame(i)) for i, label in enumerate(labels)]
         self.curr = 0
-        self.set(Prog.INFO)
+        self.set(0)
         self.build()
 
-    def set(self, val):
-        if val is None:
+    def set(self, i):
+        if self.curr == i:
             return
-        i = val.value
         self.buttons[self.curr]['bg'] = REG_COLOR
         self.buttons[i]['bg'] = CURR_COLOR
         self.curr = i

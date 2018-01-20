@@ -15,7 +15,7 @@ class PlotRangeInputGroup(Frame):
     @property
     def plotrange(self):
         if not self.entries_valid():
-            raise ValueError("Attempt to get invalid plot range")
+            raise ValueError("Attempt to get invalid plotting range")
         return float(self.dispmax.get()), float(self.loadmax.get())
 
     def set_plotrange(self, dm, lm):

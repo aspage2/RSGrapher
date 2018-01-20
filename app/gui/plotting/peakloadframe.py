@@ -1,6 +1,6 @@
 
-from app.gui.plot.plotrangeframe import PlotRangeFrame
-from app.gui.plot import POINTSTYLE, BBOX
+from app.gui.plotting.plotrangeframe import PlotRangeFrame
+from app.gui.plotting import POINTSTYLE, BBOX
 
 
 class PeakLoadFrame(PlotRangeFrame):

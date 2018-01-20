@@ -3,9 +3,9 @@ from matplotlib.figure import Figure
 
 from tkinter import *
 
-from app.gui.plot import ELASTIC_STYLE, LINESTYLE
-from app.gui.plot.plot_canvas import PlotCanvas
-from app.gui.stateframe import StateFrame
+from app.gui.plotting import ELASTIC_STYLE, LINESTYLE
+from app.gui.plotting.plot_canvas import PlotCanvas
+from app.gui.abstract_tab_frame import AbstractTabFrame
 
 from app.util.auto_elastic import suggested_elastic_zone, linear_regression
 
@@ -14,9 +14,9 @@ RADIOBUTTONS = ({"text": "Set Zone Start", "value": 0, "command": lambda f: lamb
 
 FONT = ("Helvetica", 16)
 
-class ElasticIntervalFrame(StateFrame):
-    def __init__(self, parent, dfa):
-        super().__init__(parent, dfa)
+class ElasticIntervalFrame(AbstractTabFrame):
+    def __init__(self, parent):
+        super().__init__(parent, "Elastic Zone")
         self.canvas = PlotCanvas(Figure((7, 5), dpi=100), self)
         self.canvas.mpl_connect("button_press_event", self.on_click)
         self.interval_lines = [self.canvas.plot([], [], **LINESTYLE) for i in "  "]
