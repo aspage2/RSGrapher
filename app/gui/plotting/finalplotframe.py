@@ -10,11 +10,12 @@ from app.gui.abstract_tab_frame import AbstractTabFrame
 
 matplotlib.use("TkAgg")
 
+
 class FinalPlotFrame(AbstractTabFrame):
-    def __init__(self, parent, photodir):
-        super().__init__(parent, "Final Plots")
+    def __init__(self, parent, photo_dir, handler, next_frame):
+        super().__init__(parent, "Final Plots", handler, next_frame)
         self.canvasnotebook = Notebook(self)
-        self.photodir = photodir
+        self.photodir = photo_dir
         self.peakloadframe = PeakLoadFrame(self.canvasnotebook)
         self.canvasnotebook.add(self.peakloadframe, text="Peak Load")
 
@@ -26,18 +27,19 @@ class FinalPlotFrame(AbstractTabFrame):
 
         self.build()
 
-    def set_sample(self, sample):
-        super().set_sample(sample)
-        self.peakloadframe.set_sample(sample)
-        self.utsframe.set_sample(sample)
-        self.yieldloadframe.set_sample(sample)
+    def content_update(self):
+        s = self._proj_handle.curr_sample
+        self.peakloadframe.set_sample(s)
+        self.utsframe.set_sample(s)
+        self.yieldloadframe.set_sample(s)
 
-    def ondone(self):
-        self.peakloadframe.canvas.figure.savefig("{}S{}_PL.png".format(self.photodir, self.sample.num))
-        self.utsframe.canvas.figure.savefig("{}S{}_UTS.png".format(self.photodir, self.sample.num))
-        self.yieldloadframe.canvas.figure.savefig("{}S{}_YL.png".format(self.photodir, self.sample.num))
-        self.next()
+    def unload(self):
+        s = self._proj_handle.curr_sample
+        self.peakloadframe.canvas.figure.savefig("{}S{}_PL.pdf".format(self.photodir, s.num))
+        self.utsframe.canvas.figure.savefig("{}S{}_UTS.pdf".format(self.photodir, s.num))
+        self.yieldloadframe.canvas.figure.savefig("{}S{}_YL.pdf".format(self.photodir, s.num))
+
 
     def build(self):
         self.canvasnotebook.pack()
-        Button(self, text="Generate PNGs", font=("Helvetica", 16), command=self.ondone).pack(side=RIGHT)
+        Button(self, text="Generate PNGs", font=("Helvetica", 16), command=self.on_next).pack(side=RIGHT)
