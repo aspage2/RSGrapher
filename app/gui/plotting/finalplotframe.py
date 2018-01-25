@@ -12,10 +12,9 @@ matplotlib.use("TkAgg")
 
 
 class FinalPlotFrame(AbstractTabFrame):
-    def __init__(self, parent, photo_dir, handler, next_frame):
+    def __init__(self, parent, handler, next_frame):
         super().__init__(parent, "Final Plots", handler, next_frame)
         self.canvasnotebook = Notebook(self)
-        self.photodir = photo_dir
         self.peakloadframe = PeakLoadFrame(self.canvasnotebook)
         self.canvasnotebook.add(self.peakloadframe, text="Peak Load")
 
@@ -35,9 +34,10 @@ class FinalPlotFrame(AbstractTabFrame):
 
     def unload(self):
         s = self._proj_handle.curr_sample
-        self.peakloadframe.canvas.figure.savefig("{}S{}_PL.pdf".format(self.photodir, s.num))
-        self.utsframe.canvas.figure.savefig("{}S{}_UTS.pdf".format(self.photodir, s.num))
-        self.yieldloadframe.canvas.figure.savefig("{}S{}_YL.pdf".format(self.photodir, s.num))
+        photodir = self._proj_handle.project.photo_dir
+        self.peakloadframe.canvas.figure.savefig("{}S{}_PL.pdf".format(photodir, s.num))
+        self.utsframe.canvas.figure.savefig("{}S{}_UTS.pdf".format(photodir, s.num))
+        self.yieldloadframe.canvas.figure.savefig("{}S{}_YL.pdf".format(photodir, s.num))
 
 
     def build(self):

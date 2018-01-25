@@ -26,7 +26,7 @@ class SampleEditFrame(Frame):
                        DataFrame(self.frameholder, handler, self.next_frame),
                        ZeroFrame(self.frameholder, handler, self.next_frame),
                        ElasticIntervalFrame(self.frameholder, handler, self.next_frame),
-                       FinalPlotFrame(self.frameholder, handler.project.photo_dir, handler, self.next_frame))
+                       FinalPlotFrame(self.frameholder, handler, self.next_frame))
 
         self.progress_frame = ProgressFrame(self, map(lambda f: f.title, self.frames))
 

@@ -25,7 +25,7 @@ class UTSFrame(PlotRangeFrame):
         self.canvas.set_plotrange((0, x / sample.length * 100),(0, y / sample.area))
 
         # Calculate raw stress/strain data from sample information
-        stress = (sample.load - sample.load[sample.zero]) / sample.area
+        stress = (sample.load) / sample.area
         strain = (sample.disp - sample.disp[sample.zero]) / sample.length * 100.0
         self.canvas.set_data(strain[sample.zero:sample.cutoff], stress[sample.zero:sample.cutoff])
         self.uts.set_data(strain[sample.peak_load], stress[sample.peak_load])
@@ -33,7 +33,7 @@ class UTSFrame(PlotRangeFrame):
         self.uts_text.set_text("UTS: {:.2f} ksi".format(stress[sample.peak_load] / 1000.0))
         estrain = strain[sample.elastic_zone[0]:sample.elastic_zone[1]]
         estress = stress[sample.elastic_zone[0]:sample.elastic_zone[1]]
-        m, b, r = get_yield_line(estrain, estress, sample.length)
+        m, b, r = get_yield_line(estrain, estress)
         self.yieldline_data.set_data(estrain, estress)
         self.yieldline.set_data(stress, m * stress + b)
         yield_ind = line_intersection(strain, stress, m, b)

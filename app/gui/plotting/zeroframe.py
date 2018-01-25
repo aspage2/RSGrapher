@@ -77,7 +77,7 @@ class ZeroFrame(AbstractTabFrame):
 
     def on_cutoff_set(self):
         try:
-            c = int(self.cutoffentry.get())
+            c = float(self.cutoffentry.get())
         except:
             return
         if c > 100:

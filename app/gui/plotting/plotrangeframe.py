@@ -3,12 +3,13 @@ from tkinter import *
 from app.gui.plotting.plot_canvas import PlotCanvas
 
 from matplotlib.figure import Figure
-
+from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
 
 class PlotRangeFrame(Frame):
     def __init__(self, parent, title="RSG"):
         super().__init__(parent)
         self.canvas = PlotCanvas(Figure((10, 6), dpi=100), self)
+        self.toolbar = NavigationToolbar2TkAgg(self.canvas, self)
         self.title = title
         self.sample = None
         self.build()

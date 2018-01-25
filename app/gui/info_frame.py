@@ -20,6 +20,8 @@ class InfoFrame(AbstractTabFrame):
 
     def content_update(self):
         s = self._proj_handle.curr_sample
+        if s is None:
+            return
         if None not in s.titles:
             self.title_input.set_titles(*s.titles)
         if s.area is not None:
