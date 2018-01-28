@@ -1,6 +1,12 @@
 
 from app.gui.dialog.newproject import NewProjectPrompt
+from app.gui.dialog.date_input import DateInputDialog
+
+import datetime
+
 from tkinter import messagebox, filedialog
+
+from app.gui.dialog.select_sample import SelectSampleDialog
 from app.project.project_dir import ProjectDirectory
 
 
@@ -18,7 +24,7 @@ class ProjectHandler:
         info = NewProjectPrompt(self._app).run()
         if info['cancelled']:
             return
-        self.set_project(ProjectDirectory.create_project(info['title'],info['num'],info['dir']+"/"))
+        self.set_project(ProjectDirectory.create_project(info['title'],info['num'],info['dir']+"/", datetime.datetime.now()))
         self._app.content_update()
 
     def open_project(self):
@@ -42,11 +48,16 @@ class ProjectHandler:
     def new_sample(self):
         """Add a new sample to the existing project"""
         self.project.add_blank_sample()
+        self.curr_sample = self.project.samples[-1]
         self._app.content_update()
 
     def select_sample(self):
         """Set the current sample to a previously made one"""
-        pass
+        ret = SelectSampleDialog(self._app,self.project.samples, self.curr_sample).run()
+        if ret['cancelled']:
+            return
+        self.curr_sample = self.project.samples[ret['sample']]
+        self._app.content_update()
 
     def delete_curr_sample(self):
         """Delete the currently open sample"""
@@ -64,3 +75,9 @@ class ProjectHandler:
             self.curr_sample = self.project.samples[0]
         else:
             self.curr_sample = None
+
+    def set_date(self):
+        res = DateInputDialog(self._app).run()
+        if res["cancelled"]:
+            return
+        self.project.set_date(res['date'])

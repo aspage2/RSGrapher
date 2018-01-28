@@ -2,7 +2,8 @@ from tkinter import Menu, Tk
 
 from app import PROJECT_TITLE
 from app.gui.main_frame import MainFrame
-from app.gui.project_handler import ProjectHandler
+from app.project.project_handler import ProjectHandler
+
 
 class AppWindow(Tk):
     """A running instance of the RSGrapher application"""
@@ -16,7 +17,7 @@ class AppWindow(Tk):
         self.protocol("WM_DELETE_WINDOW", self.exit)
         self.title(PROJECT_TITLE)
         self.geometry("1000x800+300+300")
-        self.iconbitmap("res/window_icon.ico")
+        # self.iconbitmap("res/window_icon.ico")
 
         self.content_update()
 
@@ -50,6 +51,11 @@ class AppWindow(Tk):
         samplemenu.add_command(label="Select Sample", command=self._project_handler.select_sample)
         samplemenu.add_command(label="Delete This Sample", command=self._project_handler.delete_curr_sample)
         menubar.add_cascade(label="Sample", menu=samplemenu)
+
+        projectmenu = Menu(menubar, tearoff=False)
+        projectmenu.add_command(label="Set Project Date", command=self._project_handler.set_date)
+        menubar.add_cascade(label="Project", menu=projectmenu)
+
 
     def _on_destroy(self):
         self._project_handler.close_project()

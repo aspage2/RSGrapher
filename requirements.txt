@@ -1,4 +1,4 @@
 numpy
 matplotlib
-Pillow
-fpdf
+reportlab
+PyPDF2

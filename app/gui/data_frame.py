@@ -4,7 +4,6 @@ from app.gui.abstract_tab_frame import AbstractTabFrame
 from app.gui.input_group.sample_num_input import SampleNumberInputGroup
 from app.gui.input_group.sample_dir_input import SampleDirectoryInputGroup
 from app.gui.info_frame import FONT
-from app.util.asc_data import ASCData
 
 
 class DataFrame(AbstractTabFrame):
@@ -19,15 +18,22 @@ class DataFrame(AbstractTabFrame):
 
     def content_update(self):
         s = self._proj_handle.curr_sample
-        if s.num is None:
+        if s.num is not None:
+            self.num_input.set(s.num)
+        else:
             self._num += 1
             self.num_input.set(self._num)
-        self.dir_input.set_dir("")
+
+        if s.dir is None:
+            self.dir_input.set_dir("")
+        else:
+            self.dir_input.set_dir(s.dir)
         self.dir_input.set_initialdir(self._proj_handle.project.data_dir)
 
     def is_done(self):
         return self.num_input.entries_valid() and self.dir_input.entries_valid()
 
     def unload(self):
-        self._parent.curr_sample.num = int(self.num_input.get_num())
-        self._parent.curr_sample.set_data_from_file(self.dir_input.get_dir())
+        s = self._proj_handle.curr_sample
+        s.num = int(self.num_input.get_num())
+        s.set_data_from_file(self.dir_input.get_dir())

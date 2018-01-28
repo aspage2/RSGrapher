@@ -19,13 +19,25 @@ class InfoFrame(AbstractTabFrame):
         self.build()
 
     def content_update(self):
-        pass  # Intentional. Most samples of a batch use the same info.
-        #  User can still go back and change values, however.
+        s = self._proj_handle.curr_sample
+        if s is None:
+            return
+        if None not in s.titles:
+            self.title_input.set_titles(*s.titles)
+        if s.area is not None:
+            self.dim_input.set_area(s.area)
+        if s.length is not None:
+            self.dim_input.set_length(s.length)
+        if None not in s.plotrange:
+            self.plot_range_input.set_plotrange(*s.plotrange)
 
     def is_done(self):
+        """"""
         return self.title_input.entries_valid() and self.dim_input.entries_valid() and self.plot_range_input.entries_valid()
 
     def unload(self):
+        """Called by AbstractTabFrame.on_next
+        is_done is true if unload is called."""
         s = self._proj_handle.curr_sample
         if s is None:
             return

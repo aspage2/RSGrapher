@@ -1,11 +1,15 @@
 import os
 import json
 
+from app.util.gen_pdf import graph_page_template
 from app.project.sample import Sample
 
 DATA_FOLDER = "Raw Data/"
 PHOTO_FOLDER = "Photos/"
 PDF_FOLDER = "pdfs for Test Report/"
+INVOICE_FOLDER = "Invoice/"
+SPEC_FOLDER = "Test Specifications/"
+
 class ProjectDirectory:
     """Data class for Project info (directory, title, sample list)"""
 
@@ -14,6 +18,9 @@ class ProjectDirectory:
         self.number = number
         self._directory = directory
         self.samples = []
+
+    def set_date(self, date):
+        graph_page_template(self.number, date.strftime("%B %d, %Y"), self.pdf_dir+"graph_template.pdf")
 
     def add_sample(self, sample):
         self.samples.append(sample)
@@ -45,6 +52,9 @@ class ProjectDirectory:
     def pdf_dir(self):
         return self._directory + PDF_FOLDER
 
+    @property
+    def template_file(self):
+        return self.pdf_dir + "graph_template.pdf"
     def write_project(self):
         data = {'title': self.title, 'number': self.number}
         samples = []
@@ -55,12 +65,16 @@ class ProjectDirectory:
             f.write(json.dumps(data))
 
     @staticmethod
-    def create_project(title, number, proj_dir):
+    def create_project(title, number, proj_dir, date):
         """Create a project and write it to [parent_dir]/RSG[number] - [title]"""
         os.mkdir(proj_dir + DATA_FOLDER)
         os.mkdir(proj_dir + PHOTO_FOLDER)
         os.mkdir(proj_dir + PDF_FOLDER)
+        os.mkdir(proj_dir + PDF_FOLDER+"temp/")
+        os.mkdir(proj_dir + INVOICE_FOLDER)
+        os.mkdir(proj_dir + SPEC_FOLDER)
         ret = ProjectDirectory(title,number,proj_dir)
+        ret.set_date(date)
         return ret
 
     @staticmethod

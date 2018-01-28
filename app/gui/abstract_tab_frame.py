@@ -1,6 +1,7 @@
 
 from tkinter import *
 
+
 class AbstractTabFrame(Frame):
     """Parent class for changing parts of a sample's information"""
     def __init__(self, parent, title, proj_ptr, next_frame):
@@ -10,8 +11,13 @@ class AbstractTabFrame(Frame):
         self._proj_handle = proj_ptr
         self._next_frame = next_frame
 
+    def can_update(self):
+        """True if frame can update display given the state
+        of the curr_sample"""
+        return True
+
     def is_done(self):
-        """True if the fields needed are correct"""
+        """True if the frame can safely update the curr_sample"""
         return True
 
     def content_update(self):
@@ -24,9 +30,11 @@ class AbstractTabFrame(Frame):
 
     @property
     def title(self):
+        """The title of this frame"""
         return self._title
 
     def on_next(self):
         """Pass this method to 'next' buttons on the frame"""
         if self.is_done():
+            self.unload()
             self._next_frame()

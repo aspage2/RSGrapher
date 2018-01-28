@@ -1,3 +1,4 @@
+from tkinter import messagebox
 from tkinter.ttk import Notebook
 from tkinter import *
 
@@ -7,14 +8,15 @@ from app.gui.plotting.peakloadframe import PeakLoadFrame
 from app.gui.plotting.utsframe import UTSFrame
 from app.gui.plotting.yieldloadframe import YieldLoadFrame
 from app.gui.abstract_tab_frame import AbstractTabFrame
+from app.util.gen_pdf import create_pdf
 
 matplotlib.use("TkAgg")
 
+
 class FinalPlotFrame(AbstractTabFrame):
-    def __init__(self, parent, photodir):
-        super().__init__(parent, "Final Plots")
+    def __init__(self, parent, handler, next_frame):
+        super().__init__(parent, "Final Plots", handler, next_frame)
         self.canvasnotebook = Notebook(self)
-        self.photodir = photodir
         self.peakloadframe = PeakLoadFrame(self.canvasnotebook)
         self.canvasnotebook.add(self.peakloadframe, text="Peak Load")
 
@@ -26,18 +28,32 @@ class FinalPlotFrame(AbstractTabFrame):
 
         self.build()
 
-    def set_sample(self, sample):
-        super().set_sample(sample)
-        self.peakloadframe.set_sample(sample)
-        self.utsframe.set_sample(sample)
-        self.yieldloadframe.set_sample(sample)
+    def content_update(self):
+        s = self._proj_handle.curr_sample
+        self.peakloadframe.set_sample(s)
+        self.utsframe.set_sample(s)
+        self.yieldloadframe.set_sample(s)
 
-    def ondone(self):
-        self.peakloadframe.canvas.figure.savefig("{}S{}_PL.png".format(self.photodir, self.sample.num))
-        self.utsframe.canvas.figure.savefig("{}S{}_UTS.png".format(self.photodir, self.sample.num))
-        self.yieldloadframe.canvas.figure.savefig("{}S{}_YL.png".format(self.photodir, self.sample.num))
-        self.next()
+    def unload(self):
+        s = self._proj_handle.curr_sample
+        project = self._proj_handle.project
+        pdf_dir = project.pdf_dir
+
+        pl_file = "{}temp/S{}_PL.pdf".format(pdf_dir, s.num)
+        self.peakloadframe.canvas.figure.savefig(pl_file)
+        create_pdf(project.template_file, pl_file, pdf_dir+"Sample #{} (PeakLoad).pdf".format(s.num))
+
+        uts_file = "{}temp/S{}_UTS.pdf".format(pdf_dir, s.num)
+        self.utsframe.canvas.figure.savefig(uts_file)
+        create_pdf(project.template_file, uts_file, pdf_dir+"Sample #{} (UTS).pdf".format(s.num))
+
+        yl_file = "{}temp/S{}_YL.pdf".format(pdf_dir, s.num)
+        self.yieldloadframe.canvas.figure.savefig(yl_file)
+        create_pdf(project.template_file, yl_file, pdf_dir+"Sample #{} (YieldLoad).pdf".format(s.num))
+
+        messagebox.showinfo(title="Success",message="Created 3 files in {}".format(pdf_dir))
+
 
     def build(self):
         self.canvasnotebook.pack()
-        Button(self, text="Generate PNGs", font=("Helvetica", 16), command=self.ondone).pack(side=RIGHT)
+        Button(self, text="Generate PDFs", command=self.on_next).pack(side=RIGHT)

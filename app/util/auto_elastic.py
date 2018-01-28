@@ -16,9 +16,9 @@ def linear_regression(x,y):
     m, b = ret[0]
     return m,b,ret[1][0]
 
-def get_yield_line(disp, load, length):
+def get_yield_line(disp, load):
     m,b,r = linear_regression(disp, load)
-    b_offset = m * 0.2 / 100.0 * length
+    b_offset = m * 0.2
     return m, b - b_offset, r
 
 def suggested_elastic_zone(disp, load):

@@ -18,33 +18,40 @@ class SampleEditFrame(Frame):
     def __init__(self, parent, handler):
         super().__init__(parent, padx=10, pady=10)
         self.parent = parent
+        self.curr_frame = None
         self._project_handler = handler
         self._recent_root = None
         self.frameholder = Frame(self)
         self.frames = (InfoFrame(self.frameholder, handler, self.next_frame),
-                  DataFrame(self.frameholder, handler, self.next_frame))
+                       DataFrame(self.frameholder, handler, self.next_frame),
+                       ZeroFrame(self.frameholder, handler, self.next_frame),
+                       ElasticIntervalFrame(self.frameholder, handler, self.next_frame),
+                       FinalPlotFrame(self.frameholder, handler, self.next_frame))
 
         self.progress_frame = ProgressFrame(self, map(lambda f: f.title, self.frames))
 
-        self.curr_frame = None
         self.build()
 
     def content_update(self):
         p = self._project_handler.project
         if self._recent_root != p.root: # New Project, go to infoframe
             self.set_frame(0)
+            self.progress_frame.set(0, False)
         else:
             self.set_frame(1)
+            self.progress_frame.set(1, False)
 
     def build(self):
         self.progress_frame.pack()
         self.frameholder.pack(fill=BOTH)
 
     def set_frame(self, i):
+        if not self.frames[i].can_update():
+            return
         if self.curr_frame is not None:
-            self.frames[self.curr_frame].unload()
             self.frames[self.curr_frame].pack_forget()
         self.curr_frame = i
+        print("SET {}".format(i))
         self.frames[self.curr_frame].content_update()
         self.frames[self.curr_frame].pack()
 
@@ -58,3 +65,4 @@ class SampleEditFrame(Frame):
                 self._project_handler.new_sample()
         else:
             self.set_frame(c)
+            self.progress_frame.set(c,False)
