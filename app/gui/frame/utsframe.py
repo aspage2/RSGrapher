@@ -1,9 +1,6 @@
-from app.gui.plotting import ELASTIC_STYLE, TRIMSTYLE
-from app.gui.plotting import POINTSTYLE, BBOX
-from app.gui.plotting.plotrangeframe import PlotRangeFrame
+from app.gui.frame.plotrangeframe import PlotRangeFrame
+from app.gui import ELASTIC_STYLE, TRIM_STYLE, POINT_STYLE, BBOX, HIGHLIGHT_STYLE
 from app.util.auto_elastic import get_yield_line, line_intersection
-
-from tkinter import *
 
 UTS_LABEL = "utstext"
 YIELDSTRENGTH_LABEL = "yieldstrengthtext"
@@ -12,12 +9,12 @@ class UTSFrame(PlotRangeFrame):
     def __init__(self, parent):
         super().__init__(parent, "Stress vs. Strain",annotation_id="uts_annotation")
         self.sample = None
-        self.uts = self.canvas.plot("utspoint",[], [], **POINTSTYLE)
+        self.uts = self.canvas.plot("utspoint", [], [], **POINT_STYLE)
         self.uts_text = self.canvas.axes.text(0, 0, "", bbox=BBOX, va="bottom", ha="left")
         self.yield_text = self.canvas.axes.text(0, 0, "", bbox=BBOX, va="top", ha="left")
         self.yieldline = self.canvas.plot("yieldline", [], [], **ELASTIC_STYLE)
-        self.yieldline_data = self.canvas.plot("yieldline_data", [], [], **TRIMSTYLE)
-        self.yieldpoint = self.canvas.plot("yieldpoint",[], [], **POINTSTYLE)
+        self.yieldline_data = self.canvas.plot("yieldline_data", [], [], **HIGHLIGHT_STYLE)
+        self.yieldpoint = self.canvas.plot("yieldpoint", [], [], **POINT_STYLE)
         self.canvas.set_labels("Stress vs. Strain", "Strain (% Length)", "Stress (psi)")
 
         self._handler.watch_label(UTS_LABEL, self.uts_text)

@@ -1,10 +1,9 @@
 from tkinter import *
-from tkinter import messagebox
 
-from app.gui.sample_edit_frame import SampleEditFrame
+from app.gui.frame.sample_edit_frame import SampleEditFrame
 
 
-class MainFrame(Frame):
+class RootFrame(Frame):
     """Root frame of an RSGrapher application window.
        the direct child of the housing Tk instance."""
 
@@ -28,7 +27,7 @@ class MainFrame(Frame):
             self._no_sample_frame.pack()
             self._curr = self._no_sample_frame
         else:
-            self._sample_frame.pack()
+            self._sample_frame.pack(fill=X)
             self._sample_frame.content_update()
             self._curr = self._sample_frame
 

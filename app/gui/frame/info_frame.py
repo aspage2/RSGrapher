@@ -1,12 +1,12 @@
 
 from tkinter import *
 
-from app.gui.input_group.title_input import TitleInputGroup
-from app.gui.input_group.sample_dim_input import SampleDimensionInputGroup
+from app.gui.frame import FONT
+from app.gui.frame.abstract_tab_frame import AbstractTabFrame
 from app.gui.input_group.plot_range_input import PlotRangeInputGroup
-from app.gui.abstract_tab_frame import AbstractTabFrame
-
-FONT = ("Helvetica", 16)
+from app.gui.input_group.precision_input import PrecisionInputGroup
+from app.gui.input_group.sample_dim_input import SampleDimensionInputGroup
+from app.gui.input_group.title_input import TitleInputGroup
 
 
 class InfoFrame(AbstractTabFrame):
@@ -16,6 +16,7 @@ class InfoFrame(AbstractTabFrame):
         self.title_input = TitleInputGroup(self, font=FONT)
         self.dim_input = SampleDimensionInputGroup(self, font=FONT)
         self.plot_range_input = PlotRangeInputGroup(self, font=FONT)
+        self.precision_input = PrecisionInputGroup(self, font=FONT)
         self.build()
 
     def content_update(self):
@@ -28,6 +29,8 @@ class InfoFrame(AbstractTabFrame):
             self.dim_input.set_area(s.area)
         if s.length is not None:
             self.dim_input.set_length(s.length)
+
+        self.precision_input.set(s.precision)
         if None not in s.plotrange:
             self.plot_range_input.set_plotrange(*s.plotrange)
 
@@ -45,6 +48,7 @@ class InfoFrame(AbstractTabFrame):
         s.area = self.dim_input.get_area()
         s.length = self.dim_input.get_length()
         s.plotrange[:] = self.plot_range_input.plotrange
+        s.precision = self.precision_input.precision
 
     def build(self):
         self.title_input.pack(pady=10)
@@ -52,4 +56,5 @@ class InfoFrame(AbstractTabFrame):
         self.dim_input.pack(pady=10)
         Label(self, text="Plot Maxima", font=FONT).pack(pady=10)
         self.plot_range_input.pack(pady=10)
+        self.precision_input.pack(pady=10)
         Button(self, text="Done", font=FONT, command=self.on_next).pack()

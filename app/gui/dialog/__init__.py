@@ -19,16 +19,20 @@ def ask_project_dir(initdir=getcwd()):
     return filedialog.askdirectory(title="Open Project", initialdir=initdir)
 
 class BaseDialogWindow(Toplevel):
-    """A Base class for all complex dialogs to inherit from.
-       provides a dictionary to populate with information to
-       return to the main application."""
-    def __init__(self, root):
-        super().__init__(master=root)
+    """Base class for more custom dialogs. Provides
+    logic for passing values back to main application.
+    Inheritors define the layout and update return values
+    with inherited methods."""
+    def __init__(self, root, title="", **kwargs):
+        super().__init__(master=root, **kwargs)
         self.root = root
         x = root.winfo_x()
         y = root.winfo_y()
-        self.geometry("{}x{}+{}+{}".format(420, 100, int(x*1.25), int(y*1.25)))
+        self.geometry("+{}+{}".format(int(x*1.25)+100, int(y*1.25)+100))
+        self.title(title)
         self.resizable(0,0)
+
+        # Keep a list of return parameters
         self.ret = {}
 
     def ret_update(self, **kwargs):
@@ -42,7 +46,8 @@ class BaseDialogWindow(Toplevel):
             del self.ret[k]
 
     def run(self):
-        """Open this window and grab all event handlers until it closes"""
+        """Open this dialog. lock the main window until this one is destroyed.
+        :return Dictionary of values set by user."""
         self.grab_set()
         self.root.wait_window(self)
         return self.ret

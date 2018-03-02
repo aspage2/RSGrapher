@@ -1,9 +1,9 @@
 from tkinter import Button
 
-from app.gui.abstract_tab_frame import AbstractTabFrame
-from app.gui.input_group.sample_num_input import SampleNumberInputGroup
+from app.gui.frame.abstract_tab_frame import AbstractTabFrame
+from app.gui.frame import FONT
 from app.gui.input_group.sample_dir_input import SampleDirectoryInputGroup
-from app.gui.info_frame import FONT
+from app.gui.input_group.sample_num_input import SampleNumberInputGroup
 
 
 class DataFrame(AbstractTabFrame):

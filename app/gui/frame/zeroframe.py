@@ -1,12 +1,12 @@
-from app.gui.plotting.plot_canvas import PlotCanvas
-from app.gui.abstract_tab_frame import AbstractTabFrame
-from app.gui.plotting import LINESTYLE, TRIMSTYLE
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
+from tkinter import *
 
 import numpy as np
+from app.gui import LINE_STYLE, TRIM_STYLE
+from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
+from matplotlib.figure import Figure
 
-from tkinter import *
+from app.gui.frame.abstract_tab_frame import AbstractTabFrame
+from app.gui.plot_canvas import PlotCanvas
 
 
 class ZeroFrame(AbstractTabFrame):
@@ -16,8 +16,8 @@ class ZeroFrame(AbstractTabFrame):
         self.canvas.mpl_connect("button_press_event", self.on_click)
         self.nav = NavigationToolbar2TkAgg(self.canvas, self)
         self.canvas.set_labels("Load vs. Time", "Time (s)", "Load (lbs.)")
-        self.zeroline = self.canvas.plot("zeroline", [], [], **LINESTYLE)
-        self.trimdata = self.canvas.plot("trimdata",[], [], **TRIMSTYLE)
+        self.zeroline = self.canvas.plot("zeroline", [], [], **LINE_STYLE)
+        self.trimdata = self.canvas.plot("trimdata", [], [], **TRIM_STYLE)
 
         self._show_time = True
 

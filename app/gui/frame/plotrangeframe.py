@@ -1,13 +1,14 @@
 from tkinter import *
 
-from app.gui.dialog.footnote_text import FootnoteDialog
-from app.gui.plotting import BBOX
-from app.gui.plotting.drag_handler import DragHandler
-from app.gui.plotting.plot_canvas import PlotCanvas
-
-from matplotlib.figure import Figure
 import matplotlib.text
+from app.gui.drag_handler import DragHandler
 from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
+from matplotlib.figure import Figure
+
+from app.gui.dialog.footnote_text import FootnoteDialog
+from app.gui.plot_canvas import PlotCanvas
+from app.gui import BBOX
+
 
 class PlotRangeFrame(Frame):
     def __init__(self, parent, title="RSG", annotation_id=None):

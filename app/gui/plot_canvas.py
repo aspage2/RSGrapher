@@ -1,5 +1,7 @@
 import matplotlib
 
+from app.gui import DATA_STYLE, GRID_STYLE
+
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
@@ -14,10 +16,10 @@ class PlotCanvas(FigureCanvasTkAgg):
         self.axes = fig.add_subplot(111)
         self.figure.tight_layout()
         self.axes.set_title("RSG")
-        self.axes.grid(color="k", linestyle="--", linewidth=0.3)
+        self.axes.grid(**GRID_STYLE)
         self._plotrange = [(0, 100), (0, 100)]
-        self.datacurve = self.axes.plot([], [])[0]
-        self.extra_plots = {}
+        self.datacurve = self.axes.plot([], [], **DATA_STYLE)[0]  # Returns list
+        self.extra_plots = {}  # Zero line, elastic lines, highlights, points etc.
         self.show()
 
     def set_labels(self, title=None, xlabel=None, ylabel=None):
@@ -30,6 +32,7 @@ class PlotCanvas(FigureCanvasTkAgg):
             self.axes.set_ylabel(ylabel)
 
     def set_plotrange(self, xrange=None, yrange=None):
+        """Set min/max values for both axes"""
         if xrange is not None:
             self.axes.set_xlim(xrange)
             self._plotrange[0] = xrange

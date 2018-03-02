@@ -3,9 +3,11 @@ from app.gui.dialog import BaseDialogWindow
 
 from tkinter import *
 
+
 class FootnoteDialog(BaseDialogWindow):
+    """Add/modify the footnote text on a graph"""
     def __init__(self, root, text):
-        super().__init__(root)
+        super().__init__(root, "Footnote Text")
         self._textbox = Text(self, width=30, height=5)
         self._textbox.insert("0.0", text)
         self._textbox.pack()

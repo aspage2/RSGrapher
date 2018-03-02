@@ -1,10 +1,6 @@
 from tkinter import *
 from tkinter import filedialog
 
-from app.gui import PANEL_BG
-from app.util.asc_data import ASCData
-from app.project.sample import Sample
-
 
 class SampleDirectoryInputGroup(Frame):
     def __init__(self, parent, font, **kwargs):

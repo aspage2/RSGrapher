@@ -1,8 +1,6 @@
 import numpy as np
 import numpy.linalg as la
 
-from app.util.search import lin_nearest_neighbor
-
 class ElasticZone():
     def __init__(self, min_lbs, max_lbs):
         self.min_lbs = min_lbs
@@ -39,8 +37,8 @@ def suggested_elastic_zone(disp, load):
     for iStep in range(n_steps):
         zone[0] += horiz_inc
         zone[1] += horiz_inc
-        i0 = lin_nearest_neighbor(zone[0], load)
-        i1 = lin_nearest_neighbor(zone[1], load)
+        i0 = np.argmin(np.abs(load-zone[0]))
+        i1 = np.argmin(np.abs(load-zone[1]))
         m, b, r = linear_regression(disp[i0:i1],load[i0:i1])
         if min_error is None or r < min_error:
             min_error = r

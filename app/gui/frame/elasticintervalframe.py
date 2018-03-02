@@ -1,15 +1,13 @@
+from tkinter import *
+
+import numpy as np
+from app.gui import ELASTIC_STYLE, LINE_STYLE
 from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
 from matplotlib.figure import Figure
 
-from tkinter import *
-
-from app.gui.plotting import ELASTIC_STYLE, LINESTYLE
-from app.gui.plotting.plot_canvas import PlotCanvas
-from app.gui.abstract_tab_frame import AbstractTabFrame
-
+from app.gui.frame.abstract_tab_frame import AbstractTabFrame
+from app.gui.plot_canvas import PlotCanvas
 from app.util.auto_elastic import suggested_elastic_zone, linear_regression
-
-import numpy as np
 
 RADIOBUTTONS = ({"text": "Set Zone Start", "value": 0, "command": lambda f: lambda: f.setfocus(0)},
                 {"text": "Set Zone End", "value": 1, "command": lambda f: lambda: f.setfocus(1)})
@@ -21,7 +19,7 @@ class ElasticIntervalFrame(AbstractTabFrame):
         super().__init__(parent, "Elastic Zone", handler, next_frame)
         self.canvas = PlotCanvas(Figure((7, 5), dpi=100), self)
         self.canvas.mpl_connect("button_press_event", self.on_click)
-        self.interval_lines = [self.canvas.plot("interval{}".format(i), [], [], **LINESTYLE) for i in (1,2)]
+        self.interval_lines = [self.canvas.plot("interval{}".format(i), [], [], **LINE_STYLE) for i in (1, 2)]
         self.elastic_line = self.canvas.plot("elasticline", [], [], **ELASTIC_STYLE)
         self.nav = NavigationToolbar2TkAgg(self.canvas, self)
         self.var = IntVar(self, value=0)

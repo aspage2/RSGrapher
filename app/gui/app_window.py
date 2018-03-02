@@ -1,28 +1,27 @@
-from tkinter import Menu, Tk
+from tkinter import Menu, Tk, BOTH
 
 from app import PROJECT_TITLE
-from app.gui.main_frame import MainFrame
+from app.gui.frame.root_frame import RootFrame
 from app.project.project_handler import ProjectHandler
 
 
 class AppWindow(Tk):
-    """A running instance of the RSGrapher application"""
+    """Root window for RSGrapher instance."""
     def __init__(self, project=None):
         super().__init__()
         self._project_handler = ProjectHandler(self, project)
-        self._main_frame = MainFrame(self, self._project_handler)
-        self._main_frame.pack()
+        self._main_frame = RootFrame(self, self._project_handler)
+        self._main_frame.pack(fill=BOTH)
 
         self.bind_menu_actions()
         self.protocol("WM_DELETE_WINDOW", self.exit)
         self.title(PROJECT_TITLE)
         self.geometry("1000x800+300+300")
-        # self.iconbitmap("res/window_icon.ico")
 
         self.content_update()
 
     def content_update(self):
-        """Update to reflect project changes. Tell MainFrame to update"""
+        """Update to reflect project changes"""
         proj = self._project_handler.project
         cs = self._project_handler.curr_sample
         if proj is None:
@@ -55,7 +54,6 @@ class AppWindow(Tk):
         projectmenu = Menu(menubar, tearoff=False)
         projectmenu.add_command(label="Set Project Date", command=self._project_handler.set_date)
         menubar.add_cascade(label="Project", menu=projectmenu)
-
 
     def _on_destroy(self):
         self._project_handler.close_project()

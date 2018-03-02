@@ -1,5 +1,5 @@
-from app.gui.plotting import ELASTIC_STYLE, POINTSTYLE, BBOX, TRIMSTYLE
-from app.gui.plotting.plotrangeframe import PlotRangeFrame
+from app.gui.frame.plotrangeframe import PlotRangeFrame
+from app.gui import ELASTIC_STYLE, POINT_STYLE, BBOX, TRIM_STYLE, HIGHLIGHT_STYLE
 from app.util.auto_elastic import line_intersection, get_yield_line
 
 YIELDLOAD_LABEL = "yieldload"
@@ -8,8 +8,8 @@ class YieldLoadFrame(PlotRangeFrame):
     def __init__(self, parent):
         super().__init__(parent, "Load vs. Strain", annotation_id="yieldload_annotation")
         self.yieldline = self.canvas.plot("yieldline", [], [], **ELASTIC_STYLE)
-        self.yieldload = self.canvas.plot("yieldloadpoint", [], [], **POINTSTYLE)
-        self.yieldset = self.canvas.plot("yieldloaddata", [], [], **TRIMSTYLE)
+        self.yieldload = self.canvas.plot("yieldloadpoint", [], [], **POINT_STYLE)
+        self.yieldset = self.canvas.plot("yieldloaddata", [], [], **HIGHLIGHT_STYLE)
         self.yieldtext = self.canvas.axes.text([], [], "", bbox=BBOX, va="top", ha="left")
         self.canvas.set_labels("Load vs. Strain", "Strain (% Length)", "Load (lbs.)")
 

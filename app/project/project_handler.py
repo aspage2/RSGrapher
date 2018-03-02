@@ -61,7 +61,13 @@ class ProjectHandler:
 
     def delete_curr_sample(self):
         """Delete the currently open sample"""
-        pass
+        if self.curr_sample is not None:
+            if not messagebox.askyesno("Delete Sample", "Deleting Sample {}?".format(self.curr_sample.num)):
+                return
+            self.project.samples.remove(self.curr_sample)
+            if len(self.project.samples) != 0:
+                self.curr_sample = self.project.samples[-1]
+            self._app.content_update()
 
     def close_project(self):
         if self.project is not None:

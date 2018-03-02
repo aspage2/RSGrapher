@@ -1,14 +1,14 @@
+from tkinter import *
 from tkinter import messagebox
 from tkinter.ttk import Notebook
-from tkinter import *
 
 import matplotlib
+from app.gui.frame.utsframe import UTSFrame
+from app.gui.frame.yieldloadframe import YieldLoadFrame
 
-from app.gui.plotting.peakloadframe import PeakLoadFrame
-from app.gui.plotting.utsframe import UTSFrame
-from app.gui.plotting.yieldloadframe import YieldLoadFrame
-from app.gui.abstract_tab_frame import AbstractTabFrame
-from app.util.gen_pdf import create_pdf
+from app.gui.frame.abstract_tab_frame import AbstractTabFrame
+from app.gui.frame.peakloadframe import PeakLoadFrame
+from app.util.pdf import create_pdf
 
 matplotlib.use("TkAgg")
 

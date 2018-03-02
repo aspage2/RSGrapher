@@ -1,7 +1,7 @@
 import os
 import json
 
-from app.util.gen_pdf import graph_page_template
+from app.util.pdf import graph_page_template
 from app.project.sample import Sample
 
 DATA_FOLDER = "Raw Data/"

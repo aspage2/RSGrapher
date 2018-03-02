@@ -1,5 +1,6 @@
-from app.util.asc_data import ASCData
 import numpy as np
+
+from app.project.asc_data import ASCData
 
 
 class Sample(ASCData):
@@ -12,6 +13,7 @@ class Sample(ASCData):
         self.area = area  # cross-sectional area
         self.length = length  # Pull length
         self.num = None  # Sample Number
+        self.precision = 0
         self.titles = titles if titles is not None else [None, None, None]  # Titles for graph output
         self._cutoff_pct = 0.1  # All data after and below 1 - pct of peak load is cut off
         self._elastic_interval = [None, None]  # Elastic interval as INDICES
@@ -88,7 +90,7 @@ class Sample(ASCData):
     def json(self):
         data = {'number': self.num, 'area': self.area, 'length': self.length, 'cutoff_pct': self._cutoff_pct,
                 'zero_ind': self._zero_ind, 'elastic_zone': self._elastic_interval, 'data_path': self._data_path,
-                'titles': self.titles, 'plot_range': self.plotrange, 'labels': self.labels}
+                'titles': self.titles, 'plot_range': self.plotrange, 'labels': self.labels, 'precision':self.precision}
         return data
 
     @staticmethod
@@ -107,5 +109,7 @@ class Sample(ASCData):
         ret.titles = data['titles']
         ret.labels = data['labels'] if 'labels' in data else {}
         ret.plotrange = data["plot_range"]
+
+        ret.precision = data['precision'] if 'precision' in data else 0
 
         return ret
