@@ -16,7 +16,7 @@ class AppWindow(Tk):
         self.bind_menu_actions()
         self.protocol("WM_DELETE_WINDOW", self.exit)
         self.title(PROJECT_TITLE)
-        self.geometry("1000x800+300+300")
+        self.geometry("1100x800+0+0")
 
         self.content_update()
 

@@ -1,2 +1,1 @@
-
-FONT = ("Helvetica", 16)
+FONT = ("Helvetica", 12)

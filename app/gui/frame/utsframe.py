@@ -24,7 +24,9 @@ class UTSFrame(PlotRangeFrame):
         super().set_sample(sample)
         self.sample = sample
         x, y = sample.plotrange
-        self.canvas.set_plotrange((0, x / sample.length * 100),(0, y / sample.area))
+        self.canvas.set_plotrange((0,
+                                   x / sample.length * 100),
+                                  (0, y / sample.area))
 
         # Calculate raw stress/strain data from sample information
         stress = (sample.load) / sample.area

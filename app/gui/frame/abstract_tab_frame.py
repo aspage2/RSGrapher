@@ -5,7 +5,7 @@ from tkinter import *
 class AbstractTabFrame(Frame):
     """Parent class for changing parts of a sample's information"""
     def __init__(self, parent, title, proj_ptr, next_frame):
-        super().__init__(parent, height=1000)
+        super().__init__(parent)
         self._parent = parent
         self._title = title
         self._proj_handle = proj_ptr

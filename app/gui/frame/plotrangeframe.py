@@ -6,6 +6,7 @@ from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
 from matplotlib.figure import Figure
 
 from app.gui.dialog.footnote_text import FootnoteDialog
+from app.gui.frame import FONT
 from app.gui.plot_canvas import PlotCanvas
 from app.gui import BBOX
 
@@ -22,8 +23,8 @@ class PlotRangeFrame(Frame):
         self._footnote = matplotlib.text.Text(0.0, 0.0, "", bbox=BBOX, wrap=True)
         self._footnote_frame = Frame(self)
         self._has_footnote = False
-        self._fn_add_button = Button(self._footnote_frame, text="Add Footnote", command=self._footnote_addrem_click)
-        self._fn_mod_button = Button(self._footnote_frame, text="Footnote Text", command=self._footnote_text_click, state=DISABLED)
+        self._fn_add_button = Button(self._footnote_frame, text="Add Footnote", font=FONT, command=self._footnote_addrem_click)
+        self._fn_mod_button = Button(self._footnote_frame, text="Footnote Text", font=FONT, command=self._footnote_text_click, state=DISABLED)
         self.build()
 
     def _footnote_addrem_click(self):
