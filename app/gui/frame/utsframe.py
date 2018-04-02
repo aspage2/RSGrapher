@@ -5,9 +5,10 @@ from app.util.auto_elastic import get_yield_line, line_intersection
 UTS_LABEL = "utstext"
 YIELDSTRENGTH_LABEL = "yieldstrengthtext"
 
+
 class UTSFrame(PlotRangeFrame):
     def __init__(self, parent):
-        super().__init__(parent, "Stress vs. Strain",annotation_id="uts_annotation")
+        super().__init__(parent, "Stress vs. Strain", annotation_id="uts_annotation")
         self.sample = None
         self.uts = self.canvas.plot("utspoint", [], [], **POINT_STYLE)
         self.uts_text = self.canvas.axes.text(0, 0, "", bbox=BBOX, va="bottom", ha="left")
@@ -36,10 +37,10 @@ class UTSFrame(PlotRangeFrame):
         # Ultimate Tensile Strength
         self.uts.set_data(strain[sample.peak_load], stress[sample.peak_load])
 
-        s = "UTS: {:.2f} ksi".format(stress[sample.peak_load] / 1000.0)
+        s = "UTS: {0:.{1}f} ksi".format(stress[sample.peak_load] / 1000.0, 3 - sample.precision)
         if UTS_LABEL not in sample.labels:
             pos = (1.10 * strain[sample.peak_load], 1.10 * stress[sample.peak_load])
-            sample.labels[UTS_LABEL] = {"text":s, "pos":pos}
+            sample.labels[UTS_LABEL] = {"text": s, "pos": pos}
         else:
             pos = sample.labels[UTS_LABEL]['pos']
         self.uts_text.set_position(pos)
@@ -54,10 +55,10 @@ class UTSFrame(PlotRangeFrame):
         yield_ind = line_intersection(strain, stress, m, b)
         self.yieldpoint.set_data(strain[yield_ind], stress[yield_ind])
 
-        s = "Yield Strength: {:.2f} ksi".format(stress[yield_ind] / 1000.0)
+        s = "Yield Strength: {0:.{1}f} ksi".format(stress[yield_ind] / 1000.0, 3 - sample.precision)
         if YIELDSTRENGTH_LABEL not in sample.labels:
             pos = (strain[yield_ind] * 1.10, stress[yield_ind] * 0.90)
-            sample.labels[YIELDSTRENGTH_LABEL] = {"text":s, "pos":pos}
+            sample.labels[YIELDSTRENGTH_LABEL] = {"text": s, "pos": pos}
         else:
             pos = sample.labels[YIELDSTRENGTH_LABEL]['pos']
         self.yield_text.set_position(pos)

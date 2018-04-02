@@ -32,7 +32,7 @@ class YieldLoadFrame(PlotRangeFrame):
         intersect = line_intersection(strain, load, m, b)
         self.yieldload.set_data(strain[intersect], load[intersect])
 
-        s = "Yield Load: {:.2f} kips".format(load[intersect] / 1000.0)
+        s = "Yield Load: {0:.{1}f} kips".format(load[intersect] / 1000.0, 3 - sample.precision)
         if YIELDLOAD_LABEL not in sample.labels:
             pos = (1.10 * strain[intersect], 0.90 * load[intersect])
             sample.labels[YIELDLOAD_LABEL] = {"text":s, "pos":pos}

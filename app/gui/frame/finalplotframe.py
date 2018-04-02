@@ -10,7 +10,7 @@ from app.gui.frame.yieldloadframe import YieldLoadFrame
 
 from app.gui.frame.abstract_tab_frame import AbstractTabFrame
 from app.gui.frame.peakloadframe import PeakLoadFrame
-from app.util.pdf import create_pdf
+from app.util.pdf import create_pdf, generate_sample_layer
 
 matplotlib.use("TkAgg")
 
@@ -41,17 +41,20 @@ class FinalPlotFrame(AbstractTabFrame):
         project = self._proj_handle.project
         pdf_dir = project.pdf_dir
 
+        info_file = "{}temp/S{}_INFO.pdf".format(pdf_dir, s.num)
+        generate_sample_layer(s, info_file)
+
         pl_file = "{}temp/S{}_PL.pdf".format(pdf_dir, s.num)
         self.peakloadframe.canvas.figure.savefig(pl_file)
-        create_pdf(project.template_file, pl_file, pdf_dir+"Sample #{} (PeakLoad).pdf".format(s.num))
+        create_pdf(info_file, project.template_file, pl_file, pdf_dir+"Sample #{} (PeakLoad).pdf".format(s.num))
 
         uts_file = "{}temp/S{}_UTS.pdf".format(pdf_dir, s.num)
         self.utsframe.canvas.figure.savefig(uts_file)
-        create_pdf(project.template_file, uts_file, pdf_dir+"Sample #{} (UTS).pdf".format(s.num))
+        create_pdf(info_file, project.template_file, uts_file, pdf_dir+"Sample #{} (UTS).pdf".format(s.num))
 
         yl_file = "{}temp/S{}_YL.pdf".format(pdf_dir, s.num)
         self.yieldloadframe.canvas.figure.savefig(yl_file)
-        create_pdf(project.template_file, yl_file, pdf_dir+"Sample #{} (YieldLoad).pdf".format(s.num))
+        create_pdf(info_file, project.template_file, yl_file, pdf_dir+"Sample #{} (YieldLoad).pdf".format(s.num))
 
         messagebox.showinfo(title="Success",message="Created 3 files in {}".format(pdf_dir))
 

@@ -25,6 +25,7 @@ class PlotCanvas(FigureCanvasTkAgg):
     def set_labels(self, title=None, xlabel=None, ylabel=None):
         """Set the plotting labels"""
         if title is not None:
+            self._title = title
             self.axes.set_title(title)
         if xlabel is not None:
             self.axes.set_xlabel(xlabel)

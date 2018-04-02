@@ -48,7 +48,14 @@ class ProjectHandler:
     def new_sample(self):
         """Add a new sample to the existing project"""
         self.project.add_blank_sample()
-        self.curr_sample = self.project.samples[-1]
+        s = self.project.samples[-1]
+        if self.curr_sample is not None:
+            s.titles = list(self.curr_sample.titles)
+            s.length = self.curr_sample.length
+            s.area = self.curr_sample.area
+            s.precision = self.curr_sample.precision
+            s.plotrange = list(self.curr_sample.plotrange)
+        self.curr_sample = s
         self._app.content_update()
 
     def select_sample(self):

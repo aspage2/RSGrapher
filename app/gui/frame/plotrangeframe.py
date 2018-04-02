@@ -19,12 +19,14 @@ class PlotRangeFrame(Frame):
         self.title = title
         self.sample = None
         self._handler = DragHandler(self.canvas, self.set_label_pos)
-        self._fnid = annotation_id
+        self._fnid = annotation_id  # Footnote identifier
         self._footnote = matplotlib.text.Text(0.0, 0.0, "", bbox=BBOX, wrap=True)
         self._footnote_frame = Frame(self)
         self._has_footnote = False
-        self._fn_add_button = Button(self._footnote_frame, text="Add Footnote", font=FONT, command=self._footnote_addrem_click)
-        self._fn_mod_button = Button(self._footnote_frame, text="Footnote Text", font=FONT, command=self._footnote_text_click, state=DISABLED)
+        self._fn_add_button = Button(self._footnote_frame, text="Add Footnote", font=FONT,
+                                     command=self._footnote_addrem_click)
+        self._fn_mod_button = Button(self._footnote_frame, text="Footnote Text", font=FONT,
+                                     command=self._footnote_text_click, state=DISABLED)
         self.build()
 
     def _footnote_addrem_click(self):
@@ -56,8 +58,8 @@ class PlotRangeFrame(Frame):
         if self._has_footnote:
             return
         self.canvas.axes.add_artist(self._footnote)
-        self.sample.labels[self._fnid] = {"text":"asdf", "pos":(1.0,1000.0)}
-        self._footnote.set_position((1.0,1000.0))
+        self.sample.labels[self._fnid] = {"text": "asdf", "pos": (1.0, 1000.0)}
+        self._footnote.set_position((1.0, 1000.0))
         self._footnote.set_text("asdf")
         self._has_footnote = True
         self._handler.watch_label(self._fnid, self._footnote)
@@ -74,15 +76,7 @@ class PlotRangeFrame(Frame):
 
     def set_sample(self, sample):
         self.sample = sample
-        title = sample.titles[0]
-        t = 1
-        while t != 3 and sample.titles[t] is not None and sample.titles[t] != "":
-            title += "\n" + sample.titles[t]
-            t += 1
-        if title is None:
-            title = ""
-        title += "\n"+self.title+" (Sample {})".format(sample.num)
-        self.canvas.set_labels(title=title)
+        self.canvas.set_labels(title=self.title)
 
         if self._fnid in sample.labels:
             info = sample.labels[self._fnid]
@@ -109,7 +103,9 @@ class PlotRangeFrame(Frame):
         self._fn_mod_button.pack(side=LEFT)
         self._footnote_frame.pack()
 
-CHAR_PER_LINE = 20
+
+CHAR_PER_LINE = 35
+
 
 def footnote_format(text):
     words = text.split(" ")
@@ -117,6 +113,13 @@ def footnote_format(text):
     ret = ""
     i = 0
     while i < len(words):
+        if len(words[i]) > CHAR_PER_LINE:
+            l = len(line)
+            line += " " + words[i][:CHAR_PER_LINE - l - 2] + "-"
+            ret += line.strip() + "\n"
+            line = words[i][CHAR_PER_LINE - l - 2:]
+            i += 1
+
         while i < len(words) and len(line) + len(words[i]) <= CHAR_PER_LINE:
             line += " " + words[i]
             i += 1

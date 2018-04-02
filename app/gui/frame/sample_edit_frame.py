@@ -48,7 +48,12 @@ class SampleEditFrame(Frame):
         """Reflect changes in the current sample (or lack thereof).
         Call propagates downward to the visible editing frame"""
         p = self._project_handler.project
+        s = self._project_handler.curr_sample
         if self._recent_root != p.root: # New Project, go to infoframe
+            self.set_frame(0)
+            self.progress_frame.set(0, False)
+        elif s is None or s.length is None or s.area is None or s.titles == [None, None, None] or s.plotrange == [None, None]\
+                or s.precision is None:
             self.set_frame(0)
             self.progress_frame.set(0, False)
         else:

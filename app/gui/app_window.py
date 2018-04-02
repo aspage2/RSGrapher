@@ -55,6 +55,7 @@ class AppWindow(Tk):
         projectmenu.add_command(label="Set Project Date", command=self._project_handler.set_date)
         menubar.add_cascade(label="Project", menu=projectmenu)
 
+
     def _on_destroy(self):
         self._project_handler.close_project()
 

@@ -1,7 +1,7 @@
 import os
 import json
 
-from app.util.pdf import graph_page_template
+from app.util.pdf import generate_project_layer
 from app.project.sample import Sample
 
 DATA_FOLDER = "Raw Data/"
@@ -20,7 +20,7 @@ class ProjectDirectory:
         self.samples = []
 
     def set_date(self, date):
-        graph_page_template(self.number, date.strftime("%B %d, %Y"), self.pdf_dir+"graph_template.pdf")
+        generate_project_layer(self.number, date.strftime("%B %d, %Y"), self.template_file)
 
     def add_sample(self, sample):
         self.samples.append(sample)
@@ -54,7 +54,8 @@ class ProjectDirectory:
 
     @property
     def template_file(self):
-        return self.pdf_dir + "graph_template.pdf"
+        return self.pdf_dir + "/temp/graph_template.pdf"
+
     def write_project(self):
         data = {'title': self.title, 'number': self.number}
         samples = []
