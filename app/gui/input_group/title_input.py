@@ -1,11 +1,11 @@
 
 from tkinter import *
 
-from app.gui import PANEL_BG
 
 ENTRY_WIDTH = 40
 
 class TitleInputGroup(Frame):
+    """Enter 3 plot titles, with the first being mandatory"""
     def __init__(self, parent, font, **kwargs):
         super().__init__(parent, **kwargs)
         self.titles = []

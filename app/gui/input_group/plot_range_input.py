@@ -3,6 +3,7 @@ from tkinter import *
 
 
 class PlotRangeInputGroup(Frame):
+    """Specify the MAX value (load/displacement) to show on the final plot"""
     def __init__(self, parent, font, **kwargs):
         super().__init__(parent, **kwargs)
         self.loadmax = Entry(self, width=8, font=font)

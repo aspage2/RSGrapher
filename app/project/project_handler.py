@@ -1,4 +1,3 @@
-
 from app.gui.dialog.newproject import NewProjectPrompt
 from app.gui.dialog.date_input import DateInputDialog
 
@@ -9,8 +8,11 @@ from tkinter import messagebox, filedialog
 from app.gui.dialog.select_sample import SelectSampleDialog
 from app.project.project_dir import ProjectDirectory
 
+import os
+
 
 class ProjectHandler:
+    """Owns the application model and provides interface methods for modifying it"""
     def __init__(self, app, project=None):
         self.project = None
         self.curr_sample = None
@@ -24,7 +26,10 @@ class ProjectHandler:
         info = NewProjectPrompt(self._app).run()
         if info['cancelled']:
             return
-        self.set_project(ProjectDirectory.create_project(info['title'],info['num'],info['dir']+"/", datetime.datetime.now()))
+        self.set_project(
+            ProjectDirectory.create_project(info['title'], info['num'], info['dir'] + "/", datetime.datetime.now()))
+        self.project.write_project()
+        self.cleanup_project_dir()
         self._app.content_update()
 
     def open_project(self):
@@ -33,7 +38,7 @@ class ProjectHandler:
         if root == "":
             return
         try:
-            p = ProjectDirectory.open_project(root+"/")
+            p = ProjectDirectory.open_project(root + "/")
         except IOError as e:
             messagebox.showwarning(title="Bad Directory", message="{} does not have a project.json".format(root))
         else:
@@ -60,7 +65,7 @@ class ProjectHandler:
 
     def select_sample(self):
         """Set the current sample to a previously made one"""
-        ret = SelectSampleDialog(self._app,self.project.samples, self.curr_sample).run()
+        ret = SelectSampleDialog(self._app, self.project.samples, self.curr_sample).run()
         if ret['cancelled']:
             return
         self.curr_sample = self.project.samples[ret['sample']]
@@ -77,12 +82,14 @@ class ProjectHandler:
             self._app.content_update()
 
     def close_project(self):
+        """Close current project"""
         if self.project is not None:
             self.project.write_project()
             self.project = None
             self.curr_sample = None
 
     def set_project(self, project):
+        """Set project to new project"""
         self.project = project
         if self.project.has_samples:
             self.curr_sample = self.project.samples[0]
@@ -90,7 +97,20 @@ class ProjectHandler:
             self.curr_sample = None
 
     def set_date(self):
+        """Set project date"""
         res = DateInputDialog(self._app).run()
         if res["cancelled"]:
             return
         self.project.set_date(res['date'])
+
+    def cleanup_project_dir(self):
+        """Move ASC files from root directory to the Raw Data folder in the project"""
+        contents = os.listdir(self.project.root)
+        num = 0
+        for name in contents:
+            if name.lower().endswith(".asc"):
+                os.rename(self.project.root + name, self.project.data_dir + name)
+                num += 1
+
+        if num > 0:
+            messagebox.showinfo("New Project", "{} ASC files were moved to {}".format(num, self.project.data_dir))

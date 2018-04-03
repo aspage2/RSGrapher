@@ -11,7 +11,7 @@ INVOICE_FOLDER = "Invoice/"
 SPEC_FOLDER = "Test Specifications/"
 
 class ProjectDirectory:
-    """Data class for Project info (directory, title, sample list)"""
+    """Root class for project model"""
 
     def __init__(self, title, number, directory):
         self.title = title

@@ -33,13 +33,16 @@ class RootFrame(Frame):
 
 
 class NoProjectFrame(Frame):
+    """Visible when project handler has no open project"""
     def __init__(self, parent, np, op):
         super().__init__(parent)
         Label(self, text="No Project Open").pack()
         Button(self, text="New Project", command=np).pack()
         Button(self, text="Open Project", command=op).pack()
 
+
 class NoSampleFrame(Frame):
+    """Visible when project has no samples"""
     def __init__(self, parent, ns):
         super().__init__(parent)
         Label(self, text="Project has no samples!").pack()

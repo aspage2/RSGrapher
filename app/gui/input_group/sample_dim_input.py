@@ -1,10 +1,9 @@
 
 from tkinter import *
 
-from app.gui import PANEL_BG
-
 
 class SampleDimensionInputGroup(Frame):
+    """Input sample dimensions (area, length)"""
     def __init__(self, parent, font, **kwargs):
         super().__init__(parent, **kwargs)
         self.len_entry = Entry(self, width=6, font=font)

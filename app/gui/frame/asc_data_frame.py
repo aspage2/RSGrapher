@@ -1,20 +1,21 @@
 from tkinter import Button
 
 from app.gui.frame.abstract_tab_frame import AbstractTabFrame
-from app.gui.frame import FONT
-from app.gui.input_group.sample_dir_input import SampleDirectoryInputGroup
+from app.gui import GUI_FONT
+from app.gui.input_group.sample_file_input import SampleFileInputGroup
 from app.gui.input_group.sample_num_input import SampleNumberInputGroup
 
 
-class DataFrame(AbstractTabFrame):
+class ASCDataFrame(AbstractTabFrame):
+    """Get sample # and data file"""
     def __init__(self, parent, proj_ptr, next_frame):
         super().__init__(parent, "Raw Data", proj_ptr, next_frame)
-        self.num_input = SampleNumberInputGroup(self, font=FONT)
-        self.dir_input = SampleDirectoryInputGroup(self, font=FONT)
+        self.num_input = SampleNumberInputGroup(self, font=GUI_FONT)
+        self.dir_input = SampleFileInputGroup(self, font=GUI_FONT)
         self._num = 0
         self.num_input.pack(pady=15)
         self.dir_input.pack(pady=15)
-        Button(self, font=FONT, text="Done", command=self.on_next).pack()
+        Button(self, font=GUI_FONT, text="Done", command=self.on_next).pack()
 
     def content_update(self):
         s = self._proj_handle.curr_sample

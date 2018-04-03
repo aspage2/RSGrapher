@@ -4,18 +4,18 @@ from tkinter.ttk import Notebook
 
 import matplotlib
 
-from app.gui.frame import FONT
-from app.gui.frame.utsframe import UTSFrame
-from app.gui.frame.yieldloadframe import YieldLoadFrame
-
+from app.gui import GUI_FONT
 from app.gui.frame.abstract_tab_frame import AbstractTabFrame
-from app.gui.frame.peakloadframe import PeakLoadFrame
+from app.gui.plotting.peakloadframe import PeakLoadFrame
+from app.gui.plotting.utsframe import UTSFrame
+from app.gui.plotting.yieldloadframe import YieldLoadFrame
 from app.util.pdf import create_pdf, generate_sample_layer
 
 matplotlib.use("TkAgg")
 
 
 class FinalPlotFrame(AbstractTabFrame):
+    """View final plots, move labels and manage footnotes"""
     def __init__(self, parent, handler, next_frame):
         super().__init__(parent, "Final Plots", handler, next_frame)
         self.canvasnotebook = Notebook(self)
@@ -61,4 +61,4 @@ class FinalPlotFrame(AbstractTabFrame):
 
     def build(self):
         self.canvasnotebook.pack()
-        Button(self, text="Generate PDFs", command=self.on_next, font=FONT).pack(side=RIGHT)
+        Button(self, text="Generate PDFs", command=self.on_next, font=GUI_FONT).pack(side=RIGHT)

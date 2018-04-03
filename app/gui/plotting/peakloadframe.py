@@ -1,10 +1,11 @@
-from app.gui.frame.plotrangeframe import PlotRangeFrame
 from app.gui import POINT_STYLE, BBOX
+from app.gui.plotting.sampleplotframe import SamplePlotFrame
 
 PEAKLOAD_LABEL = "peakload"
 
 
-class PeakLoadFrame(PlotRangeFrame):
+class PeakLoadFrame(SamplePlotFrame):
+    """Plot Peak Load (kips)"""
     def __init__(self, parent):
         super().__init__(parent, "Load vs. Displacement", annotation_id="peakload_annotation")
         self.peakpoint = self.canvas.plot("peakloadpoint", [], [], **POINT_STYLE)

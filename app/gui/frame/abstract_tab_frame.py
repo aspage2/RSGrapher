@@ -3,7 +3,7 @@ from tkinter import *
 
 
 class AbstractTabFrame(Frame):
-    """Parent class for changing parts of a sample's information"""
+    """Parent class for a view containing sample editing tools"""
     def __init__(self, parent, title, proj_ptr, next_frame):
         super().__init__(parent)
         self._parent = parent

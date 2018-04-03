@@ -1,17 +1,18 @@
 from tkinter import *
 
 import matplotlib.text
-from app.gui.drag_handler import DragHandler
 from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
 from matplotlib.figure import Figure
 
+from app.gui import BBOX, GUI_FONT
 from app.gui.dialog.footnote_text import FootnoteDialog
-from app.gui.frame import FONT
-from app.gui.plot_canvas import PlotCanvas
-from app.gui import BBOX
+from app.gui.drag_handler import DragHandler
+from app.gui.plotting.plot_canvas import PlotCanvas
 
 
-class PlotRangeFrame(Frame):
+class SamplePlotFrame(Frame):
+    """Container for viewing the plot before it is written to a PDF.
+    Provides tools for adding/removing/editing a footnote."""
     def __init__(self, parent, title="RSG", annotation_id=None):
         super().__init__(parent)
         self.canvas = PlotCanvas(Figure((10, 6), dpi=100), self)
@@ -23,9 +24,9 @@ class PlotRangeFrame(Frame):
         self._footnote = matplotlib.text.Text(0.0, 0.0, "", bbox=BBOX, wrap=True)
         self._footnote_frame = Frame(self)
         self._has_footnote = False
-        self._fn_add_button = Button(self._footnote_frame, text="Add Footnote", font=FONT,
+        self._fn_add_button = Button(self._footnote_frame, text="Add Footnote", font=GUI_FONT,
                                      command=self._footnote_addrem_click)
-        self._fn_mod_button = Button(self._footnote_frame, text="Footnote Text", font=FONT,
+        self._fn_mod_button = Button(self._footnote_frame, text="Footnote Text", font=GUI_FONT,
                                      command=self._footnote_text_click, state=DISABLED)
         self.build()
 
@@ -65,12 +66,13 @@ class PlotRangeFrame(Frame):
         self._handler.watch_label(self._fnid, self._footnote)
         self.button_set()
 
-    def _remove_footnote(self):
+    def _remove_footnote(self, rem_from_sample=True):
         if not self._has_footnote:
             return
         self._footnote.remove()
         self._has_footnote = False
-        del self.sample.labels[self._fnid]
+        if rem_from_sample and self._fnid in self.sample.labels:
+            del self.sample.labels[self._fnid]
         self._handler.ignore_label(self._fnid)
         self.button_set()
 
@@ -82,7 +84,7 @@ class PlotRangeFrame(Frame):
             info = sample.labels[self._fnid]
             self._set_footnote(info['pos'], info['text'])
         else:
-            self._remove_footnote()
+            self._remove_footnote(False)
 
         self.canvas.show()
 

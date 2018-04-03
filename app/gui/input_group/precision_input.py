@@ -3,6 +3,7 @@ from tkinter import *
 
 
 class PrecisionInputGroup(Frame):
+    """Specify the precision of the measurements"""
     def __init__(self, parent, font):
         super().__init__(parent)
         self._var = IntVar(0)

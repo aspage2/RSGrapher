@@ -2,6 +2,7 @@ import numpy as np
 
 
 class ASCData:
+    """Input data from a single stress test (Time, Load, Displacement)"""
     def __init__(self, time=None, load=None, disp=None):
         if time is not None and load is not None and disp is not None:
             self.set_data(time, load, disp)

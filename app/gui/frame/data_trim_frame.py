@@ -1,15 +1,16 @@
 from tkinter import *
 
 import numpy as np
-from app.gui import LINE_STYLE, TRIM_STYLE
 from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
 from matplotlib.figure import Figure
 
+from app.gui import LINE_STYLE, TRIM_STYLE, GUI_FONT
 from app.gui.frame.abstract_tab_frame import AbstractTabFrame
-from app.gui.plot_canvas import PlotCanvas
+from app.gui.plotting.plot_canvas import PlotCanvas
 
 
-class ZeroFrame(AbstractTabFrame):
+class DataTrimFrame(AbstractTabFrame):
+    """Trim the data to remove extraneous data points (before/after actual test)"""
     def __init__(self, parent, handle, next_frame):
         super().__init__(parent, "Trim Data", handle, next_frame)
         self.canvas = PlotCanvas(Figure((7, 5), dpi=100), self)
@@ -23,9 +24,9 @@ class ZeroFrame(AbstractTabFrame):
 
         self._cs = None
         self.controlframe = Frame(self, borderwidth=2, relief=SUNKEN)
-        self.cutoffentry = Entry(self.controlframe, font=("Helvetica", 16), width=6)
+        self.cutoffentry = Entry(self.controlframe, font=GUI_FONT, width=6)
         self.cutoffentry.bind("<Return>", lambda k: self.on_cutoff_set())
-        self.zerolabel = Label(self.controlframe, text="Zero: {:0.1f} s".format(0), font=("Helvetica",14))
+        self.zerolabel = Label(self.controlframe, text="Zero: {:0.1f} s".format(0), font=GUI_FONT)
         self.viewbutton = Button(self.controlframe, text="SHOW DISP", command=self._toggle_view)
         self.build()
 
@@ -109,11 +110,11 @@ class ZeroFrame(AbstractTabFrame):
 
     def build(self):
         self.canvas.pack()
-        Label(self.controlframe, text="Post Peak Load Cutoff (%)", font=("Helvetica", 14)).pack(padx=10, side=LEFT)
+        Label(self.controlframe, text="Post Peak Load Cutoff (%)", font=GUI_FONT).pack(padx=10, side=LEFT)
         self.cutoffentry.pack(side=LEFT)
         self.zerolabel.pack(side=LEFT, padx=10)
         self.viewbutton.pack(side=LEFT, padx=10)
-        Button(self.controlframe, text="Done", font=("Helvetica", 14), command=self.on_next).pack(side=RIGHT, padx=10,
+        Button(self.controlframe, text="Done", font=GUI_FONT, command=self.on_next).pack(side=RIGHT, padx=10,
                                                                                                  pady=10)
         self.controlframe.pack(fill=X)
         self.nav.pack()

@@ -1,12 +1,13 @@
-from app.gui.frame.plotrangeframe import PlotRangeFrame
-from app.gui import ELASTIC_STYLE, TRIM_STYLE, POINT_STYLE, BBOX, HIGHLIGHT_STYLE
+from app.gui import ELASTIC_STYLE, POINT_STYLE, BBOX, HIGHLIGHT_STYLE
+from app.gui.plotting.sampleplotframe import SamplePlotFrame
 from app.util.auto_elastic import get_yield_line, line_intersection
 
 UTS_LABEL = "utstext"
 YIELDSTRENGTH_LABEL = "yieldstrengthtext"
 
 
-class UTSFrame(PlotRangeFrame):
+class UTSFrame(SamplePlotFrame):
+    """Plot showing UTS and Yield Strength (both ksi)"""
     def __init__(self, parent):
         super().__init__(parent, "Stress vs. Strain", annotation_id="uts_annotation")
         self.sample = None

@@ -1,7 +1,7 @@
 from tkinter import Menu, Tk, BOTH
 
 from app import PROJECT_TITLE
-from app.gui.frame.root_frame import RootFrame
+from app.gui.root_frame import RootFrame
 from app.project.project_handler import ProjectHandler
 
 

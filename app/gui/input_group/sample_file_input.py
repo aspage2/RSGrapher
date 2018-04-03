@@ -2,7 +2,8 @@ from tkinter import *
 from tkinter import filedialog
 
 
-class SampleDirectoryInputGroup(Frame):
+class SampleFileInputGroup(Frame):
+    """Input path to ASC file"""
     def __init__(self, parent, font, **kwargs):
         super().__init__(parent, **kwargs)
         self.parent = parent

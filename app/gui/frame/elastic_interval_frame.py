@@ -1,20 +1,20 @@
 from tkinter import *
 
 import numpy as np
-from app.gui import ELASTIC_STYLE, LINE_STYLE
 from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
 from matplotlib.figure import Figure
 
+from app.gui import ELASTIC_STYLE, LINE_STYLE, GUI_FONT
 from app.gui.frame.abstract_tab_frame import AbstractTabFrame
-from app.gui.plot_canvas import PlotCanvas
+from app.gui.plotting.plot_canvas import PlotCanvas
 from app.util.auto_elastic import suggested_elastic_zone, linear_regression
 
-RADIOBUTTONS = ({"text": "Set Zone Start", "value": 0, "command": lambda f: lambda: f.setfocus(0)},
-                {"text": "Set Zone End", "value": 1, "command": lambda f: lambda: f.setfocus(1)})
+RADIO_BUTTONS = ({"text": "Set Zone Start", "value": 0, "command": lambda f: lambda: f.setfocus(0)},
+                 {"text": "Set Zone End", "value": 1, "command": lambda f: lambda: f.setfocus(1)})
 
-FONT = ("Helvetica", 16)
 
 class ElasticIntervalFrame(AbstractTabFrame):
+    """Specify the elastic interval for the sample"""
     def __init__(self, parent, handler, next_frame):
         super().__init__(parent, "Elastic Zone", handler, next_frame)
         self.canvas = PlotCanvas(Figure((7, 5), dpi=100), self)
@@ -26,8 +26,8 @@ class ElasticIntervalFrame(AbstractTabFrame):
         self.controlframe = Frame(self, borderwidth=2, relief=SUNKEN)
         self.curr = 1
         self.radiobuttons = []
-        for b in RADIOBUTTONS:
-            self.radiobuttons.append(Radiobutton(self.controlframe, font=FONT, text=b['text'], value=b['value'], variable=self.var,
+        for b in RADIO_BUTTONS:
+            self.radiobuttons.append(Radiobutton(self.controlframe, font=GUI_FONT, text=b['text'], value=b['value'], variable=self.var,
                                                  command=b['command'](self)))
         self.setfocus(0)
         self.canvas.set_labels("Load vs. Displacement", "Displacement (in.)", "Load (lbs.)")
@@ -94,7 +94,7 @@ class ElasticIntervalFrame(AbstractTabFrame):
         self.canvas.pack()
         for b in self.radiobuttons:
             b.pack(side=LEFT)
-        Button(self.controlframe, font=FONT, text="Auto Elastic Zone", command=self.autoelastic_click).pack(side=LEFT,padx=10, pady=10)
-        Button(self.controlframe, font=FONT, text="Done", command=self.on_next).pack(side=RIGHT,padx=10)
+        Button(self.controlframe, font=GUI_FONT, text="Auto Elastic Zone", command=self.autoelastic_click).pack(side=LEFT, padx=10, pady=10)
+        Button(self.controlframe, font=GUI_FONT, text="Done", command=self.on_next).pack(side=RIGHT, padx=10)
         self.controlframe.pack(side=LEFT,fill=BOTH)
         self.nav.pack()

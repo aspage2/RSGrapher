@@ -19,10 +19,10 @@ def ask_project_dir(initdir=getcwd()):
     return filedialog.askdirectory(title="Open Project", initialdir=initdir)
 
 class BaseDialogWindow(Toplevel):
-    """Base class for more custom dialogs. Provides
+    """Base class for custom dialogs. Provides
     logic for passing values back to main application.
     Inheritors define the layout and update return values
-    with inherited methods."""
+    with inherited methods"""
     def __init__(self, root, title="", **kwargs):
         super().__init__(master=root, **kwargs)
         self.root = root

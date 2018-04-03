@@ -8,9 +8,13 @@ REG_COLOR = "#eff4ff"
 def f(x, i):
     return lambda: x.set(i)
 
+
 class ProgressFrame(Frame):
-    def __init__(self, parent, labels):
+    """Mimic 'tabs' in a browser window
+    control which edit window is showing"""
+    def __init__(self, parent, labels, set_frame):
         super().__init__(parent)
+        self.set_frame = set_frame
         self.parent = parent
         self.buttons = [Button(self, text=label, width=15, bg=REG_COLOR, activebackground=REG_COLOR,
                    command=f(self, i)) for i, label in enumerate(labels)]
@@ -25,7 +29,7 @@ class ProgressFrame(Frame):
         self.buttons[i]['bg'] = CURR_COLOR
         self.curr = i
         if parent_update:
-            self.parent.set_frame(i)
+            self.set_frame(i)
 
     def build(self):
         for button in self.buttons:

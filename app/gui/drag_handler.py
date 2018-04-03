@@ -1,4 +1,5 @@
 class DragHandler:
+    """Responsible for enabling plot labels to be dragged to a new location"""
     def __init__(self, canvas, callback, labels=None):
         self._labels = labels if labels is not None else []
         self._canvas = canvas
@@ -7,8 +8,9 @@ class DragHandler:
                       canvas.mpl_connect("button_release_event", self._release),
                       canvas.mpl_connect("motion_notify_event", self._move))
 
-        self._drag_data = None # (label_id, dx, dy)
+        self._drag_data = None  # (label_id, dx, dy)
         self._bg = None
+
     def __del__(self):
         for cid in self._cids:
             self._canvas.mpl_disconnect(cid)
@@ -52,7 +54,7 @@ class DragHandler:
         self._callback(id, label)
 
     def watch_label(self, label_id, label_obj):
-        self._labels.append((label_id,label_obj))
+        self._labels.append((label_id, label_obj))
 
     def ignore_label(self, label_id):
         for id, obj in self._labels:

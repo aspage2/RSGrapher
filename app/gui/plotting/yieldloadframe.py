@@ -1,10 +1,12 @@
-from app.gui.frame.plotrangeframe import PlotRangeFrame
-from app.gui import ELASTIC_STYLE, POINT_STYLE, BBOX, TRIM_STYLE, HIGHLIGHT_STYLE
+from app.gui import ELASTIC_STYLE, POINT_STYLE, BBOX, HIGHLIGHT_STYLE
+from app.gui.plotting.sampleplotframe import SamplePlotFrame
 from app.util.auto_elastic import line_intersection, get_yield_line
 
-YIELDLOAD_LABEL = "yieldload"
+YIELD_LOAD_LABEL = "yieldload"
 
-class YieldLoadFrame(PlotRangeFrame):
+
+class YieldLoadFrame(SamplePlotFrame):
+    """Plot showing Yield Load (kips)"""
     def __init__(self, parent):
         super().__init__(parent, "Load vs. Strain", annotation_id="yieldload_annotation")
         self.yieldline = self.canvas.plot("yieldline", [], [], **ELASTIC_STYLE)
@@ -13,7 +15,7 @@ class YieldLoadFrame(PlotRangeFrame):
         self.yieldtext = self.canvas.axes.text([], [], "", bbox=BBOX, va="top", ha="left")
         self.canvas.set_labels("Load vs. Strain", "Strain (% Length)", "Load (lbs.)")
 
-        self._handler.watch_label(YIELDLOAD_LABEL, self.yieldtext)
+        self._handler.watch_label(YIELD_LOAD_LABEL, self.yieldtext)
 
     def set_sample(self, sample):
         super().set_sample(sample)
@@ -33,11 +35,11 @@ class YieldLoadFrame(PlotRangeFrame):
         self.yieldload.set_data(strain[intersect], load[intersect])
 
         s = "Yield Load: {0:.{1}f} kips".format(load[intersect] / 1000.0, 3 - sample.precision)
-        if YIELDLOAD_LABEL not in sample.labels:
+        if YIELD_LOAD_LABEL not in sample.labels:
             pos = (1.10 * strain[intersect], 0.90 * load[intersect])
-            sample.labels[YIELDLOAD_LABEL] = {"text":s, "pos":pos}
+            sample.labels[YIELD_LOAD_LABEL] = {"text":s, "pos":pos}
         else:
-            pos = sample.labels[YIELDLOAD_LABEL]['pos']
+            pos = sample.labels[YIELD_LOAD_LABEL]['pos']
         self.yieldtext.set_position(pos)
         self.yieldtext.set_text(s)
 

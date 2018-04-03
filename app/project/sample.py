@@ -4,25 +4,26 @@ from app.project.asc_data import ASCData
 
 
 class Sample(ASCData):
-    """Data for a specific sample"""
+    """Information relative to a single test (pull length, area, plotrange etc.)"""
 
     def __init__(self, area=None, length=None, titles=None, plotrange=None):
         super().__init__()
         # Data to be written to JSON
-        self._data_path = None  # Path to ASC
+        self._data_path = None  # Path to ASC file
         self.area = area  # cross-sectional area
         self.length = length  # Pull length
         self.num = None  # Sample Number
         self.precision = 0
         self.titles = titles if titles is not None else [None, None, None]  # Titles for graph output
         self._cutoff_pct = 0.1  # All data after and below 1 - pct of peak load is cut off
-        self._elastic_interval = [None, None]  # Elastic interval as INDICES
-        self._zero_ind = 0  # Zero point
+        self._elastic_interval = [None, None]  # Elastic interval AS A SLICE
+        self._zero_ind = 0  # ZERO INDEX
         self.plotrange = [None, None]  # Graph plotting range as specified by the user.
 
-        self.labels = {}
+        self.labels = {}  # Labels to display on the final plot(s) for this sample.
+        # labels include text and data coordinates for display.
 
-        self._peak_load_ind = None
+        self._peak_load_ind = None # index of the maximum load of the sample.
         self._cutoff_ind = None  # Index of first point cut from the end of the data.
 
     @property
@@ -90,7 +91,7 @@ class Sample(ASCData):
     def json(self):
         data = {'number': self.num, 'area': self.area, 'length': self.length, 'cutoff_pct': self._cutoff_pct,
                 'zero_ind': self._zero_ind, 'elastic_zone': self._elastic_interval, 'data_path': self._data_path,
-                'titles': self.titles, 'plot_range': self.plotrange, 'labels': self.labels, 'precision':self.precision}
+                'titles': self.titles, 'plot_range': self.plotrange, 'labels': self.labels, 'precision': self.precision}
         return data
 
     @staticmethod

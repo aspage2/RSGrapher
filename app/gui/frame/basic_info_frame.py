@@ -1,7 +1,7 @@
 
 from tkinter import *
 
-from app.gui.frame import FONT
+from app.gui import GUI_FONT
 from app.gui.frame.abstract_tab_frame import AbstractTabFrame
 from app.gui.input_group.plot_range_input import PlotRangeInputGroup
 from app.gui.input_group.precision_input import PrecisionInputGroup
@@ -9,14 +9,14 @@ from app.gui.input_group.sample_dim_input import SampleDimensionInputGroup
 from app.gui.input_group.title_input import TitleInputGroup
 
 
-class InfoFrame(AbstractTabFrame):
+class BasicInfoFrame(AbstractTabFrame):
     """Sample information: plotting titles, sample dimensions, plotting range"""
     def __init__(self, parent, handler, next_frame):
         super().__init__(parent, "Info", handler, next_frame)
-        self.title_input = TitleInputGroup(self, font=FONT)
-        self.dim_input = SampleDimensionInputGroup(self, font=FONT)
-        self.plot_range_input = PlotRangeInputGroup(self, font=FONT)
-        self.precision_input = PrecisionInputGroup(self, font=FONT)
+        self.title_input = TitleInputGroup(self, font=GUI_FONT)
+        self.dim_input = SampleDimensionInputGroup(self, font=GUI_FONT)
+        self.plot_range_input = PlotRangeInputGroup(self, font=GUI_FONT)
+        self.precision_input = PrecisionInputGroup(self, font=GUI_FONT)
         self.build()
 
     def content_update(self):
@@ -52,9 +52,9 @@ class InfoFrame(AbstractTabFrame):
 
     def build(self):
         self.title_input.pack(pady=10)
-        Label(self, text="Sample Dimensions", font=FONT).pack(pady=10)
+        Label(self, text="Sample Dimensions", font=GUI_FONT).pack(pady=10)
         self.dim_input.pack(pady=10)
-        Label(self, text="Plot Maxima", font=FONT).pack(pady=10)
+        Label(self, text="Plot Maxima", font=GUI_FONT).pack(pady=10)
         self.plot_range_input.pack(pady=10)
         self.precision_input.pack(pady=10)
-        Button(self, text="Done", font=FONT, command=self.on_next).pack()
+        Button(self, text="Done", font=GUI_FONT, command=self.on_next).pack()

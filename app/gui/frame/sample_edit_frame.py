@@ -1,46 +1,49 @@
-
 from tkinter import *
 from tkinter import messagebox
 
-from app.gui.frame.data_frame import DataFrame
-from app.gui.frame.elasticintervalframe import ElasticIntervalFrame
-from app.gui.frame.finalplotframe import FinalPlotFrame
-from app.gui.frame.info_frame import InfoFrame
-from app.gui.frame.zeroframe import ZeroFrame
+from app.gui import GUI_FONT
+from app.gui.frame.asc_data_frame import ASCDataFrame
+from app.gui.frame.elastic_interval_frame import ElasticIntervalFrame
+from app.gui.frame.final_plot_frame import FinalPlotFrame
+from app.gui.frame.basic_info_frame import BasicInfoFrame
+from app.gui.frame.data_trim_frame import DataTrimFrame
 from app.gui.progress_buttons import ProgressFrame
 
 
 class SampleEditFrame(Frame):
-    """Root frame of an RSGrapher application window.
-    Provides mechanism for switching between pages for
-    editing the info of a sample"""
+    """Visible when a project is open and has samples.
+    Tab-like view with scrollable pages for editing attributes
+    of the sample."""
 
     def __init__(self, parent, handler):
         super().__init__(parent, padx=10, pady=10)
         self.parent = parent
-        self.curr_frame = None # Current edit frame to be displayed
-        self._project_handler = handler # See app.project.project_handler.ProjectHandler
-        self._recent_root = None # Hold most recent project directory to detect a project change
+        self.curr_frame = None  # Current edit frame to be displayed
+        self._project_handler = handler  # See app.project.project_handler.ProjectHandler
+        self._recent_root = None  # Hold most recent project directory to detect a project change
 
         # Make the edit page y-scrollable
-        self.framecanvas = Canvas(self,width=1100,height=800)
+        self.framecanvas = Canvas(self, width=1100, height=800)
         self.framecanvas.pack_propagate(False)
         self.scrollbar = Scrollbar(self)
         self.framecanvas['yscrollcommand'] = self.scrollbar.set
         self.scrollbar['command'] = self.framecanvas.yview
         self.frameholder = Frame(self.framecanvas)
         self.frameholder.bind("<Configure>", self.on_canvas_configure)
-        self.framecanvas.create_window((self.framecanvas.winfo_width()/2, 0),
+        self.framecanvas.create_window((self.framecanvas.winfo_width() / 2, 0),
                                        window=self.frameholder, anchor=CENTER, tags="window")
 
         # Edit frames
-        self.frames = (InfoFrame(self.frameholder, handler, self.next_frame),
-                       DataFrame(self.frameholder, handler, self.next_frame),
-                       ZeroFrame(self.frameholder, handler, self.next_frame),
+        self.frames = (BasicInfoFrame(self.frameholder, handler, self.next_frame),
+                       ASCDataFrame(self.frameholder, handler, self.next_frame),
+                       DataTrimFrame(self.frameholder, handler, self.next_frame),
                        ElasticIntervalFrame(self.frameholder, handler, self.next_frame),
                        FinalPlotFrame(self.frameholder, handler, self.next_frame))
 
-        self.progress_frame = ProgressFrame(self, map(lambda f: f.title, self.frames))
+        # Navigation & Current project/sample
+        self.nav_frame = Frame(self)
+        self.curr_label = Label(self.nav_frame, text="RSG", font=GUI_FONT)
+        self.progress_frame = ProgressFrame(self.nav_frame, map(lambda f: f.title, self.frames), self.set_frame)
 
         self.build()
 
@@ -49,11 +52,15 @@ class SampleEditFrame(Frame):
         Call propagates downward to the visible editing frame"""
         p = self._project_handler.project
         s = self._project_handler.curr_sample
-        if self._recent_root != p.root: # New Project, go to infoframe
+        self.curr_label['text'] = "RSG {0:0>4}, Sample {1}".format(p.number, s.num)
+        if self._recent_root != p.root:  # New Project, go to infoframe
             self.set_frame(0)
             self.progress_frame.set(0, False)
-        elif s is None or s.length is None or s.area is None or s.titles == [None, None, None] or s.plotrange == [None, None]\
-                or s.precision is None:
+        elif s is None or s.length is None \
+                or s.area is None \
+                or s.titles == [None, None, None] \
+                or s.plotrange == [None, None] \
+                or s.precision is None:  # Missing information important to the rest of the program.
             self.set_frame(0)
             self.progress_frame.set(0, False)
         else:
@@ -64,7 +71,9 @@ class SampleEditFrame(Frame):
 
     def build(self):
         """Assemble the rigid components"""
-        self.progress_frame.pack()
+        self.curr_label.pack(side=LEFT, padx=10)
+        self.progress_frame.pack(side=LEFT)
+        self.nav_frame.pack()
         self.scrollbar.pack(side=RIGHT, fill=Y)
         self.framecanvas.pack(fill=BOTH, expand=True)
 
@@ -89,7 +98,7 @@ class SampleEditFrame(Frame):
                 self._project_handler.new_sample()
         else:
             self.set_frame(c)
-            self.progress_frame.set(c,False)
+            self.progress_frame.set(c, False)
 
-    def on_canvas_configure(self,x):
+    def on_canvas_configure(self, x):
         self.framecanvas.configure(scrollregion=self.framecanvas.bbox('all'))
