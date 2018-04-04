@@ -23,7 +23,7 @@ class Sample(ASCData):
         self.labels = {}  # Labels to display on the final plot(s) for this sample.
         # labels include text and data coordinates for display.
 
-        self._peak_load_ind = None # index of the maximum load of the sample.
+        self._peak_load_ind = None  # index of the maximum load of the sample.
         self._cutoff_ind = None  # Index of first point cut from the end of the data.
 
     @property
@@ -35,6 +35,7 @@ class Sample(ASCData):
         return self._data_path
 
     def set_data_from_file(self, data_path):
+
         self.set_data(*ASCData.from_file(data_path))
         self._peak_load_ind = np.argmax(self.load)
         self._update_cutoff_ind()
@@ -57,6 +58,17 @@ class Sample(ASCData):
 
     def set_zero(self, t):
         self._zero_ind = int(np.argmin(np.abs(self.time - t)))
+
+    @property
+    def is_complete(self):
+        return self._data_path is not None \
+               and self.area is not None and self.length is not None \
+               and self.num is not None \
+               and self.titles != [None, None, None] \
+               and self._elastic_interval != [None, None] \
+               and self.plotrange != [None, None] \
+               and self._peak_load_ind is not None \
+               and self._cutoff_ind is not None
 
     @property
     def cutoff_pct(self):
@@ -97,15 +109,15 @@ class Sample(ASCData):
     @staticmethod
     def from_json(data):
         ret = Sample()
-        ret.set_data_from_file(data['data_path'])
+        if data['data_path'] is not None:
+            ret.set_data_from_file(data['data_path'])
+            ret.cutoff_pct = data['cutoff_pct']
+            ret._elastic_interval = data['elastic_zone']
+            ret._zero_ind = data['zero_ind']
 
         ret.num = data['number']
         ret.area = data['area']
         ret.length = data['length']
-
-        ret.cutoff_pct = data['cutoff_pct']
-        ret._elastic_interval = data['elastic_zone']
-        ret._zero_ind = data['zero_ind']
 
         ret.titles = data['titles']
         ret.labels = data['labels'] if 'labels' in data else {}

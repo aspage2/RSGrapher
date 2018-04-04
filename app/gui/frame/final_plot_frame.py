@@ -30,6 +30,10 @@ class FinalPlotFrame(AbstractTabFrame):
 
         self.build()
 
+    def can_update(self):
+        s = self._proj_handle.curr_sample
+        return s.is_complete
+
     def content_update(self):
         s = self._proj_handle.curr_sample
         self.peakloadframe.set_sample(s)

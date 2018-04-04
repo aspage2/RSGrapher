@@ -80,12 +80,13 @@ class SampleEditFrame(Frame):
     def set_frame(self, i):
         """Set the frame to the given index"""
         if not self.frames[i].can_update():
-            return
+            return False
         if self.curr_frame is not None:
             self.frames[self.curr_frame].pack_forget()
         self.curr_frame = i
         self.frames[self.curr_frame].content_update()
         self.frames[self.curr_frame].pack(fill=X)
+        return True
 
     def next_frame(self):
         """The next frame in the lineup"""

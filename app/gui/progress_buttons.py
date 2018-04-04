@@ -25,11 +25,14 @@ class ProgressFrame(Frame):
     def set(self, i, parent_update=True):
         if self.curr == i:
             return
-        self.buttons[self.curr]['bg'] = REG_COLOR
-        self.buttons[i]['bg'] = CURR_COLOR
-        self.curr = i
+        update = True
         if parent_update:
-            self.set_frame(i)
+            update = self.set_frame(i)
+        if update:
+            self.buttons[self.curr]['bg'] = REG_COLOR
+            self.buttons[i]['bg'] = CURR_COLOR
+            self.curr = i
+
 
     def build(self):
         for button in self.buttons:

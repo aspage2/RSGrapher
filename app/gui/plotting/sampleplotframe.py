@@ -106,10 +106,11 @@ class SamplePlotFrame(Frame):
         self._footnote_frame.pack()
 
 
-CHAR_PER_LINE = 35
+CHAR_PER_LINE = 45
 
 
 def footnote_format(text):
+    """Manually 'wrap' text to reduce the width of footnotes"""
     words = text.split(" ")
     line = ""
     ret = ""
