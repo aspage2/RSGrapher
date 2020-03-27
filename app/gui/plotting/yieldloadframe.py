@@ -12,7 +12,7 @@ class YieldLoadFrame(SamplePlotFrame):
         self.yieldline = self.canvas.plot("yieldline", [], [], **ELASTIC_STYLE)
         self.yieldload = self.canvas.plot("yieldloadpoint", [], [], **POINT_STYLE)
         self.yieldset = self.canvas.plot("yieldloaddata", [], [], **HIGHLIGHT_STYLE)
-        self.yieldtext = self.canvas.axes.text([], [], "", bbox=BBOX, va="top", ha="left")
+        self.yieldtext = self.canvas.axes.text(0, 0, "", bbox=BBOX, va="top", ha="left")
         self.canvas.set_labels("Load vs. Strain", "Strain (% Length)", "Load (lbs.)")
 
         self._handler.watch_label(YIELD_LOAD_LABEL, self.yieldtext)

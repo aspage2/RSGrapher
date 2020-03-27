@@ -9,7 +9,7 @@ class PeakLoadFrame(SamplePlotFrame):
     def __init__(self, parent):
         super().__init__(parent, "Load vs. Displacement", annotation_id="peakload_annotation")
         self.peakpoint = self.canvas.plot("peakloadpoint", [], [], **POINT_STYLE)
-        self.peaktext = self.canvas.axes.text([], [], "", bbox=BBOX, va="bottom", ha="left")
+        self.peaktext = self.canvas.axes.text(0, 0, "", bbox=BBOX, va="bottom", ha="left")
         self.canvas.set_labels("Load vs. Displacement", "Displacement (in.)", "Load (lbs)")
         self._handler.watch_label(PEAKLOAD_LABEL, self.peaktext)
 
