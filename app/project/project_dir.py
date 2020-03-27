@@ -10,6 +10,7 @@ PDF_FOLDER = "pdfs for Test Report/"
 INVOICE_FOLDER = "Invoice/"
 SPEC_FOLDER = "Test Specifications/"
 
+
 class ProjectDirectory:
     """Root class for project model"""
 
@@ -20,7 +21,9 @@ class ProjectDirectory:
         self.samples = []
 
     def set_date(self, date):
-        generate_project_layer(self.number, date.strftime("%B %d, %Y"), self.template_file)
+        generate_project_layer(
+            self.number, date.strftime("%B %d, %Y"), self.template_file
+        )
 
     def add_sample(self, sample):
         self.samples.append(sample)
@@ -57,12 +60,12 @@ class ProjectDirectory:
         return self.pdf_dir + "/temp/graph_template.pdf"
 
     def write_project(self):
-        data = {'title': self.title, 'number': self.number}
+        data = {"title": self.title, "number": self.number}
         samples = []
         for sample in self.samples:
             samples.append(sample.json)
-        data['samples'] = samples
-        with open(self.root + "project.json", 'w') as f:
+        data["samples"] = samples
+        with open(self.root + "project.json", "w") as f:
             f.write(json.dumps(data))
 
     @staticmethod
@@ -71,18 +74,18 @@ class ProjectDirectory:
         os.mkdir(proj_dir + DATA_FOLDER)
         os.mkdir(proj_dir + PHOTO_FOLDER)
         os.mkdir(proj_dir + PDF_FOLDER)
-        os.mkdir(proj_dir + PDF_FOLDER+"temp/")
+        os.mkdir(proj_dir + PDF_FOLDER + "temp/")
         os.mkdir(proj_dir + INVOICE_FOLDER)
         os.mkdir(proj_dir + SPEC_FOLDER)
-        ret = ProjectDirectory(title,number,proj_dir)
+        ret = ProjectDirectory(title, number, proj_dir)
         ret.set_date(date)
         return ret
 
     @staticmethod
     def open_project(proj_dir):
-        with open(proj_dir+"project.json", 'r') as f:
+        with open(proj_dir + "project.json", "r") as f:
             data = json.loads(f.read())
-            ret = ProjectDirectory(data['title'], data['number'], proj_dir)
-            for sample in data['samples']:
+            ret = ProjectDirectory(data["title"], data["number"], proj_dir)
+            for sample in data["samples"]:
                 ret.add_sample(Sample.from_json(sample))
         return ret

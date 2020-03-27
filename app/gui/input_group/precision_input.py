@@ -1,19 +1,21 @@
-
 from tkinter import *
 
 
 class PrecisionInputGroup(Frame):
     """Specify the precision of the measurements"""
+
     def __init__(self, parent, font):
         super().__init__(parent)
         self._var = IntVar(0)
         self._buttons = []
         f = Frame(self)
         for i in range(3):
-            r = Radiobutton(f, variable=self._var, val=i, text="{}".format(10 ** i),font=font)
+            r = Radiobutton(
+                f, variable=self._var, val=i, text="{}".format(10 ** i), font=font
+            )
             self._buttons.append(r)
             r.pack(side=LEFT)
-        Label(self, text="Precision (lbs.)",font=font).pack()
+        Label(self, text="Precision (lbs.)", font=font).pack()
         f.pack()
 
     def set(self, precision):

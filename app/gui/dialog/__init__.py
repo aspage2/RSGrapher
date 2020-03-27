@@ -1,4 +1,3 @@
-
 from tkinter import messagebox, filedialog, Toplevel
 
 from os import getcwd
@@ -18,19 +17,21 @@ def ask_project_dir(initdir=getcwd()):
     """Ask for a directory that represents an RSGrapher project"""
     return filedialog.askdirectory(title="Open Project", initialdir=initdir)
 
+
 class BaseDialogWindow(Toplevel):
     """Base class for custom dialogs. Provides
     logic for passing values back to main application.
     Inheritors define the layout and update return values
     with inherited methods"""
+
     def __init__(self, root, title="", **kwargs):
         super().__init__(master=root, **kwargs)
         self.root = root
         x = root.winfo_x()
         y = root.winfo_y()
-        self.geometry("+{}+{}".format(int(x*1.25)+100, int(y*1.25)+100))
+        self.geometry("+{}+{}".format(int(x * 1.25) + 100, int(y * 1.25) + 100))
         self.title(title)
-        self.resizable(0,0)
+        self.resizable(0, 0)
 
         # Keep a list of return parameters
         self.ret = {}

@@ -8,6 +8,7 @@ from app.gui.input_group.sample_num_input import SampleNumberInputGroup
 
 class ASCDataFrame(AbstractTabFrame):
     """Get sample # and data file"""
+
     def __init__(self, parent, proj_ptr, next_frame):
         super().__init__(parent, "Raw Data", proj_ptr, next_frame)
         self.num_input = SampleNumberInputGroup(self, font=GUI_FONT)

@@ -34,7 +34,9 @@ class NewProjectPrompt(BaseDialogWindow):
         self.dir = Entry(f, width=self.ENTRY_WIDTH)
         Label(f, text="Folder").grid()
         self.dir.grid(row=2, column=1, columnspan=2, sticky=W)
-        Button(f, command=self.get_directory_location, text="Browse").grid(row=2, column=3)
+        Button(f, command=self.get_directory_location, text="Browse").grid(
+            row=2, column=3
+        )
 
         Button(f, command=self.create, text="Create").grid(column=1)
         Button(f, command=self.destroy, text="Cancel").grid(row=3, column=2)
@@ -50,7 +52,9 @@ class NewProjectPrompt(BaseDialogWindow):
             messagebox.showwarning("Create Project", "The project needs a version.")
             return False
         if self.dir.get() == "":
-            messagebox.showwarning("Create Project", "No directory is selected to save the project")
+            messagebox.showwarning(
+                "Create Project", "No directory is selected to save the project"
+            )
             return False
         return True
 

@@ -13,6 +13,7 @@ import os
 
 class ProjectHandler:
     """Owns the application model and provides interface methods for modifying it"""
+
     def __init__(self, app, project=None):
         self.project = None
         self.curr_sample = None
@@ -24,10 +25,13 @@ class ProjectHandler:
         """Create new project"""
         self.close_project()
         info = NewProjectPrompt(self._app).run()
-        if info['cancelled']:
+        if info["cancelled"]:
             return
         self.set_project(
-            ProjectDirectory.create_project(info['title'], info['num'], info['dir'] + "/", datetime.datetime.now()))
+            ProjectDirectory.create_project(
+                info["title"], info["num"], info["dir"] + "/", datetime.datetime.now()
+            )
+        )
         self.project.write_project()
         self.cleanup_project_dir()
         self._app.content_update()
@@ -40,7 +44,10 @@ class ProjectHandler:
         try:
             p = ProjectDirectory.open_project(root + "/")
         except IOError as e:
-            messagebox.showwarning(title="Bad Directory", message="{} does not have a project.json".format(root))
+            messagebox.showwarning(
+                title="Bad Directory",
+                message="{} does not have a project.json".format(root),
+            )
         else:
             self.close_project()
             self.set_project(p)
@@ -65,16 +72,20 @@ class ProjectHandler:
 
     def select_sample(self):
         """Set the current sample to a previously made one"""
-        ret = SelectSampleDialog(self._app, self.project.samples, self.curr_sample).run()
-        if ret['cancelled']:
+        ret = SelectSampleDialog(
+            self._app, self.project.samples, self.curr_sample
+        ).run()
+        if ret["cancelled"]:
             return
-        self.curr_sample = self.project.samples[ret['sample']]
+        self.curr_sample = self.project.samples[ret["sample"]]
         self._app.content_update()
 
     def delete_curr_sample(self):
         """Delete the currently open sample"""
         if self.curr_sample is not None:
-            if not messagebox.askyesno("Delete Sample", "Deleting Sample {}?".format(self.curr_sample.num)):
+            if not messagebox.askyesno(
+                "Delete Sample", "Deleting Sample {}?".format(self.curr_sample.num)
+            ):
                 return
             self.project.samples.remove(self.curr_sample)
             if len(self.project.samples) != 0:
@@ -101,7 +112,7 @@ class ProjectHandler:
         res = DateInputDialog(self._app).run()
         if res["cancelled"]:
             return
-        self.project.set_date(res['date'])
+        self.project.set_date(res["date"])
 
     def cleanup_project_dir(self):
         """Move ASC files from root directory to the Raw Data folder in the project"""
@@ -113,4 +124,7 @@ class ProjectHandler:
                 num += 1
 
         if num > 0:
-            messagebox.showinfo("New Project", "{} ASC files were moved to {}".format(num, self.project.data_dir))
+            messagebox.showinfo(
+                "New Project",
+                "{} ASC files were moved to {}".format(num, self.project.data_dir),
+            )

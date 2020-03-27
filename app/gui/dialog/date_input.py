@@ -1,4 +1,3 @@
-
 from app.gui.dialog import BaseDialogWindow
 from app.gui import GUI_FONT
 from tkinter import *
@@ -7,6 +6,7 @@ import datetime
 
 class DateInputDialog(BaseDialogWindow):
     """Enter the date that the testing took place on"""
+
     def __init__(self, root):
         super().__init__(root, "Set Date", padx=10, pady=10)
         rf = Frame(self, padx=20, pady=10)
@@ -29,7 +29,11 @@ class DateInputDialog(BaseDialogWindow):
         self.ret_update(cancelled=True)
 
     def _submit(self):
-        d = datetime.datetime(int(self._yearentry.get()), int(self._monthentry.get()), int(self._dayentry.get()))
+        d = datetime.datetime(
+            int(self._yearentry.get()),
+            int(self._monthentry.get()),
+            int(self._dayentry.get()),
+        )
         self.ret_update(cancelled=False)
         self.ret_update(date=d)
         self.destroy()
