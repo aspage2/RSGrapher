@@ -16,6 +16,7 @@ matplotlib.use("TkAgg")
 
 class FinalPlotFrame(AbstractTabFrame):
     """View final plots, move labels and manage footnotes"""
+
     def __init__(self, parent, handler, next_frame):
         super().__init__(parent, "Final Plots", handler, next_frame)
         self.canvasnotebook = Notebook(self)
@@ -50,19 +51,37 @@ class FinalPlotFrame(AbstractTabFrame):
 
         pl_file = "{}temp/S{}_PL.pdf".format(pdf_dir, s.num)
         self.peakloadframe.canvas.figure.savefig(pl_file)
-        create_pdf(info_file, project.template_file, pl_file, pdf_dir+"Sample #{} (PeakLoad).pdf".format(s.num))
+        create_pdf(
+            info_file,
+            project.template_file,
+            pl_file,
+            pdf_dir + "Sample #{} (PeakLoad).pdf".format(s.num),
+        )
 
         uts_file = "{}temp/S{}_UTS.pdf".format(pdf_dir, s.num)
         self.utsframe.canvas.figure.savefig(uts_file)
-        create_pdf(info_file, project.template_file, uts_file, pdf_dir+"Sample #{} (UTS).pdf".format(s.num))
+        create_pdf(
+            info_file,
+            project.template_file,
+            uts_file,
+            pdf_dir + "Sample #{} (UTS).pdf".format(s.num),
+        )
 
         yl_file = "{}temp/S{}_YL.pdf".format(pdf_dir, s.num)
         self.yieldloadframe.canvas.figure.savefig(yl_file)
-        create_pdf(info_file, project.template_file, yl_file, pdf_dir+"Sample #{} (YieldLoad).pdf".format(s.num))
+        create_pdf(
+            info_file,
+            project.template_file,
+            yl_file,
+            pdf_dir + "Sample #{} (YieldLoad).pdf".format(s.num),
+        )
 
-        messagebox.showinfo(title="Success",message="Created 3 files in {}".format(pdf_dir))
-
+        messagebox.showinfo(
+            title="Success", message="Created 3 files in {}".format(pdf_dir)
+        )
 
     def build(self):
         self.canvasnotebook.pack()
-        Button(self, text="Generate PDFs", command=self.on_next, font=GUI_FONT).pack(side=RIGHT)
+        Button(self, text="Generate PDFs", command=self.on_next, font=GUI_FONT).pack(
+            side=RIGHT
+        )

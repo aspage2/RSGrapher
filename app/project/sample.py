@@ -14,8 +14,12 @@ class Sample(ASCData):
         self.length = length  # Pull length
         self.num = None  # Sample Number
         self.precision = 0
-        self.titles = titles if titles is not None else [None, None, None]  # Titles for graph output
-        self._cutoff_pct = 0.1  # All data after and below 1 - pct of peak load is cut off
+        self.titles = (
+            titles if titles is not None else [None, None, None]
+        )  # Titles for graph output
+        self._cutoff_pct = (
+            0.1  # All data after and below 1 - pct of peak load is cut off
+        )
         self._elastic_interval = [None, None]  # Elastic interval AS A SLICE
         self._zero_ind = 0  # ZERO INDEX
         self.plotrange = [None, None]  # Graph plotting range as specified by the user.
@@ -61,14 +65,17 @@ class Sample(ASCData):
 
     @property
     def is_complete(self):
-        return self._data_path is not None \
-               and self.area is not None and self.length is not None \
-               and self.num is not None \
-               and self.titles != [None, None, None] \
-               and self._elastic_interval != [None, None] \
-               and self.plotrange != [None, None] \
-               and self._peak_load_ind is not None \
-               and self._cutoff_ind is not None
+        return (
+            self._data_path is not None
+            and self.area is not None
+            and self.length is not None
+            and self.num is not None
+            and self.titles != [None, None, None]
+            and self._elastic_interval != [None, None]
+            and self.plotrange != [None, None]
+            and self._peak_load_ind is not None
+            and self._cutoff_ind is not None
+        )
 
     @property
     def cutoff_pct(self):
@@ -83,7 +90,9 @@ class Sample(ASCData):
 
     def _update_cutoff_ind(self):
         i = self._peak_load_ind
-        while i < len(self.load) and self.load[i] > self.load[self._peak_load_ind] * (1 - self._cutoff_pct):
+        while i < len(self.load) and self.load[i] > self.load[self._peak_load_ind] * (
+            1 - self._cutoff_pct
+        ):
             i += 1
         self._cutoff_ind = i
 
@@ -101,28 +110,38 @@ class Sample(ASCData):
 
     @property
     def json(self):
-        data = {'number': self.num, 'area': self.area, 'length': self.length, 'cutoff_pct': self._cutoff_pct,
-                'zero_ind': self._zero_ind, 'elastic_zone': self._elastic_interval, 'data_path': self._data_path,
-                'titles': self.titles, 'plot_range': self.plotrange, 'labels': self.labels, 'precision': self.precision}
+        data = {
+            "number": self.num,
+            "area": self.area,
+            "length": self.length,
+            "cutoff_pct": self._cutoff_pct,
+            "zero_ind": self._zero_ind,
+            "elastic_zone": self._elastic_interval,
+            "data_path": self._data_path,
+            "titles": self.titles,
+            "plot_range": self.plotrange,
+            "labels": self.labels,
+            "precision": self.precision,
+        }
         return data
 
     @staticmethod
     def from_json(data):
         ret = Sample()
-        if data['data_path'] is not None:
-            ret.set_data_from_file(data['data_path'])
-            ret.cutoff_pct = data['cutoff_pct']
-            ret._elastic_interval = data['elastic_zone']
-            ret._zero_ind = data['zero_ind']
+        if data["data_path"] is not None:
+            ret.set_data_from_file(data["data_path"])
+            ret.cutoff_pct = data["cutoff_pct"]
+            ret._elastic_interval = data["elastic_zone"]
+            ret._zero_ind = data["zero_ind"]
 
-        ret.num = data['number']
-        ret.area = data['area']
-        ret.length = data['length']
+        ret.num = data["number"]
+        ret.area = data["area"]
+        ret.length = data["length"]
 
-        ret.titles = data['titles']
-        ret.labels = data['labels'] if 'labels' in data else {}
+        ret.titles = data["titles"]
+        ret.labels = data["labels"] if "labels" in data else {}
         ret.plotrange = data["plot_range"]
 
-        ret.precision = data['precision'] if 'precision' in data else 0
+        ret.precision = data["precision"] if "precision" in data else 0
 
         return ret

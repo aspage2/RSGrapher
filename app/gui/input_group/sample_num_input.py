@@ -1,9 +1,9 @@
-
 from tkinter import *
 
 
 class SampleNumberInputGroup(Frame):
     """Input sample number, which MUST be a positive whole number"""
+
     def __init__(self, parent, font, **kwargs):
         super().__init__(parent, **kwargs)
         self.sample_num = Entry(self, width=3, font=font)

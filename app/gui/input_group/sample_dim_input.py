@@ -1,9 +1,9 @@
-
 from tkinter import *
 
 
 class SampleDimensionInputGroup(Frame):
     """Input sample dimensions (area, length)"""
+
     def __init__(self, parent, font, **kwargs):
         super().__init__(parent, **kwargs)
         self.len_entry = Entry(self, width=6, font=font)
@@ -36,6 +36,6 @@ class SampleDimensionInputGroup(Frame):
 
     def get_area(self):
         return float(self.area_entry.get())
+
     def get_length(self):
         return float(self.len_entry.get())
-

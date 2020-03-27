@@ -19,31 +19,43 @@ class SampleEditFrame(Frame):
         super().__init__(parent, padx=10, pady=10)
         self.parent = parent
         self.curr_frame = None  # Current edit frame to be displayed
-        self._project_handler = handler  # See app.project.project_handler.ProjectHandler
-        self._recent_root = None  # Hold most recent project directory to detect a project change
+        self._project_handler = (
+            handler  # See app.project.project_handler.ProjectHandler
+        )
+        self._recent_root = (
+            None  # Hold most recent project directory to detect a project change
+        )
 
         # Make the edit page y-scrollable
         self.framecanvas = Canvas(self, width=1100, height=800)
         self.framecanvas.pack_propagate(False)
         self.scrollbar = Scrollbar(self)
-        self.framecanvas['yscrollcommand'] = self.scrollbar.set
-        self.scrollbar['command'] = self.framecanvas.yview
+        self.framecanvas["yscrollcommand"] = self.scrollbar.set
+        self.scrollbar["command"] = self.framecanvas.yview
         self.frameholder = Frame(self.framecanvas)
         self.frameholder.bind("<Configure>", self.on_canvas_configure)
-        self.framecanvas.create_window((self.framecanvas.winfo_width() / 2, 0),
-                                       window=self.frameholder, anchor=CENTER, tags="window")
+        self.framecanvas.create_window(
+            (self.framecanvas.winfo_width() / 2, 0),
+            window=self.frameholder,
+            anchor=CENTER,
+            tags="window",
+        )
 
         # Edit frames
-        self.frames = (BasicInfoFrame(self.frameholder, handler, self.next_frame),
-                       ASCDataFrame(self.frameholder, handler, self.next_frame),
-                       DataTrimFrame(self.frameholder, handler, self.next_frame),
-                       ElasticIntervalFrame(self.frameholder, handler, self.next_frame),
-                       FinalPlotFrame(self.frameholder, handler, self.next_frame))
+        self.frames = (
+            BasicInfoFrame(self.frameholder, handler, self.next_frame),
+            ASCDataFrame(self.frameholder, handler, self.next_frame),
+            DataTrimFrame(self.frameholder, handler, self.next_frame),
+            ElasticIntervalFrame(self.frameholder, handler, self.next_frame),
+            FinalPlotFrame(self.frameholder, handler, self.next_frame),
+        )
 
         # Navigation & Current project/sample
         self.nav_frame = Frame(self)
         self.curr_label = Label(self.nav_frame, text="RSG", font=GUI_FONT)
-        self.progress_frame = ProgressFrame(self.nav_frame, map(lambda f: f.title, self.frames), self.set_frame)
+        self.progress_frame = ProgressFrame(
+            self.nav_frame, map(lambda f: f.title, self.frames), self.set_frame
+        )
 
         self.build()
 
@@ -52,15 +64,18 @@ class SampleEditFrame(Frame):
         Call propagates downward to the visible editing frame"""
         p = self._project_handler.project
         s = self._project_handler.curr_sample
-        self.curr_label['text'] = "RSG {0:0>4}, Sample {1}".format(p.number, s.num)
+        self.curr_label["text"] = "RSG {0:0>4}, Sample {1}".format(p.number, s.num)
         if self._recent_root != p.root:  # New Project, go to infoframe
             self.set_frame(0)
             self.progress_frame.set(0, False)
-        elif s is None or s.length is None \
-                or s.area is None \
-                or s.titles == [None, None, None] \
-                or s.plotrange == [None, None] \
-                or s.precision is None:  # Missing information important to the rest of the program.
+        elif (
+            s is None
+            or s.length is None
+            or s.area is None
+            or s.titles == [None, None, None]
+            or s.plotrange == [None, None]
+            or s.precision is None
+        ):  # Missing information important to the rest of the program.
             self.set_frame(0)
             self.progress_frame.set(0, False)
         else:
@@ -95,11 +110,13 @@ class SampleEditFrame(Frame):
         else:
             raise ValueError("Frame not initially set")
         if c == len(self.frames):
-            if messagebox.askyesno(title="Next Sample?", message="Create another sample?"):
+            if messagebox.askyesno(
+                title="Next Sample?", message="Create another sample?"
+            ):
                 self._project_handler.new_sample()
         else:
             self.set_frame(c)
             self.progress_frame.set(c, False)
 
     def on_canvas_configure(self, x):
-        self.framecanvas.configure(scrollregion=self.framecanvas.bbox('all'))
+        self.framecanvas.configure(scrollregion=self.framecanvas.bbox("all"))

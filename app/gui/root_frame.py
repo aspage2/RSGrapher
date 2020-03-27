@@ -9,7 +9,9 @@ class RootFrame(Frame):
 
     def __init__(self, parent, handler):
         super().__init__(parent, padx=10, pady=10)
-        self._no_project_frame = NoProjectFrame(self, handler.new_project, handler.open_project)
+        self._no_project_frame = NoProjectFrame(
+            self, handler.new_project, handler.open_project
+        )
         self._no_sample_frame = NoSampleFrame(self, handler.new_sample)
         self._sample_frame = SampleEditFrame(self, handler)
         self._project_handler = handler
@@ -34,6 +36,7 @@ class RootFrame(Frame):
 
 class NoProjectFrame(Frame):
     """Visible when project handler has no open project"""
+
     def __init__(self, parent, np, op):
         super().__init__(parent)
         Label(self, text="No Project Open").pack()
@@ -43,6 +46,7 @@ class NoProjectFrame(Frame):
 
 class NoSampleFrame(Frame):
     """Visible when project has no samples"""
+
     def __init__(self, parent, ns):
         super().__init__(parent)
         Label(self, text="Project has no samples!").pack()

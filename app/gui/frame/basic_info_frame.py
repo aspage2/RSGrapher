@@ -1,4 +1,3 @@
-
 from tkinter import *
 
 from app.gui import GUI_FONT
@@ -11,6 +10,7 @@ from app.gui.input_group.title_input import TitleInputGroup
 
 class BasicInfoFrame(AbstractTabFrame):
     """Sample information: plotting titles, sample dimensions, plotting range"""
+
     def __init__(self, parent, handler, next_frame):
         super().__init__(parent, "Info", handler, next_frame)
         self.title_input = TitleInputGroup(self, font=GUI_FONT)
@@ -36,7 +36,11 @@ class BasicInfoFrame(AbstractTabFrame):
 
     def is_done(self):
         """"""
-        return self.title_input.entries_valid() and self.dim_input.entries_valid() and self.plot_range_input.entries_valid()
+        return (
+            self.title_input.entries_valid()
+            and self.dim_input.entries_valid()
+            and self.plot_range_input.entries_valid()
+        )
 
     def unload(self):
         """Called by AbstractTabFrame.on_next

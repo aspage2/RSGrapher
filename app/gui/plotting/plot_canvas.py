@@ -20,7 +20,7 @@ class PlotCanvas(FigureCanvasTkAgg):
         self._plotrange = [(0, 100), (0, 100)]
         self.datacurve = self.axes.plot([], [], **DATA_STYLE)[0]  # Returns list
         self.extra_plots = {}  # Zero line, elastic lines, highlights, points etc.
-        self.show()
+        self.draw()
 
     def set_labels(self, title=None, xlabel=None, ylabel=None):
         """Set the plotting labels"""

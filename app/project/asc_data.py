@@ -3,6 +3,7 @@ import numpy as np
 
 class ASCData:
     """Input data from a single stress test (Time, Load, Displacement)"""
+
     def __init__(self, time=None, load=None, disp=None):
         if time is not None and load is not None and disp is not None:
             self.set_data(time, load, disp)
@@ -23,7 +24,11 @@ class ASCData:
 
     def __getitem__(self, key):
         if isinstance(key, slice):
-            return (self.time[key.start:key.stop], self.disp[key.start:key.stop], self.load[key.start:key.stop])
+            return (
+                self.time[key.start : key.stop],
+                self.disp[key.start : key.stop],
+                self.load[key.start : key.stop],
+            )
         return (self.time[key], self.disp[key], self.load[key])
 
     @staticmethod
@@ -31,7 +36,7 @@ class ASCData:
         time = []
         load = []
         disp = []
-        with open(filename, 'r') as fh:
+        with open(filename, "r") as fh:
             for i in range(7):
                 fh.readline()
             line = fh.readline().strip()
@@ -43,5 +48,3 @@ class ASCData:
                 line = fh.readline().strip()
 
         return time, load, disp
-
-
