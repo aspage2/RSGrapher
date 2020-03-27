@@ -1,7 +1,7 @@
 from tkinter import *
 
 import numpy as np
-from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
+from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk
 from matplotlib.figure import Figure
 
 from app.gui import LINE_STYLE, TRIM_STYLE, GUI_FONT
@@ -15,7 +15,7 @@ class DataTrimFrame(AbstractTabFrame):
         super().__init__(parent, "Trim Data", handle, next_frame)
         self.canvas = PlotCanvas(Figure((7, 5), dpi=100), self)
         self.canvas.mpl_connect("button_press_event", self.on_click)
-        self.nav = NavigationToolbar2TkAgg(self.canvas, self)
+        self.nav = NavigationToolbar2Tk(self.canvas, self)
         self.canvas.set_labels("Load vs. Time", "Time (s)", "Load (lbs.)")
         self.zeroline = self.canvas.plot("zeroline", [], [], **LINE_STYLE)
         self.trimdata = self.canvas.plot("trimdata", [], [], **TRIM_STYLE)
@@ -51,7 +51,7 @@ class DataTrimFrame(AbstractTabFrame):
         self._show_time = not self._show_time
         self.set_zeroline(z)
         self.set_trimdata(t,self._cs.load[self._cs.cutoff:])
-        self.canvas.show()
+        self.canvas.draw()
 
     def can_update(self):
         s = self._proj_handle.curr_sample
@@ -67,7 +67,7 @@ class DataTrimFrame(AbstractTabFrame):
         self.cutoffentry.delete(0, END)
         self.cutoffentry.insert(0, str(self._cs.cutoff_pct * 100))
         self.set_trimdata(self._cs.time[self._cs.cutoff:], self._cs.load[self._cs.cutoff:])
-        self.canvas.show()
+        self.canvas.draw()
 
     def set_zeroline(self, x):
         self.zerolabel['text'] = "Zero: {:0.1f} {}".format(x, "s" if self._show_time else "in")
@@ -90,7 +90,7 @@ class DataTrimFrame(AbstractTabFrame):
         else:
             data = self._cs.disp
         self.set_trimdata(data[self._cs.cutoff:], self._cs.load[self._cs.cutoff:])
-        self.canvas.show()
+        self.canvas.draw()
 
     def on_click(self, event):
         if not event.inaxes:
@@ -99,7 +99,7 @@ class DataTrimFrame(AbstractTabFrame):
             return
         self._cs.set_zero(event.xdata)
         self.set_zeroline(event.xdata)
-        self.canvas.show()
+        self.canvas.draw()
 
     def is_done(self):
         try:

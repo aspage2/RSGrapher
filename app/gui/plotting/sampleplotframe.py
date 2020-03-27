@@ -1,7 +1,7 @@
 from tkinter import *
 
 import matplotlib.text
-from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
+from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk
 from matplotlib.figure import Figure
 
 from app.gui import BBOX, GUI_FONT
@@ -16,7 +16,7 @@ class SamplePlotFrame(Frame):
     def __init__(self, parent, title="RSG", annotation_id=None):
         super().__init__(parent)
         self.canvas = PlotCanvas(Figure((10, 6), dpi=100), self)
-        self.toolbar = NavigationToolbar2TkAgg(self.canvas, self)
+        self.toolbar = NavigationToolbar2Tk(self.canvas, self)
         self.title = title
         self.sample = None
         self._handler = DragHandler(self.canvas, self.set_label_pos)
@@ -86,7 +86,7 @@ class SamplePlotFrame(Frame):
         else:
             self._remove_footnote(False)
 
-        self.canvas.show()
+        self.canvas.draw()
 
     def set_label_pos(self, label_id, label):
         self.sample.labels[label_id]['pos'] = label.get_position()

@@ -1,4 +1,4 @@
 numpy
-matplotlib==2.0.2
+matplotlib
 reportlab
 PyPDF2

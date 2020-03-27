@@ -44,4 +44,4 @@ class YieldLoadFrame(SamplePlotFrame):
         self.yieldtext.set_text(s)
 
         self.canvas.figure.tight_layout()
-        self.canvas.show()
+        self.canvas.draw()

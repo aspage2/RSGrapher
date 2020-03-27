@@ -66,4 +66,4 @@ class UTSFrame(SamplePlotFrame):
         self.yield_text.set_text(s)
 
         self.canvas.figure.tight_layout()
-        self.canvas.show()
+        self.canvas.draw()

@@ -1,7 +1,7 @@
 from tkinter import *
 
 import numpy as np
-from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
+from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk
 from matplotlib.figure import Figure
 
 from app.gui import ELASTIC_STYLE, LINE_STYLE, GUI_FONT
@@ -21,7 +21,7 @@ class ElasticIntervalFrame(AbstractTabFrame):
         self.canvas.mpl_connect("button_press_event", self.on_click)
         self.interval_lines = [self.canvas.plot("interval{}".format(i), [], [], **LINE_STYLE) for i in (1, 2)]
         self.elastic_line = self.canvas.plot("elasticline", [], [], **ELASTIC_STYLE)
-        self.nav = NavigationToolbar2TkAgg(self.canvas, self)
+        self.nav = NavigationToolbar2Tk(self.canvas, self)
         self.var = IntVar(self, value=0)
         self.controlframe = Frame(self, borderwidth=2, relief=SUNKEN)
         self.curr = 1
@@ -31,7 +31,7 @@ class ElasticIntervalFrame(AbstractTabFrame):
                                                  command=b['command'](self)))
         self.setfocus(0)
         self.canvas.set_labels("Load vs. Displacement", "Displacement (in.)", "Load (lbs.)")
-        self.canvas.show()
+        self.canvas.draw()
         self.sample = None
         self.build()
 
@@ -41,7 +41,7 @@ class ElasticIntervalFrame(AbstractTabFrame):
         self.interval_lines[self.curr].set_color("k")
         self.interval_lines[i].set_color("r")
         self.curr = i
-        self.canvas.show()
+        self.canvas.draw()
 
     def can_update(self):
         s = self._proj_handle.curr_sample
@@ -58,7 +58,7 @@ class ElasticIntervalFrame(AbstractTabFrame):
             l0, l1 = suggested_elastic_zone(disp, load)
             s.set_elastic_zone(l0, l1)
         self.update_lines()
-        self.canvas.show()
+        self.canvas.draw()
 
     def autoelastic_click(self):
         s = self.sample
@@ -67,7 +67,7 @@ class ElasticIntervalFrame(AbstractTabFrame):
         l0, l1 = suggested_elastic_zone(disp, load)
         s.set_elastic_zone(l0, l1)
         self.update_lines()
-        self.canvas.show()
+        self.canvas.draw()
 
     def update_lines(self):
         s = self.sample
@@ -88,7 +88,7 @@ class ElasticIntervalFrame(AbstractTabFrame):
         interval[self.curr] = event.ydata
         self.sample.set_elastic_zone(*interval)
         self.update_lines()
-        self.canvas.show()
+        self.canvas.draw()
 
     def build(self):
         self.canvas.pack()
