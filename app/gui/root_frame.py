@@ -5,7 +5,7 @@ from app.gui.frame.sample_edit_frame import SampleEditFrame
 
 class RootFrame(Frame):
     """Root frame of an RSGrapher application window.
-       the direct child of the housing Tk instance."""
+    the direct child of the housing Tk instance."""
 
     def __init__(self, parent, handler):
         super().__init__(parent, padx=10, pady=10)
