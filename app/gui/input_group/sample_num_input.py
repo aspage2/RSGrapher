@@ -1,5 +1,7 @@
 from tkinter import *
 
+import re
+
 
 class SampleNumberInputGroup(Frame):
     """Input sample number, which MUST be a positive whole number"""
