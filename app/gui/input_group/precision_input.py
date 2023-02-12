@@ -6,7 +6,7 @@ class PrecisionInputGroup(Frame):
 
     def __init__(self, parent, font):
         super().__init__(parent)
-        self._var = IntVar(0)
+        self._var = IntVar(self, 0)
         self._buttons = []
         f = Frame(self)
         for i in range(3):
