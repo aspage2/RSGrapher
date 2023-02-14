@@ -102,9 +102,7 @@ class ElasticIntervalFrame(AbstractTabFrame):
         )
 
     def on_click(self, event):
-        if not event.inaxes:
-            return
-        if self.nav._active == "ZOOM":
+        if not event.inaxes or event.inaxes.get_navigate_mode() == "ZOOM":
             return
         interval = [None, None]
         interval[self.curr] = event.ydata
