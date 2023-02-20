@@ -64,7 +64,7 @@ class SampleEditFrame(Frame):
         Call propagates downward to the visible editing frame"""
         p = self._project_handler.project
         s = self._project_handler.curr_sample
-        self.curr_label["text"] = "RSG {0:0>4}, Sample {1}".format(p.number, s.num)
+        self.curr_label["text"] = f"RSG {p.number:0>4}, {s.name}"
         if self._recent_root != p.root:  # New Project, go to infoframe
             self.set_frame(0)
             self.progress_frame.set(0, False)

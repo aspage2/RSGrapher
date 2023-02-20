@@ -111,9 +111,7 @@ class DataTrimFrame(AbstractTabFrame):
         self.canvas.draw()
 
     def on_click(self, event):
-        if not event.inaxes:
-            return
-        if self.nav._active == "ZOOM":
+        if not event.inaxes or event.inaxes.get_navigate_mode() == "ZOOM":
             return
         self._cs.set_zero(event.xdata)
         self.set_zeroline(event.xdata)

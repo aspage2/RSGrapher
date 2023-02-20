@@ -1,4 +1,3 @@
-
 from app.gui.app_window import AppWindow
 
 import sys

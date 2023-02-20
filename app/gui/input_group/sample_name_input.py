@@ -3,12 +3,12 @@ from tkinter import *
 import re
 
 
-class SampleNumberInputGroup(Frame):
+class SampleNameInputGroup(Frame):
     """Input sample number, which MUST be a positive whole number"""
 
     def __init__(self, parent, font, **kwargs):
         super().__init__(parent, **kwargs)
-        self.sample_num = Entry(self, width=3, font=font)
+        self.sample_num = Entry(self, width=40, font=font)
         Label(self, text="Sample # ", font=font).pack(side=LEFT)
         self.sample_num.pack(side=LEFT)
         self.re = re.compile("^\d+$")

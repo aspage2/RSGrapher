@@ -8,7 +8,7 @@ class SampleFileInputGroup(Frame):
     def __init__(self, parent, font, **kwargs):
         super().__init__(parent, **kwargs)
         self.parent = parent
-        self.sample_dir = Entry(self, width=30, font=font)
+        self.sample_dir = Entry(self, width=40, font=font)
         Label(self, text="ASC File ", font=font).pack(side=LEFT)
         self.sample_dir.pack(side=LEFT)
         Button(self, text="Browse", font=font, command=self.browse).pack(side=LEFT)

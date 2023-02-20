@@ -28,9 +28,7 @@ class AppWindow(Tk):
         if proj is None:
             self.title(PROJECT_TITLE)
         else:
-            self.title(
-                proj.title + (" - Sample {}".format(cs.num) if cs is not None else "")
-            )
+            self.title(proj.title + (f" - {cs.name}" if cs is not None else ""))
         self._main_frame.content_update()
 
     def bind_menu_actions(self):

@@ -46,12 +46,11 @@ SUBTITLE_FONT = 14
 
 def generate_sample_layer(sample, filename):
     """Layer 2: SAMPLE (sample #, titles)"""
-    sample_num_str = "Sample #{}".format(sample.num)
     pagewidth, pageheight = landscape(letter)
     c = canvas.Canvas(filename, pagesize=(pagewidth, pageheight))
     c.setFont("Helvetica-Bold", 16)
     c.drawRightString(
-        pagewidth - TEXT_MARGIN, pageheight - 35 - TEXT_MARGIN, sample_num_str
+        pagewidth - TEXT_MARGIN, pageheight - 35 - TEXT_MARGIN, sample.name
     )
 
     titles = sample.titles
