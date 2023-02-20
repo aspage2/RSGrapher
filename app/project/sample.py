@@ -12,7 +12,7 @@ class Sample(ASCData):
         self._data_path = None  # Path to ASC file
         self.area = area  # cross-sectional area
         self.length = length  # Pull length
-        self.num = None  # Sample Number
+        self.name = None  # Sample Number
         self.precision = 0
         self.titles = (
             titles if titles is not None else [None, None, None]
@@ -69,7 +69,7 @@ class Sample(ASCData):
             self._data_path is not None
             and self.area is not None
             and self.length is not None
-            and self.num is not None
+            and self.name is not None
             and self.titles != [None, None, None]
             and self._elastic_interval != [None, None]
             and self.plotrange != [None, None]
@@ -111,7 +111,7 @@ class Sample(ASCData):
     @property
     def json(self):
         data = {
-            "number": self.num,
+            "name": self.name,
             "area": self.area,
             "length": self.length,
             "cutoff_pct": self._cutoff_pct,
@@ -134,7 +134,11 @@ class Sample(ASCData):
             ret._elastic_interval = data["elastic_zone"]
             ret._zero_ind = data["zero_ind"]
 
-        ret.num = data["number"]
+        if "name" in data:
+            ret.name = data["name"]
+        # Backwards-compatibility: Support projects that used sample #
+        elif "number" in data:
+            ret.name = f"Sample {data['number']}"
         ret.area = data["area"]
         ret.length = data["length"]
 
