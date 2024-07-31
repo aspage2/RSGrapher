@@ -46,39 +46,37 @@ class FinalPlotFrame(AbstractTabFrame):
         project = self._proj_handle.project
         pdf_dir = project.pdf_dir
 
-        info_file = "{}temp/S{}_INFO.pdf".format(pdf_dir, s.num)
+        info_file = "{}temp/S_{}_INFO.pdf".format(pdf_dir, s.name)
         generate_sample_layer(s, info_file)
 
-        pl_file = "{}temp/S{}_PL.pdf".format(pdf_dir, s.num)
+        pl_file = "{}temp/S_{}_PL.pdf".format(pdf_dir, s.name)
         self.peakloadframe.canvas.figure.savefig(pl_file)
         create_pdf(
             info_file,
             project.template_file,
             pl_file,
-            pdf_dir + "Sample #{} (PeakLoad).pdf".format(s.num),
+            pdf_dir + "{} (PeakLoad).pdf".format(s.name),
         )
 
-        uts_file = "{}temp/S{}_UTS.pdf".format(pdf_dir, s.num)
+        uts_file = "{}temp/S_{}_UTS.pdf".format(pdf_dir, s.name)
         self.utsframe.canvas.figure.savefig(uts_file)
         create_pdf(
             info_file,
             project.template_file,
             uts_file,
-            pdf_dir + "Sample #{} (UTS).pdf".format(s.num),
+            pdf_dir + "{} (UTS).pdf".format(s.name),
         )
 
-        yl_file = "{}temp/S{}_YL.pdf".format(pdf_dir, s.num)
+        yl_file = "{}temp/S_{}_YL.pdf".format(pdf_dir, s.name)
         self.yieldloadframe.canvas.figure.savefig(yl_file)
         create_pdf(
             info_file,
             project.template_file,
             yl_file,
-            pdf_dir + "Sample #{} (YieldLoad).pdf".format(s.num),
+            pdf_dir + "{} (YieldLoad).pdf".format(s.name),
         )
 
-        messagebox.showinfo(
-            title="Success", message="Created 3 files in {}".format(pdf_dir)
-        )
+        messagebox.showinfo(title="Success", message=f"Created 3 files in {pdf_dir}")
 
     def build(self):
         self.canvasnotebook.pack()

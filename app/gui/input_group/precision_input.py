@@ -11,7 +11,7 @@ class PrecisionInputGroup(Frame):
         f = Frame(self)
         for i in range(3):
             r = Radiobutton(
-                f, variable=self._var, val=i, text="{}".format(10 ** i), font=font
+                f, variable=self._var, val=i, text="{}".format(10**i), font=font
             )
             self._buttons.append(r)
             r.pack(side=LEFT)

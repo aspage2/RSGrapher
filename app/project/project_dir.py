@@ -34,6 +34,9 @@ class ProjectDirectory:
     def delete_sample(self, sample):
         self.samples.remove(sample)
 
+    def num_samples(self):
+        return len(self.samples)
+
     @property
     def has_samples(self):
         return len(self.samples) != 0
