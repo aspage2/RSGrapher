@@ -32,7 +32,7 @@ jobs:
       run: |
         poetry run pyinstaller --onefile --windowed --hidden-import PIL._tkinter_finder run.py
     - name: Upload Executable
-      uses: actions/upload-artifacts@v4
+      uses: actions/upload-artifact@v4
       with:
         name: executable
         path: dist/run
