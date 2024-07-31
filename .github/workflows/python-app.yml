@@ -31,13 +31,7 @@ jobs:
         poetry install
     - name: Run pyinstaller
       run: |
-        poetry run pyinstaller \
-          --onefile \
-          --name RSGrapher \
-          --add-data res/logo.png:res \
-          --hidden-import PIL._tkinter_finder \
-          --hidden-import matplotlib.backends.backend_pdf \
-          run.py
+        poetry run pyinstaller --onefile --name RSGrapher --add-data res/logo.png:res --hidden-import PIL._tkinter_finder --hidden-import matplotlib.backends.backend_pdf run.py
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:

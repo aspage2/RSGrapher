@@ -1,3 +1,6 @@
+import sys
+from pathlib import Path
+
 from PyPDF2.pdf import PageObject
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.lib.utils import ImageReader
@@ -11,11 +14,17 @@ LOGO_MARGIN = 0
 
 TEXT_MARGIN = 30
 
+def get_file_location(relative_path):
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        return str(Path(sys._MEIPASS) / relative_path)
+    return relative_path
+
 
 def generate_project_layer(proj_num, proj_date, pdf_dir):
     """Layer 1: PROJECT (logo, project number, date)"""
+    logo_path = get_file_location("res/logo.png")
     proj_num_str = "RSG {:0>4}".format(proj_num)
-    lwidth, lheight = Image.open("res/logo.png").size
+    lwidth, lheight = Image.open(logo_path).size
     drawwidth = LOGO_WIDTH
     drawheight = int(LOGO_WIDTH * lheight / lwidth)
     pagewidth, pageheight = landscape(letter)
@@ -24,7 +33,7 @@ def generate_project_layer(proj_num, proj_date, pdf_dir):
     c.setFillColor("#282560")
     c.setFont("Helvetica-Bold", 16)
     c.drawImage(
-        ImageReader("res/logo.png"),
+        ImageReader(logo_path),
         LOGO_MARGIN,
         pageheight - drawheight - LOGO_MARGIN,
         width=drawwidth,

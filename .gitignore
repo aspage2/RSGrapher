@@ -18,6 +18,7 @@ sample_project/
 # Distribution / packaging
 .Python
 build/
+workdir/
 develop-eggs/
 dist/
 downloads/
