@@ -14,6 +14,7 @@ LOGO_MARGIN = 0
 
 TEXT_MARGIN = 30
 
+
 def get_file_location(relative_path):
     if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
         return str(Path(sys._MEIPASS) / relative_path)

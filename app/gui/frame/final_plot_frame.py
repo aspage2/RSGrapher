@@ -50,7 +50,10 @@ class FinalPlotFrame(AbstractTabFrame):
         generate_sample_layer(s, info_file)
 
         pl_file = "{}temp/S{}_PL.pdf".format(pdf_dir, s.num)
-        self.peakloadframe.canvas.figure.savefig(pl_file)
+        self.peakloadframe.canvas.figure.savefig(
+            pl_file,
+            facecolor="white",
+        )
         create_pdf(
             info_file,
             project.template_file,
@@ -59,7 +62,10 @@ class FinalPlotFrame(AbstractTabFrame):
         )
 
         uts_file = "{}temp/S{}_UTS.pdf".format(pdf_dir, s.num)
-        self.utsframe.canvas.figure.savefig(uts_file)
+        self.utsframe.canvas.figure.savefig(
+            uts_file,
+            facecolor="white",
+        )
         create_pdf(
             info_file,
             project.template_file,
@@ -68,7 +74,10 @@ class FinalPlotFrame(AbstractTabFrame):
         )
 
         yl_file = "{}temp/S{}_YL.pdf".format(pdf_dir, s.num)
-        self.yieldloadframe.canvas.figure.savefig(yl_file)
+        self.yieldloadframe.canvas.figure.savefig(
+            yl_file,
+            facecolor="white",
+        )
         create_pdf(
             info_file,
             project.template_file,
